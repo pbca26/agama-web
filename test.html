@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html class="no-js css-menubar" lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta name="description" content="bootstrap admin template">
+    <meta name="author" content="SuperNET Team">
+    <script type="text/javascript" src="bundle.js"></script>
+    <title>Agama</title>
+  </head>
+  <body id="body" class="page-login layout-full page-dark">
+    <div id="app" class="full-height"></div>
+    <script>
+      const _key = agama.seedToWif('test', agama.networks.komodo, true);
+      console.log(_key);
+
+      const _rawtx = '01000000015b48ccf5fd288cb19fb9c11cf83de0ca604ff100da1f22763b5bdcaff146247a010000006b4830450221009c02068afcc03b0eb43c56b94c40e7efd2258101eb544f47ab13381e226e7fba022073a1071e3d62d7f51a7147970b20e8ae9b39f8fceb88258d024b4c11d29c0aa3012102743d2afdb88ede68fb5938e961b1f41c2b6267b3286516543eb4e4ab87ad0d0affffffff02204e0000000000001976a9142f4c0f91fc06ac228c120aee41741d0d3909683288ac66cb7f46000000001976a9142f4c0f91fc06ac228c120aee41741d0d3909683288ac3405f259';
+
+      console.log(agama.TxDecoder(_rawtx, agama.networks.komodo));
+    </script>
+  </body>
+</html>
