@@ -1,9 +1,3 @@
-# agama-browserify
-
-install browserify
+# agama-web
 
 npm install
-
-### Compile
-
-browserify main.js --standalone agama > bundle.js
