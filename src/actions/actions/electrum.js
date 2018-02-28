@@ -11,6 +11,40 @@ import {
   sendToAddressState,
 } from '../actionCreators';
 import Store from '../../store';
+import agamalib from '../../agamalib';
+import proxyServers from '../../util/proxyServers';
+
+export function shepherdSelectProxy() {
+  // pick a random proxy server
+  const _randomServer = proxyServers[agamalib.utils.getRandomIntInclusive(0, proxyServers.length - 1)];
+  appData.proxy = {
+    ip: _randomServer.ip,
+    port: _randomServer.port,
+  };
+  console.warn('shepherdSelectProxy', appData);
+}
+
+export function shepherdElectrumLock() {
+  return new Promise((resolve, reject) => {
+    appData.auth.status = 'locked';
+    appData.keys = {};
+    resolve();
+  });
+}
+
+export function shepherdElectrumLogout() {
+  return new Promise((resolve, reject) => {
+    appData.auth.status = 'locked';
+    appData.keys = {};
+    appData.coins = {};
+    appData.allcoins = {
+      spv: [],
+      total: 0,
+    };
+    appData.servers = {};
+    resolve();
+  });
+}
 
 // src: atomicexplorer
 export function shepherdGetRemoteBTCFees() {
@@ -193,28 +227,20 @@ export function shepherdElectrumTransactionsState(json) {
 }
 
 export function shepherdElectrumCoins() {
+  let _coins = {};
+
+  for (let i = 0; i < appData.coins.length; i++) {
+    if (appData.keys[appData.coins[i]]) {
+      _coins[appData.coins[i]] = {
+        pub: appData.keys[appData.coins[i]].pub,
+      };
+    } else {
+      _coins[appData.coins[i]] = {};
+    }
+  }
+
   return dispatch => {
-    return dispatch(shepherdElectrumCoinsState(Config.mock.api.coins ? Config.mock.api.coins : { result: appData.coins }));
-    /*return fetch(`http://127.0.0.1:${Config.agamaPort}/shepherd/electrum/coins?token=${Config.token}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-    .catch((error) => {
-      console.log(error);
-      dispatch(
-        triggerToaster(
-          'shepherdElectrumCoins',
-          'Error',
-          'error'
-        )
-      );
-    })
-    .then(response => response.json())
-    .then(json => {
-      dispatch(shepherdElectrumCoinsState(json));
-    });*/
+    return dispatch(shepherdElectrumCoinsState({ result: _coins }));
   }
 }
 

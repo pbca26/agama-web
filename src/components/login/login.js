@@ -13,11 +13,10 @@ import {
   toggleZcparamsFetchModal,
   toggleNotaryElectionsModal,
   activeHandle,
+  addCoin,
 } from '../../actions/actionCreators';
 import Config from '../../config';
 import Store from '../../store';
-import { PassPhraseGenerator } from '../../util/crypto/passphrasegenerator';
-import { zcashParamsCheckErrors } from '../../util/zcashParams';
 import SwallModalRender from './swall-modal.render';
 import LoginRender from './login.render';
 import { translate } from '../../translate/translate';
@@ -26,7 +25,9 @@ import {
   loadPinList,
   loginWithPin,
 } from '../../actions/actions/pin';
-import { md5 } from '../../util/crypto/md5';
+import agamalib from '../../agamalib';
+
+console.warn(agamalib);
 
 const IGUNA_ACTIVE_HANDLE_TIMEOUT = 3000;
 const IGUNA_ACTIVE_COINS_TIMEOUT = 10000;
@@ -43,7 +44,7 @@ class Login extends React.Component {
       seedInputVisibility: false,
       loginPassPhraseSeedType: null,
       bitsOption: 256,
-      randomSeed: PassPhraseGenerator.generatePassPhrase(256),
+      randomSeed: agamalib.crypto.passPhraseGenerator.generatePassPhrase(256),
       randomSeedConfirm: '',
       isSeedConfirmError: false,
       isSeedBlank: false,
@@ -111,7 +112,7 @@ class Login extends React.Component {
       // if customWalletSeed is set to false, regenerate the seed
       if (!this.state.customWalletSeed) {
         this.setState({
-          randomSeed: PassPhraseGenerator.generatePassPhrase(this.state.bitsOption),
+          randomSeed: agamalib.crypto.passPhraseGenerator.generatePassPhrase(this.state.bitsOption),
           isSeedConfirmError: false,
           isSeedBlank: false,
           isCustomSeedWeak: false,
@@ -168,7 +169,7 @@ class Login extends React.Component {
 
   generateNewSeed(bits) {
     this.setState(Object.assign({}, this.state, {
-      randomSeed: PassPhraseGenerator.generatePassPhrase(bits),
+      randomSeed: agamalib.crypto.passPhraseGenerator.generatePassPhrase(bits),
       bitsOption: bits,
       isSeedBlank: false,
     }));
@@ -349,19 +350,19 @@ class Login extends React.Component {
     }
 
     const passPhraseWords = passPhrase.split(' ');
-    if (!PassPhraseGenerator.arePassPhraseWordsValid(passPhraseWords)) {
+    if (!agamalib.crypto.passPhraseGenerator.arePassPhraseWordsValid(passPhraseWords)) {
       return null;
     }
 
-    if (PassPhraseGenerator.isPassPhraseValid(passPhraseWords, 256)) {
+    if (agamalib.crypto.passPhraseGenerator.isPassPhraseValid(passPhraseWords, 256)) {
       return translate('LOGIN.IGUANA_SEED');
     }
 
-    if (PassPhraseGenerator.isPassPhraseValid(passPhraseWords, 160)) {
+    if (agamalib.crypto.passPhraseGenerator.isPassPhraseValid(passPhraseWords, 160)) {
       return translate('LOGIN.WAVES_SEED');
     }
 
-    if (PassPhraseGenerator.isPassPhraseValid(passPhraseWords, 128)) {
+    if (agamalib.crypto.passPhraseGenerator.isPassPhraseValid(passPhraseWords, 128)) {
       return translate('LOGIN.NXT_SEED');
     }
 
@@ -376,7 +377,7 @@ class Login extends React.Component {
       loginPassPhraseSeedType: null,
       seedInputVisibility: false,
       bitsOption: 256,
-      randomSeed: PassPhraseGenerator.generatePassPhrase(256),
+      randomSeed: agamalib.crypto.passPhraseGenerator.generatePassPhrase(256),
       randomSeedConfirm: '',
       isSeedConfirmError: false,
       isSeedBlank: false,
@@ -472,20 +473,13 @@ class Login extends React.Component {
       [type === 'native' ? 'selectedShortcutNative' : 'selectedShortcutSPV'] : e.value,
     });
 
-    // mainWindow.startSPV(e.value.toUpperCase());
+    Store.dispatch(addCoin(
+      e.value,
+      '0',
+    ));
 
-    setTimeout(() => {
-      Store.dispatch(activeHandle());
-      Store.dispatch(getDexCoins());
-    }, 500);
-    setTimeout(() => {
-      Store.dispatch(activeHandle());
-      Store.dispatch(getDexCoins());
-    }, 1000);
-    setTimeout(() => {
-      Store.dispatch(activeHandle());
-      Store.dispatch(getDexCoins());
-    }, 2000);
+    Store.dispatch(activeHandle());
+    Store.dispatch(getDexCoins());
   }
 
   renderSwallModal() {

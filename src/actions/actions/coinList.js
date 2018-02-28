@@ -3,54 +3,6 @@ import Config from '../../config';
 import Store from '../../store';
 import { translate } from '../../translate/translate';
 
-export function shepherdElectrumLock() {
-  return new Promise((resolve, reject) => {
-    fetch(`http://127.0.0.1:${Config.agamaPort}/shepherd/electrum/lock`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ token: Config.token }),
-    })
-    .catch((error) => {
-      console.log(error);
-      Store.dispatch(
-        triggerToaster(
-          'shepherdElectrumLock',
-          'Error',
-          'error'
-        )
-      );
-    })
-    .then(response => response.json())
-    .then(json => resolve(json));
-  });
-}
-
-export function shepherdElectrumLogout() {
-  return new Promise((resolve, reject) => {
-    fetch(`http://127.0.0.1:${Config.agamaPort}/shepherd/electrum/logout`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ token: Config.token }),
-    })
-    .catch((error) => {
-      console.log(error);
-      Store.dispatch(
-        triggerToaster(
-          'shepherdElectrumLogout',
-          'Error',
-          'error'
-        )
-      );
-    })
-    .then(response => response.json())
-    .then(json => resolve(json));
-  });
-}
-
 export function shepherdStopCoind(coin) {
   return new Promise((resolve, reject) => {
     fetch(`http://127.0.0.1:${Config.agamaPort}/shepherd/coind/stop`, {

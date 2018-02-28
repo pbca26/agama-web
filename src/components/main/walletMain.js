@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Toaster from '../toaster/toaster';
 import AddCoin from '../addcoin/addcoin';
 import Login from '../login/login';
-//import Dashboard from '../dashboard/main/dashboard';
+import Dashboard from '../dashboard/main/dashboard';
 import Store from '../../store';
 import {
   toggleDashboardTxInfoModal,
@@ -44,7 +44,7 @@ class WalletMain extends React.Component {
         <input
           type="text"
           id="js-copytextarea" />
-        { /*<Dashboard /> */ }
+        <Dashboard />
         <AddCoin />
         <Login />
         <Toaster {...this.props.toaster} />

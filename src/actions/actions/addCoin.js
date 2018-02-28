@@ -12,6 +12,7 @@ import {
   checkCoinType,
   checkAC,
 } from '../../components/addcoin/payload';
+import agamalib from '../../agamalib';
 
 function iguanaActiveHandleState(json) {
   return {
@@ -24,14 +25,29 @@ function iguanaActiveHandleState(json) {
 export function activeHandle() {
   return dispatch => {
     return dispatch(
-      iguanaActiveHandleState(Config.mock.api.auth ? Config.mock.api.auth : {
-        status: 'locked',
-      })
+      iguanaActiveHandleState(appData.auth)
     );
   }
 }
 
 export function shepherdElectrumAuth(seed) {
+  let _pubKeys = {};
+
+  for (let i = 0; i < appData.coins.length; i++) {
+    if (agamalib.coin.isKomodoCoin(appData.coins[i])) {
+      appData.keys[appData.coins[i]] = agamalib.keys.stringToWif(seed, agamalib.btcnetworks.kmd, true);
+    } else {
+      appData.keys[appData.coins[i]] = agamalib.keys.stringToWif(seed, agamalib.btcnetworks[appData.coins[i]], true);
+    }
+  }
+
+  appData.auth.status = 'unlocked';
+
+  return dispatch => {
+    dispatch(activeHandle());
+    dispatch(shepherdElectrumCoins());
+  };
+  /*
   return dispatch => {
     return fetch(`http://127.0.0.1:${Config.agamaPort}/shepherd/electrum/login`, {
       method: 'POST',
@@ -69,7 +85,7 @@ export function shepherdElectrumAuth(seed) {
         );
       }
     });
-  }
+  }*/
 }
 
 export function shepherdElectrumAddCoin(coin) {
@@ -77,166 +93,12 @@ export function shepherdElectrumAddCoin(coin) {
     return dispatch(
       addCoinResult(coin, '0')
     );
-
-    /*return fetch(`http://127.0.0.1:${Config.agamaPort}/shepherd/electrum/coins/add?coin=${coin}&token=${Config.token}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    })
-    .catch((error) => {
-      console.log(error);
-      dispatch(
-        triggerToaster(
-          'shepherdElectrumAddCoin',
-          'Error',
-          'error'
-        )
-      );
-    })
-    .then(response => response.json())
-    .then(json => {
-      dispatch(
-        addCoinResult(coin, '0')
-      );
-    });*/
   }
 }
 
 export function addCoin(coin, mode, startupParams) {
-  if (mode === 0 ||
-      mode === '0') {
-    return dispatch => {
-      dispatch(shepherdElectrumAddCoin(coin));
-    }
-  } else {
-    return dispatch => {
-      dispatch(shepherdGetConfig(coin, '-1', startupParams));
-    }
-  }
-}
-
-
-export function shepherdHerd(coin, mode, path, startupParams) {
-  let acData;
-  let herdData = {
-    'ac_name': coin,
-    'ac_options': [
-      '-daemon=0',
-      '-server',
-      `-ac_name=${coin}`,
-      coin === 'BEER' || coin === 'PIZZA' ? '-addnode=24.54.206.138' : '-addnode=78.47.196.146',
-    ],
-  };
-
-  if (coin === 'ZEC') {
-    herdData = {
-      'ac_name': 'zcashd',
-      'ac_options': [
-        '-daemon=0',
-        '-server=1',
-      ],
-    };
-  }
-
-  if (coin === 'KMD') {
-    herdData = {
-      'ac_name': 'komodod',
-      'ac_options': [
-        '-daemon=0',
-        '-addnode=78.47.196.146',
-      ],
-    };
-  }
-
-  if (startupParams) {
-    herdData['ac_custom_param'] = startupParams.type;
-
-    if (startupParams.value) {
-      herdData['ac_custom_param_value'] = startupParams.value;
-    }
-  }
-
-  // TODO: switch statement
-  if (checkCoinType(coin) === 'crypto') {
-    acData = startCrypto(
-      path.result,
-      coin,
-      mode
-    );
-  }
-
-  if (checkCoinType(coin) === 'currency_ac') {
-    acData = startCurrencyAssetChain(
-      path.result,
-      coin,
-      mode
-    );
-  }
-
-  if (checkCoinType(coin) === 'ac') {
-    const supply = startAssetChain(
-      path.result,
-      coin,
-      mode,
-      true
-    );
-    acData = startAssetChain(
-      path.result,
-      coin,
-      mode
-    );
-    herdData.ac_options.push(`-ac_supply=${supply}`);
-  }
-
   return dispatch => {
-    let _herd;
-
-    if (coin === 'CHIPS') {
-      _herd = 'chipsd';
-      herdData = {};
-    } else {
-      _herd = coin !== 'ZEC' ? 'komodod' : 'zcashd';
-    }
-
-    return fetch(`http://127.0.0.1:${Config.agamaPort}/shepherd/herd`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        herd: _herd,
-        options: herdData,
-        token: Config.token,
-      }),
-    })
-    .catch((error) => {
-      console.log(error);
-      dispatch(
-        triggerToaster(
-          translate('FAILED_SHEPHERD_HERD'),
-          translate('TOASTR.SERVICE_NOTIFICATION'),
-          'error'
-        )
-      );
-    })
-    .then(handleErrors)
-    .then((json) => {
-      if (json) {
-        dispatch(
-          addCoinResult(coin, mode)
-        );
-      } else {
-        dispatch(
-          triggerToaster(
-            translate('TOASTR.ERROR_STARTING_DAEMON', coin) + ' ' + translate('TOASTR.PORT_IS_TAKEN', acData),
-            translate('TOASTR.SERVICE_NOTIFICATION'),
-            'error',
-            false
-          )
-        );
-      }
-    });
+    dispatch(shepherdElectrumAddCoin(coin));
   }
 }
 
@@ -251,8 +113,6 @@ export function addCoinResult(coin, mode) {
     appData.allcoins.spv.push(coin);
     appData.allcoins.total++;
   }
-
-  console.warn(appData);
 
   return dispatch => {
     dispatch(

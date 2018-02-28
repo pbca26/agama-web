@@ -5,6 +5,7 @@ import {
   getDexCoins,
   activeHandle,
   shepherdElectrumCoins,
+  shepherdSelectProxy,
 } from '../../actions/actionCreators';
 import Config from '../../config';
 
@@ -21,6 +22,7 @@ class Main extends React.Component {
   }
 
   componentWillMount() {
+    shepherdSelectProxy();
     Store.dispatch(getDexCoins());
     Store.dispatch(activeHandle());
     Store.dispatch(shepherdElectrumCoins());

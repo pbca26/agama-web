@@ -9,7 +9,7 @@ import appData from './appData';
 export function getDexCoins() {
   return dispatch => {
     return dispatch(
-      dashboardCoinsState(Config.mock.api.allcoins ? Config.mock.api.allcoins : appData.allcoins)
+      dashboardCoinsState(appData.allcoins)
     );
   }
 }
