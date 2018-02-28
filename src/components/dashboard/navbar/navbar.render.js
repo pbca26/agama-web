@@ -1,6 +1,5 @@
 import React from 'react';
 import { translate } from '../../../translate/translate';
-import mainWindow from '../../../util/mainWindow';
 import ReactTooltip from 'react-tooltip';
 import Config from '../../../config';
 
@@ -55,46 +54,12 @@ const NavbarRender = function() {
                 <i className="site-menu-icon"></i> { translate('INDEX.WALLETS') }
               </a>
             </li>
-            <li className={ (this.isSectionActive('dex') ? 'active nav-top-menu' : 'nav-top-menu') + (mainWindow.argv.indexOf('dexonly') > -1 ? '' : ' hide') }>
-              <a onClick={ () => this.dashboardChangeSection('dex') }>
-                <i className="site-menu-icon"></i> BarterDEX
-              </a>
-            </li>
-            { this.props.ActiveCoin &&
-              (/*this._checkAC() || */this.props.ActiveCoin.coin === 'KMD' &&
-                this.props.ActiveCoin.mode === 'native') &&
-              <li className={ this.isSectionActive('jumblr') ? 'active nav-top-menu' : 'nav-top-menu' }>
-                <a onClick={ () => this.dashboardChangeSection('jumblr') }>
-                  <i className="site-menu-icon"></i> Jumblr
-                </a>
-              </li>
-            }
-            { this.props.ActiveCoin.coin !== 'CHIPS' &&
-              this.props.ActiveCoin.mode !== 'spv' &&
-              <li className="nav-top-menu">
-                <a onClick={ this.openImportKeyModal }>
-                  <i className="site-menu-icon"></i> { translate('IMPORT_KEY.IMPORT_KEY') }
-                </a>
-              </li>
-            }
-            { /*<li className={ this.isSectionActive('explorer') ? 'active nav-top-menu' : 'nav-top-menu' }>
-              <a onClick={ () => this.dashboardChangeSection('exporer') }>
-                <i className="site-menu-icon"></i> Explorer
-              </a>
-            </li>*/ }
-            { Config.experimentalFeatures &&
+            { /*Config.experimentalFeatures &&
               <li className={ this.isSectionActive('tools') ? 'active nav-top-menu' : 'nav-top-menu' }>
                 <a onClick={ () => this.dashboardChangeSection('tools') }>
                   <i className="site-menu-icon"></i> Tools
                 </a>
-              </li>
-            }
-            { mainWindow.nnVoteChain &&
-              <li className="nav-top-menu">
-                <a onClick={ this._toggleNotaryElectionsModal }>
-                  <i className="site-menu-icon"></i> Notary Elections
-                </a>
-              </li>
+              </li>*/
             }
             { !navigator.onLine &&
               <li
@@ -130,12 +95,12 @@ const NavbarRender = function() {
                 </span>
               </a>
               <ul className="dropdown-menu">
-                { !this.isSectionActive('settings') &&
+                { /*!this.isSectionActive('settings') &&
                   <li>
                     <a onClick={ () => this.dashboardChangeSection('settings') }>
                       <i className="icon md-settings"></i> { translate('INDEX.SETTINGS') }
                     </a>
-                  </li>
+                  </li>*/
                 }
                 { !this.isSectionActive('about') &&
                   <li>

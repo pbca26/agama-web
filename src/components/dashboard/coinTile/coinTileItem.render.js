@@ -5,6 +5,8 @@ import ReactTooltip from 'react-tooltip';
 const CoinTileItemRender = function() {
   const { item } = this.props;
 
+  console.warn(item);
+
   return (
     <div className="list-group-item col-xlg-6 col-lg-12 wallet-widgets-info pointer">
       <span className={ `badge up badge-${item.modecolor}` }>

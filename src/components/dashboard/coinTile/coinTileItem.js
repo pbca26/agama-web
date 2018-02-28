@@ -3,33 +3,23 @@ import { connect } from 'react-redux';
 import {
   dashboardChangeActiveCoin,
   getAddressesByAccount,
-  getSyncInfo,
   startInterval,
   stopInterval,
-  iguanaEdexBalance,
   getKMDAddressesNative,
   changeActiveAddress,
-  getKMDOPID,
-  getNativeTxHistory,
   getKMDBalanceTotal,
-  getSyncInfoNative,
-  getDebugLog,
-  getDashboardUpdate,
   shepherdElectrumBalance,
   shepherdElectrumTransactions,
   shepherdElectrumCoins,
   electrumServerChanged,
-  shepherdStopCoind,
   getDexCoins,
   activeHandle,
   triggerToaster,
   shepherdRemoveCoin,
-  toggleCoindDownModal,
   dashboardRemoveCoin,
 } from '../../../actions/actionCreators';
 import Store from '../../../store';
 import Config from '../../../config';
-import mainWindow from '../../../util/mainWindow';
 import { translate } from '../../../translate/translate';
 
 import CoinTileItemRender from './coinTileItem.render';
@@ -37,13 +27,12 @@ import CoinTileItemRender from './coinTileItem.render';
 const SPV_DASHBOARD_UPDATE_TIMEOUT = 60000;
 const ACTIVE_HANDLE_TIMEOUT_COIND_NATIVE = 15000;
 const ACTIVE_HANDLE_TIMEOUT_COIND_NATIVE_RCP2CLI = 40000;
-const COIND_DOWN_MODAL_FETCH_FAILURES_THRESHOLD = mainWindow.appConfig.failedRPCAttemptsThreshold || 10;
+const COIND_DOWN_MODAL_FETCH_FAILURES_THRESHOLD = 10;
 
 class CoinTileItem extends React.Component {
   constructor() {
     super();
     this.state = {
-      appConfig: {},
       activeCoin: null,
       activeCoinMode: null,
       propsUpdatedCounter: 0,
@@ -55,15 +44,9 @@ class CoinTileItem extends React.Component {
   }
 
   componentWillMount() {
-    const appConfig = mainWindow.appConfig;
-
     if (!this.props.ActiveCoin.coin) {
       this.autoSetActiveCoin();
     }
-
-    this.setState({
-      appConfig,
-    });
 
     document.addEventListener(
       'click',
@@ -128,19 +111,14 @@ class CoinTileItem extends React.Component {
   renderRemoveCoinButton() {
     if (this.props.Main &&
         this.props.Main.coins &&
-        ((this.props.Main.coins.native &&
-        this.props.Main.coins.native.length &&
-        this.state.appConfig &&
-        !this.state.appConfig.stopNativeDaemonsOnQuit) ||
-        (this.props.Main.coins.spv &&
-        this.props.Main.coins.spv.length))) {
+        this.props.Main.coins.spv &&
+        this.props.Main.coins.spv.length) {
       return true;
     }
   }
 
   autoSetActiveCoin(skipCoin) {
     const modes = [
-      'native',
       'spv',
     ];
     const allCoins = this.props.Main.coins;
@@ -161,13 +139,13 @@ class CoinTileItem extends React.Component {
           _coinMode[coin] = mode;
         });
 
-        if (_coinMode.KMD &&
-            _coinMode.KMD === 'native' &&
-            skipCoin !== 'KMD') {
-          _coin = 'KMD';
+        if (_coinMode.kmd &&
+            _coinMode.kmd === 'native' &&
+            skipCoin !== 'kmd') {
+          _coin = 'kmd';
           _mode = 'native';
-        } else if (_coinMode.KMD && _coinMode.KMD === 'spv' && skipCoin !== 'KMD') {
-          _coin = 'KMD';
+        } else if (_coinMode.kmd && _coinMode.kmd === 'spv' && skipCoin !== 'kmd') {
+          _coin = 'kmd';
           _mode = 'spv';
         }
       });

@@ -16,7 +16,6 @@ class CoinTile extends React.Component {
 
   renderTiles() {
     const modes = [
-      'native',
       'spv',
     ];
     const allCoins = this.props.allCoins;
@@ -30,7 +29,7 @@ class CoinTile extends React.Component {
           const modetip = _coinMode.tip;
           const modecolor = _coinMode.color;
 
-          const _coinTitle = getCoinTitle(coin);
+          const _coinTitle = getCoinTitle(coin.toUpperCase());
           const coinlogo = _coinTitle.logo;
           const coinname = _coinTitle.name;
 

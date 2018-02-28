@@ -5,8 +5,6 @@ import { translate } from '../../../translate/translate';
 import { secondsToString } from '../../../util/time';
 import {
   triggerToaster,
-  sendNativeTx,
-  getKMDOPID,
   clearLastSendToResponseState,
   shepherdElectrumSend,
   shepherdElectrumSendPreflight,
@@ -21,7 +19,6 @@ import {
   _SendFormRender,
 } from './sendCoin.render';
 import { isPositiveNumber } from '../../../util/number';
-import mainWindow from '../../../util/mainWindow';
 import explorerList from '../../../util/explorerList';
 import Slider, { Range } from 'rc-slider';
 import ReactTooltip from 'react-tooltip';
@@ -85,7 +82,7 @@ class SendCoin extends React.Component {
     const _amount = this.state.amount;
     const _amountSats = this.state.amount * 100000000;
     const _balanceSats = this.props.ActiveCoin.balance.balanceSats;
-    let _fees = mainWindow.spvFees;
+    let _fees = {};//mainWindow.spvFees;
     _fees.BTC = 0;
 
     this.setState({
@@ -104,26 +101,8 @@ class SendCoin extends React.Component {
   }
 
   openExplorerWindow(txid) {
-    const url = explorerList[this.props.ActiveCoin.coin].split('/').length - 1 > 2 ? `${explorerList[this.props.ActiveCoin.coin]}${txid}` : `${explorerList[this.props.ActiveCoin.coin]}/tx/${txid}`;
-    const remote = window.require('electron').remote;
-    const BrowserWindow = remote.BrowserWindow;
-
-    const externalWindow = new BrowserWindow({
-      width: 1280,
-      height: 800,
-      title: `${translate('INDEX.LOADING')}...`,
-      icon: remote.getCurrentWindow().iguanaIcon,
-      webPreferences: {
-        nodeIntegration: false,
-      },
-    });
-
-    externalWindow.loadURL(url);
-    externalWindow.webContents.on('did-finish-load', () => {
-      setTimeout(() => {
-        externalWindow.show();
-      }, 40);
-    });
+    // TODO
+    //const url = explorerList[this.props.ActiveCoin.coin].split('/').length - 1 > 2 ? `${explorerList[this.props.ActiveCoin.coin]}${txid}` : `${explorerList[this.props.ActiveCoin.coin]}/tx/${txid}`;
   }
 
   SendFormRender() {
@@ -553,7 +532,7 @@ class SendCoin extends React.Component {
       const _amount = this.state.amount;
       const _amountSats = Math.floor(this.state.amount * 100000000);
       const _balanceSats = this.props.ActiveCoin.balance.balanceSats;
-      let _fees = mainWindow.spvFees;
+      let _fees = {};//mainWindow.spvFees;
       _fees.BTC = 0;
 
       if (Number(_amountSats) + _fees[this.props.ActiveCoin.coin] > _balanceSats) {
@@ -579,7 +558,8 @@ class SendCoin extends React.Component {
 
     if (!this.state.sendTo ||
         (this.state.sendTo && this.state.sendTo.substring(0, 2) !== 'zc')) {
-      const _validateAddress = mainWindow.addressVersionCheck(this.props.ActiveCoin.coin, this.state.sendTo);
+      // TODO: version check
+      //const _validateAddress = mainWindow.addressVersionCheck(this.props.ActiveCoin.coin, this.state.sendTo);
       let _msg;
 
       if (_validateAddress === 'Invalid pub address') {

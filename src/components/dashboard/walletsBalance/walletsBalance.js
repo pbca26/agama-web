@@ -2,10 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { translate } from '../../../translate/translate';
 import {
-  getDashboardUpdate,
   shepherdElectrumBalance,
 } from '../../../actions/actionCreators';
-import mainWindow from '../../../util/mainWindow';
 import Config from '../../../config';
 import { formatValue } from '../../../util/formatValue';
 import ReactTooltip from 'react-tooltip';
@@ -21,7 +19,6 @@ class WalletsBalance extends React.Component {
       currentAddress: null,
       loading: false,
     };
-    this.isFullySynced = this.isFullySynced.bind(this);
     this.refreshBalance = this.refreshBalance.bind(this);
   }
 
@@ -30,20 +27,6 @@ class WalletsBalance extends React.Component {
       this.setState(Object.assign({}, this.state, {
         currentAddress: this.props.ActiveCoin.activeAddress,
       }));
-    }
-  }
-
-  isFullySynced() {
-    const _progress = this.props.ActiveCoin.progress;
-
-    if (_progress &&
-        (Number(_progress.balances) +
-        Number(_progress.validated) +
-        Number(_progress.bundles) +
-        Number(_progress.utxo)) / 4 === 100) {
-      return true;
-    } else {
-      return false;
     }
   }
 
@@ -106,7 +89,7 @@ class WalletsBalance extends React.Component {
       }
     }
 
-    if (mainWindow.appConfig.fiatRates &&
+    if (Config.fiatRates &&
         this.props.Dashboard.prices &&
         returnFiatPrice) {
       const _prices = this.props.Dashboard.prices;

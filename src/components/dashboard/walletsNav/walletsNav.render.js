@@ -27,7 +27,7 @@ export const WalletsNavWithWalletRender = function() {
         { this.props.ActiveCoin &&
           this.props.ActiveCoin.mode === 'spv' &&
           <div>
-            <strong>{ translate('INDEX.MY') } { this.props && this.props.ActiveCoin ? this.props.ActiveCoin.coin : '-' } { translate('INDEX.ADDRESS') }: </strong>
+            <strong>{ translate('INDEX.MY') } { this.props && this.props.ActiveCoin ? this.props.ActiveCoin.coin.toUpperCase() : '-' } { translate('INDEX.ADDRESS') }: </strong>
             { this.props &&
               this.props.Dashboard &&
               this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin] &&
@@ -41,12 +41,12 @@ export const WalletsNavWithWalletRender = function() {
         }
         <div className="page-header-actions">
           <div id="kmd_header_button">
-            <button
+            {/*<button
               type="button"
               className="btn btn-info waves-effect waves-light"
               onClick={ this.toggleNativeWalletInfo }>
               <i className="icon fa-info"></i>
-            </button>
+            </button>*/}
             <button
               type="button"
               className="btn btn-dark waves-effect waves-light"

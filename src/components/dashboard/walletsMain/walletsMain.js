@@ -9,12 +9,7 @@ import {
 import { getCoinTitle } from '../../../util/coinHelper';
 import Config from '../../../config';
 import Store from '../../../store';
-import mainWindow from '../../../util/mainWindow';
 
-import { SocketProvider } from 'socket.io-react';
-import io from 'socket.io-client';
-
-const socket = io.connect(`http://127.0.0.1:${Config.agamaPort}`);
 const PRICES_UPDATE_INTERVAL = 120000; // every 2m
 
 class WalletsMain extends React.Component {
@@ -22,7 +17,6 @@ class WalletsMain extends React.Component {
     super();
     this.getCoinStyle = this.getCoinStyle.bind(this);
     this.pricesInterval = null;
-    socket.on('service', msg => this.updateSocketsData(msg));
   }
 
   componentWillUnmount() {
@@ -39,7 +33,7 @@ class WalletsMain extends React.Component {
       }, PRICES_UPDATE_INTERVAL);
     }
 
-    if (mainWindow.createSeed.triggered &&
+    /*if (mainWindow.createSeed.triggered &&
         !mainWindow.createSeed.secondaryLoginPH) {
       Store.dispatch(
         triggerToaster(
@@ -79,40 +73,21 @@ class WalletsMain extends React.Component {
           secondaryLoginPH: null,
         };
       }
-    }
-  }
-
-  updateSocketsData(data) {
-    if (data &&
-        data.komodod &&
-        data.komodod.error) {
-      switch (data.komodod.error) {
-        case 'run -reindex':
-          Store.dispatch(
-            triggerToaster(
-              translate('TOASTR.RESTART_AGAMA_WITH_REINDEX_PARAM'),
-              translate('TOASTR.WALLET_NOTIFICATION'),
-              'info',
-              false
-            )
-          );
-          break;
-      }
-    }
+    }*/
   }
 
   getCoinStyle(type) {
     if (type === 'transparent') {
-      if (getCoinTitle(this.props.ActiveCoin.coin).transparentBG && getCoinTitle().logo) {
+      if (getCoinTitle(this.props.ActiveCoin.coin.toUpperCase()).transparentBG && getCoinTitle().logo) {
         return { 'backgroundImage': `url("assets/images/bg/${getCoinTitle().logo.toLowerCase()}_transparent_header_bg.png")` };
       }
     } else if (type === 'title') {
       let _iconPath;
 
-      if (getCoinTitle(this.props.ActiveCoin.coin).titleBG) {
-        _iconPath = `assets/images/native/${getCoinTitle(this.props.ActiveCoin.coin).logo.toLowerCase()}_header_title_logo.png`;
-      } else if (!getCoinTitle(this.props.ActiveCoin.coin).titleBG && getCoinTitle(this.props.ActiveCoin.coin).logo) {
-        _iconPath = `assets/images/cryptologo/${getCoinTitle(this.props.ActiveCoin.coin).logo.toLowerCase()}.png`;
+      if (getCoinTitle(this.props.ActiveCoin.coin.toUpperCase()).titleBG) {
+        _iconPath = `assets/images/native/${getCoinTitle(this.props.ActiveCoin.coin.toUpperCase()).logo.toLowerCase()}_header_title_logo.png`;
+      } else if (!getCoinTitle(this.props.ActiveCoin.coin.toUpperCase()).titleBG && getCoinTitle(this.props.ActiveCoin.coin.toUpperCase()).logo) {
+        _iconPath = `assets/images/cryptologo/${getCoinTitle(this.props.ActiveCoin.coin.toUpperCase()).logo.toLowerCase()}.png`;
       }
 
       return _iconPath;

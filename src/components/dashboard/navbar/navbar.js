@@ -5,19 +5,16 @@ import {
   toggleAddcoinModal,
   stopInterval,
   startInterval,
-  displayImportKeyModal,
   shepherdElectrumLock,
   shepherdElectrumLogout,
   getDexCoins,
   activeHandle,
   dashboardRemoveCoin,
   dashboardChangeActiveCoin,
-  toggleNotaryElectionsModal,
 } from '../../../actions/actionCreators';
 import Store from '../../../store';
 import Config from '../../../config';
 import { checkAC } from '../../addcoin/payload';
-import mainWindow from '../../../util/mainWindow';
 
 import NavbarRender from './navbar.render';
 
@@ -26,11 +23,9 @@ class Navbar extends React.Component {
     super();
     this.state = {
       openDropMenu: false,
-      isExperimentalOn: false,
     };
     this.openDropMenu = this.openDropMenu.bind(this);
     this.handleClickOutside = this.handleClickOutside.bind(this);
-    this._toggleNotaryElectionsModal = this._toggleNotaryElectionsModal.bind(this);
     this._checkAC = this._checkAC.bind(this);
     this.spvLock = this.spvLock.bind(this);
     this.spvLogout = this.spvLogout.bind(this);
@@ -83,14 +78,6 @@ class Navbar extends React.Component {
       this.handleClickOutside,
       false
     );
-
-    this.setState({
-      isExperimentalOn: mainWindow.appConfig.experimentalFeatures,
-    });
-
-    if (mainWindow.argv.indexOf('dexonly') > -1) {
-      Store.dispatch(dashboardChangeSection(mainWindow.activeSection));
-    }
   }
 
   componentWillUnmount() {
@@ -114,18 +101,10 @@ class Navbar extends React.Component {
     }
   }
 
-  openImportKeyModal() {
-    Store.dispatch(displayImportKeyModal(true));
-  }
-
   openDropMenu() {
     this.setState(Object.assign({}, this.state, {
       openDropMenu: !this.state.openDropMenu,
     }));
-  }
-
-  _toggleNotaryElectionsModal() {
-    Store.dispatch(toggleNotaryElectionsModal(true));
   }
 
   toggleAddCoinModal() {
@@ -133,7 +112,6 @@ class Navbar extends React.Component {
   }
 
   dashboardChangeSection(sectionName) {
-    mainWindow.activeSection = sectionName;
     Store.dispatch(dashboardChangeSection(sectionName));
   }
 
