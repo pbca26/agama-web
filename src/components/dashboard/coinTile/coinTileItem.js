@@ -11,6 +11,7 @@ import {
   shepherdElectrumBalance,
   shepherdElectrumTransactions,
   shepherdElectrumCoins,
+  shepherdElectrumListunspent,
   electrumServerChanged,
   getDexCoins,
   activeHandle,
@@ -259,6 +260,7 @@ class CoinTileItem extends React.Component {
         }
       } else if (mode === 'spv' && this.props.Dashboard.electrumCoins && this.props.Dashboard.electrumCoins[coin] && this.props.Dashboard.electrumCoins[coin].pub) {
         Store.dispatch(shepherdElectrumBalance(coin, this.props.Dashboard.electrumCoins[coin].pub));
+        shepherdElectrumListunspent(coin, this.props.Dashboard.electrumCoins[coin].pub);
 
         if (this.props.ActiveCoin.activeSection === 'default') {
           Store.dispatch(shepherdElectrumTransactions(coin, this.props.Dashboard.electrumCoins[coin].pub));
