@@ -6,8 +6,6 @@ import {
   toggleReceiveCoinForm,
   toggleSendReceiveCoinForms,
   toggleDashboardActiveSection,
-  getNativeNettotals,
-  getNativePeers,
 } from '../../../actions/actionCreators';
 import Store from '../../../store';
 import Config from '../../../config';
@@ -25,7 +23,6 @@ class WalletsNav extends React.Component {
     this.toggleNativeWalletInfo = this.toggleNativeWalletInfo.bind(this);
     this.toggleNativeWalletTransactions = this.toggleNativeWalletTransactions.bind(this);
     this.checkTotalBalance = this.checkTotalBalance.bind(this);
-    this.netInfoInterval = null;
   }
 
   copyMyAddress(address) {
@@ -59,11 +56,6 @@ class WalletsNav extends React.Component {
     if (this.props.ActiveCoin.activeSection !== 'settings') {
       Store.dispatch(getNativePeers(this.props.ActiveCoin.coin));
       Store.dispatch(getNativeNettotals(this.props.ActiveCoin.coin));
-
-      this.netInfoInterval = setInterval(() => {
-        Store.dispatch(getNativePeers(this.props.ActiveCoin.coin));
-        Store.dispatch(getNativeNettotals(this.props.ActiveCoin.coin));
-      }, NET_INFO_INTERVAL);
     }
 
     Store.dispatch(toggleDashboardActiveSection('settings'));

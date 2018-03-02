@@ -190,13 +190,16 @@ const WalletsTxInfoRender = function(txInfo) {
             </div>
             <div className="modal-footer">
               { this.state.txDetails &&
-                explorerList[this.props.ActiveCoin.coin] &&
-                <button
-                  type="button"
-                  className="btn btn-sm white btn-dark waves-effect waves-light pull-left"
-                  onClick={ () => this.openExplorerWindow(this.state.txDetails.txid) }>
-                  <i className="icon fa-external-link"></i> { translate('INDEX.OPEN_TRANSACTION_IN_EPLORER', this.props.ActiveCoin.coin) }
-                </button>
+                explorerList[this.props.ActiveCoin.coin.toUpperCase()] &&
+                <a
+                  href={ this.openExplorerWindow(this.state.txDetails.txid) }
+                  target="_blank">
+                  <button
+                    type="button"
+                    className="btn btn-sm white btn-dark waves-effect waves-light pull-left">
+                    <i className="icon fa-external-link"></i> { translate('INDEX.OPEN_TRANSACTION_IN_EPLORER', this.props.ActiveCoin.coin.toUpperCase()) }
+                  </button>
+                </a>
               }
               <button
                 type="button"

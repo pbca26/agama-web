@@ -109,25 +109,26 @@ class ClaimInterestModal extends React.Component {
       shepherdElectrumListunspent(
         this.props.ActiveCoin.coin,
         this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub
-      ).then((json) => {
-        if (json !== 'error' &&
-            json.result &&
-            typeof json.result !== 'string') {
-          json = json.result;
-
+      )
+      .then((json) => {
+          console.warn('kmdinterestmodal', json);
+        if (json &&
+            json !== 'error' &&
+            typeof json.result !== 'string' &&
+            json.length) {
           for (let i = 0; i < json.length; i++) {
-            if (json[i].interest === 0) {
+            if (Number(json[i].interest) === 0) {
               _zeroInterestUtxo = true;
             }
 
             _transactionsList.push({
               address: json[i].address,
               locktime: json[i].locktime,
-              amount: Number(json[i].amount.toFixed(8)),
-              interest: Number(json[i].interest.toFixed(8)),
+              amount: Number(Number(json[i].amount).toFixed(8)),
+              interest: Number(Number(json[i].interest).toFixed(8)),
               txid: json[i].txid,
             });
-            _totalInterest += Number(json[i].interest.toFixed(8));
+            _totalInterest += Number(Number(json[i].interest).toFixed(8));
 
             if (i === json.length - 1) {
               this.setState({
@@ -199,7 +200,8 @@ class ClaimInterestModal extends React.Component {
       this.props.ActiveCoin.balance.balanceSats,
       this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub,
       this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub
-    ).then((res) => {
+    )
+    .then((res) => {
       if (res.msg === 'error') {
         Store.dispatch(
           triggerToaster(
@@ -223,7 +225,7 @@ class ClaimInterestModal extends React.Component {
   }
 
   claimInterest(address, amount) {
-    if (this.props.ActiveCoin.coin === 'KMD') {
+    if (this.props.ActiveCoin.coin.toUpperCase() === 'KMD') {
       if (this.props.ActiveCoin.mode === 'spv') {
         this.setState(Object.assign({}, this.state, {
           spvVerificationWarning: false,
@@ -235,7 +237,8 @@ class ClaimInterestModal extends React.Component {
           this.props.ActiveCoin.balance.balanceSats,
           this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub,
           this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub
-        ).then((sendPreflight) => {
+        )
+        .then((sendPreflight) => {
           if (sendPreflight &&
               sendPreflight.msg === 'success') {
             this.setState(Object.assign({}, this.state, {
@@ -407,7 +410,7 @@ class ClaimInterestModal extends React.Component {
   render() {
     if (this.props.ActiveCoin &&
         this.props.ActiveCoin.coin &&
-        this.props.ActiveCoin.coin === 'KMD') {
+        this.props.ActiveCoin.coin.toUpperCase() === 'KMD') {
       return ClaimInterestModalRender.call(this);
     } else {
       return null;

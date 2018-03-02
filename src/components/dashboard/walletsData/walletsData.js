@@ -7,7 +7,6 @@ import Config from '../../../config';
 import {
   toggleDashboardTxInfoModal,
   changeActiveAddress,
-  getDashboardUpdate,
   shepherdElectrumTransactions,
   toggleClaimInterestModal,
   shepherdElectrumCheckServerConnection,
@@ -30,11 +29,6 @@ import {
 } from  './walletsData.render';
 import { secondsToString } from '../../../util/time';
 import getRandomElectrumServer from '../../../util/serverRandom';
-
-/*import { SocketProvider } from 'socket.io-react';
-import io from 'socket.io-client';
-
-const socket = io.connect(`http://127.0.0.1:${Config.agamaPort}`);*/
 
 const BOTTOM_BAR_DISPLAY_THRESHOLD = 15;
 
@@ -73,14 +67,6 @@ class WalletsData extends React.Component {
       this.handleClickOutside,
       false
     );
-
-    /*setTimeout(() => {
-      if (this.props.ActiveCoin.mode === 'basilisk' || (Object.keys(this.props.Main.coins.basilisk).length && (Object.keys(this.props.Main.coins.native).length || Object.keys(this.props.Main.coins.full).length)) || Object.keys(this.props.Main.coins.basilisk).length) {
-        socket.on('messages', msg => this.updateSocketsData(msg));
-      } else {
-        socket.removeAllListeners('messages');
-      }
-    }, 100);*/
   }
 
   componentWillUnmount() {
@@ -95,7 +81,7 @@ class WalletsData extends React.Component {
 
   displayClaimInterestUI() {
     if (this.props.ActiveCoin &&
-        this.props.ActiveCoin.coin === 'KMD' &&
+        this.props.ActiveCoin.coin.toUpperCase() === 'KMD' &&
         this.props.ActiveCoin.balance) {
       if (this.props.ActiveCoin.balance.interest &&
         this.props.ActiveCoin.balance.interest > 0) {

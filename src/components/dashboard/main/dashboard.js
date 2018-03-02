@@ -24,22 +24,11 @@ class Dashboard extends React.Component {
 
   displayDashboard() {
     return this.props &&
-      (this.props.Main &&
-      this.props.Main.coins &&
-      this.props.Main.coins.native &&
-      this.props.Main.coins.native.length &&
-      !this.props.Main.coins.spv.length) ||
-      (this.props.Main &&
-      this.props.Main.coins &&
-      this.props.Main.coins.spv &&
-      this.props.Main.coins.spv.length &&
-      this.props.Main.isLoggedIn) ||
-      (this.props.Main &&
-      this.props.Main.coins &&
-      this.props.Main.coins.native &&
-      this.props.Main.coins.native.length &&
-      !this.props.Main.coins.spv.length &&
-      this.props.Main.isLoggedIn);
+          this.props.Main &&
+          this.props.Main.coins &&
+          this.props.Main.coins.spv &&
+          this.props.Main.coins.spv.length &&
+          this.props.Main.isLoggedIn;
   }
 
   render() {

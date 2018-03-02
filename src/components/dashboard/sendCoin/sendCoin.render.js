@@ -24,7 +24,7 @@ export const AddressListRender = function() {
             onClick={ () => this.updateAddressSelection(null, 'public', null) }>
             <a>
               <span className="text">
-                { this.props.ActiveCoin.mode === 'spv' ? `[ ${this.props.ActiveCoin.balance.balance} ${this.props.ActiveCoin.coin} ] ${this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub}` : translate('INDEX.T_FUNDS') }
+                { this.props.ActiveCoin.mode === 'spv' ? `[ ${this.props.ActiveCoin.balance.balance} ${this.props.ActiveCoin.coin.toUpperCase()} ] ${this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub}` : translate('INDEX.T_FUNDS') }
               </span>
               <span
                 className="glyphicon glyphicon-ok check-mark pull-right"
@@ -140,7 +140,7 @@ export const _SendFormRender = function() {
           <span>
             <strong>{ translate('INDEX.TOTAL') }:</strong>&nbsp;
             { this.state.amount } - { this.state.fee }/kb = { Number(this.state.amount) - Number(this.state.fee) }&nbsp;
-            { this.props.ActiveCoin.coin }
+            { this.props.ActiveCoin.coin.toUpperCase() }
           </span>
         </div>
         { (!this.isFullySynced() || !navigator.onLine) &&
@@ -157,7 +157,7 @@ export const _SendFormRender = function() {
             className="btn btn-primary waves-effect waves-light pull-right"
             onClick={ this.props.renderFormOnly ? this.handleSubmit : () => this.changeSendCoinStep(1) }
             disabled={ !this.state.sendTo || !this.state.amount }>
-            { translate('INDEX.SEND') } { this.state.amount } { this.props.ActiveCoin.coin }
+            { translate('INDEX.SEND') } { this.state.amount } { this.props.ActiveCoin.coin.toUpperCase() }
           </button>
         </div>
       </div>
@@ -203,7 +203,7 @@ export const SendRender = function() {
           <div className="panel">
             <div className="panel-heading">
               <h3 className="panel-title">
-                { translate('INDEX.SEND') } { this.props.ActiveCoin.coin }
+                { translate('INDEX.SEND') } { this.props.ActiveCoin.coin.toUpperCase() }
               </h3>
             </div>
             <div className="qr-modal-send-block">
@@ -226,7 +226,7 @@ export const SendRender = function() {
                 </div>
                 <div className="col-lg-6 col-sm-6 col-xs-12 overflow-hidden">{ this.state.sendTo }</div>
                 <div className="col-lg-6 col-sm-6 col-xs-6">
-                  { this.state.amount } { this.props.ActiveCoin.coin }
+                  { this.state.amount } { this.props.ActiveCoin.coin.toUpperCase() }
                 </div>
                 <div className={ this.state.subtractFee ? 'col-lg-6 col-sm-6 col-xs-12 padding-top-10 bold' : 'hide' }>
                   { translate('DASHBOARD.SUBTRACT_FEE') }
@@ -240,7 +240,7 @@ export const SendRender = function() {
                   </div>
                   <div className="col-lg-6 col-sm-6 col-xs-12 overflow-hidden">{ this.state.sendFrom }</div>
                   <div className="col-lg-6 col-sm-6 col-xs-6 confirm-currency-send-container">
-                    { Number(this.state.amount) } { this.props.ActiveCoin.coin }
+                    { Number(this.state.amount) } { this.props.ActiveCoin.coin.toUpperCase() }
                   </div>
                 </div>
               }
@@ -358,10 +358,9 @@ export const SendRender = function() {
                         <td className="padding-left-30">{ translate('SEND.TRANSACTION_ID') }</td>
                         <td className="padding-left-30">
                           { this.props.ActiveCoin.mode === 'spv' ? (this.state.lastSendToResponse && this.state.lastSendToResponse.txid ? this.state.lastSendToResponse.txid : '') : this.state.lastSendToResponse }
-                          { ((this.props.ActiveCoin.mode === 'spv' &&
+                          { this.props.ActiveCoin.mode === 'spv' &&
                             this.state.lastSendToResponse &&
-                            this.state.lastSendToResponse.txid) ||
-                            (this.props.ActiveCoin.mode === 'native' && this.state.lastSendToResponse && this.state.lastSendToResponse.length === 64)) &&
+                            this.state.lastSendToResponse.txid &&
                             <button
                               className="btn btn-default btn-xs clipboard-edexaddr margin-left-10"
                               title={ translate('INDEX.COPY_TO_CLIPBOARD') }
@@ -369,18 +368,20 @@ export const SendRender = function() {
                                 <i className="icon wb-copy"></i> { translate('INDEX.COPY') }
                             </button>
                           }
-                          { ((this.props.ActiveCoin.mode === 'spv' &&
+                          { this.props.ActiveCoin.mode === 'spv' &&
                             this.state.lastSendToResponse &&
-                            this.state.lastSendToResponse.txid) ||
-                            (this.props.ActiveCoin.mode === 'native' && this.state.lastSendToResponse && this.state.lastSendToResponse.length === 64)) &&
-                            explorerList[this.props.ActiveCoin.coin] &&
+                            this.state.lastSendToResponse.txid &&
+                            explorerList[this.props.ActiveCoin.coin.toUpperCase()] &&
                             <div className="margin-top-10">
-                              <button
-                                type="button"
-                                className="btn btn-sm white btn-dark waves-effect waves-light pull-left"
-                                onClick={ () => this.openExplorerWindow(this.props.ActiveCoin.mode === 'spv' ? (this.state.lastSendToResponse && this.state.lastSendToResponse.txid ? this.state.lastSendToResponse.txid : '') : this.state.lastSendToResponse) }>
-                                <i className="icon fa-external-link"></i> { translate('INDEX.OPEN_TRANSACTION_IN_EPLORER', this.props.ActiveCoin.coin) }
-                              </button>
+                              <a
+                                href={ this.openExplorerWindow(this.props.ActiveCoin.mode === 'spv' ? (this.state.lastSendToResponse && this.state.lastSendToResponse.txid ? this.state.lastSendToResponse.txid : '') : this.state.lastSendToResponse) }
+                                target="_blank">
+                                <button
+                                  type="button"
+                                  className="btn btn-sm white btn-dark waves-effect waves-light pull-left">
+                                  <i className="icon fa-external-link"></i> { translate('INDEX.OPEN_TRANSACTION_IN_EPLORER', this.props.ActiveCoin.coin.toUpperCase()) }
+                                </button>
+                              </a>
                             </div>
                           }
                         </td>

@@ -66,7 +66,7 @@ class WalletsBalance extends React.Component {
         _balance = this.props.ActiveCoin.balance[type];
       }
     } else if (_mode === 'spv' && this.props.ActiveCoin.balance.balance) {
-      if (this.props.ActiveCoin.coin === 'KMD') {
+      if (this.props.ActiveCoin.coin.toUpperCase() === 'KMD') {
         if (type === 'total' &&
             this.props.ActiveCoin.balance &&
             this.props.ActiveCoin.balance.total) {
@@ -96,7 +96,7 @@ class WalletsBalance extends React.Component {
       let _fiatPriceTotal = 0;
       let _fiatPricePerCoin = 0;
 
-      if (this.props.ActiveCoin.coin === 'KMD') {
+      if (this.props.ActiveCoin.coin.toUpperCase() === 'KMD') {
         if (_prices.fiat &&
             _prices.fiat.USD) {
           _fiatPriceTotal = formatValue(_balance * _prices.fiat.USD);
@@ -105,10 +105,10 @@ class WalletsBalance extends React.Component {
       } else {
         if (_prices.fiat &&
             _prices.fiat.USD &&
-            _prices[`${this.props.ActiveCoin.coin}/KMD`] &&
-            _prices[`${this.props.ActiveCoin.coin}/KMD`].low) {
-          _fiatPriceTotal = _balance * _prices.fiat.USD * _prices[`${this.props.ActiveCoin.coin}/KMD`].low;
-          _fiatPricePerCoin = _prices.fiat.USD * _prices[`${this.props.ActiveCoin.coin}/KMD`].low;
+            _prices[`${this.props.ActiveCoin.coin.toUpperCase()}/KMD`] &&
+            _prices[`${this.props.ActiveCoin.coin.toUpperCase()}/KMD`].low) {
+          _fiatPriceTotal = _balance * _prices.fiat.USD * _prices[`${this.props.ActiveCoin.coin.toUpperCase()}/KMD`].low;
+          _fiatPricePerCoin = _prices.fiat.USD * _prices[`${this.props.ActiveCoin.coin.toUpperCase()}/KMD`].low;
         }
       }
 
@@ -118,7 +118,7 @@ class WalletsBalance extends React.Component {
           { _fiatPriceTotal > 0 &&
             _fiatPricePerCoin > 0 &&
             <div
-              data-tip={ `Price per 1 ${this.props.ActiveCoin.coin} ~ $${formatValue(_fiatPricePerCoin)}` }
+              data-tip={ `Price per 1 ${this.props.ActiveCoin.coin.toUpperCase()} ~ $${formatValue(_fiatPricePerCoin)}` }
               className="text-right">${ formatValue(_fiatPriceTotal) }</div>
           }
         </div>

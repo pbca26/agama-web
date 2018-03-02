@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import {
   copyCoinAddress,
-  getNewKMDAddresses,
   dumpPrivKey,
   copyString,
   triggerToaster,

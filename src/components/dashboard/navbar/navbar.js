@@ -54,18 +54,9 @@ class Navbar extends React.Component {
     .then((res) => {
       const _spvCoins = this.props.Main.coins.spv;
 
-      if (!this.props.Main.coins.native.length) {
-        Store.dispatch(dashboardChangeActiveCoin(null, null, true));
+      for (let i = 0; i < _spvCoins.length; i++) {
+        Store.dispatch(dashboardRemoveCoin(_spvCoins[i]));
       }
-
-      setTimeout(() => {
-        for (let i = 0; i < _spvCoins.length; i++) {
-          Store.dispatch(dashboardRemoveCoin(_spvCoins[i]));
-        }
-        if (!this.props.Main.coins.native.length) {
-          Store.dispatch(dashboardChangeActiveCoin(null, null, true));
-        }
-      }, 500);
 
       Store.dispatch(getDexCoins());
       Store.dispatch(activeHandle());

@@ -176,7 +176,6 @@ class Login extends React.Component {
   }
 
   setLoginState(props) {
-    console.warn(props.Main);
     if (props.Login.pinList === 'no pins') {
       props.Login.pinList = [];
     }
@@ -247,8 +246,6 @@ class Login extends React.Component {
         activeLoginSection: 'activateCoin',
       });
     }
-
-    console.warn(this.state);
   }
 
   componentWillReceiveProps(props) {
@@ -273,19 +270,19 @@ class Login extends React.Component {
     // remove any empty chars from the start/end of the string
     const newValue = e.target.value;
 
-    clearTimeout(this.state.trimPassphraseTimer);
+    /*clearTimeout(this.state.trimPassphraseTimer);
 
     const _trimPassphraseTimer = setTimeout(() => {
       this.setState({
         loginPassphrase: newValue ? newValue.trim() : '', // hardcoded field name
         loginPassPhraseSeedType: this.getLoginPassPhraseSeedType(newValue),
       });
-    }, 2000);
+    }, 2000);*/
 
     this.resizeLoginTextarea();
 
     this.setState({
-      trimPassphraseTimer: _trimPassphraseTimer,
+      //trimPassphraseTimer: _trimPassphraseTimer,
       [e.target.name === 'loginPassphraseTextarea' ? 'loginPassphrase' : e.target.name]: newValue,
       loginPassPhraseSeedType: this.getLoginPassPhraseSeedType(newValue),
     });

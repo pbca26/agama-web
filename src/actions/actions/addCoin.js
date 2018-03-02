@@ -73,39 +73,45 @@ export function addCoinResult(coin, mode) {
     appData.coins.push(coin);
     appData.allcoins.spv.push(coin);
     appData.allcoins.total++;
+
+    if (Object.keys(appData.keys).length) {
+      if (agamalib.coin.isKomodoCoin(coin)) {
+        appData.keys[coin] = agamalib.keys.stringToWif(appData.keys[Object.keys(appData.keys)[0]].priv, agamalib.btcnetworks.kmd, true);
+      } else {
+        appData.keys[coin] = agamalib.keys.stringToWif(appData.keys[Object.keys(appData.keys)[0]].priv, agamalib.btcnetworks[coin], true);
+      }
+    }
   }
 
   return dispatch => {
     dispatch(
       triggerToaster(
-        `${coin} ${translate('TOASTR.STARTED_IN')} ${modeToValue[mode].toUpperCase()} ${translate('TOASTR.MODE')}`,
+        `${coin.toUpperCase()} ${translate('TOASTR.STARTED_IN')} ${modeToValue[mode].toUpperCase()} ${translate('TOASTR.MODE')}`,
         translate('TOASTR.COIN_NOTIFICATION'),
         'success'
       )
     );
     dispatch(toggleAddcoinModal(false, false));
 
-    if (Number(mode) === 0) {
-      shepherdSelectRandomCoinServer(coin);
+    shepherdSelectRandomCoinServer(coin);
+    dispatch(activeHandle());
+    dispatch(shepherdElectrumCoins());
+    dispatch(getDexCoins());
+
+    /*setTimeout(() => {
       dispatch(activeHandle());
       dispatch(shepherdElectrumCoins());
       dispatch(getDexCoins());
-
-      /*setTimeout(() => {
-        dispatch(activeHandle());
-        dispatch(shepherdElectrumCoins());
-        dispatch(getDexCoins());
-      }, 500);
-      setTimeout(() => {
-        dispatch(activeHandle());
-        dispatch(shepherdElectrumCoins());
-        dispatch(getDexCoins());
-      }, 1000);
-      setTimeout(() => {
-        dispatch(activeHandle());
-        dispatch(shepherdElectrumCoins());
-        dispatch(getDexCoins());
-      }, 2000);*/
-    }
+    }, 500);
+    setTimeout(() => {
+      dispatch(activeHandle());
+      dispatch(shepherdElectrumCoins());
+      dispatch(getDexCoins());
+    }, 1000);
+    setTimeout(() => {
+      dispatch(activeHandle());
+      dispatch(shepherdElectrumCoins());
+      dispatch(getDexCoins());
+    }, 2000);*/
   }
 }

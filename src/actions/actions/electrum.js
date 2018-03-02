@@ -47,7 +47,7 @@ export function shepherdElectrumLogout() {
   return new Promise((resolve, reject) => {
     appData.auth.status = 'locked';
     appData.keys = {};
-    appData.coins = {};
+    appData.coins = [];
     appData.allcoins = {
       spv: [],
       total: 0,
@@ -189,23 +189,53 @@ export function shepherdElectrumBalance(coin, address) {
       if (json &&
           json.hasOwnProperty('confirmed') &&
           json.hasOwnProperty('unconfirmed')) {
-        json = {
-          msg: 'success',
-          result: {
-            balance: Number((0.00000001 * json.confirmed).toFixed(8)),
-            unconfirmed: Number((0.00000001 * json.unconfirmed).toFixed(8)),
-            unconfirmedSats: json.unconfirmed,
-            balanceSats: json.confirmed,
-          },
-        };
+
+        if (coin === 'kmd') {
+          shepherdElectrumListunspent(coin, address)
+          .then((_utxoList) => {
+            let _totalInterest = 0;
+
+            for (let i = 0; i < _utxoList.length; i++) {
+              if (Number(_utxoList[i].interest) > 0) {
+                _totalInterest += Number(_utxoList[i].interest);
+              }
+            }
+
+            json = {
+              msg: 'success',
+              result: {
+                balance: Number((0.00000001 * json.confirmed).toFixed(8)),
+                balanceSats: json.confirmed,
+                unconfirmed: Number((0.00000001 * json.unconfirmed).toFixed(8)),
+                unconfirmedSats: json.unconfirmed,
+                interest: Number(_totalInterest.toFixed(8)),
+                interestSats: Math.floor(_totalInterest * 100000000),
+                total: _totalInterest > 0 ? Number((0.00000001 * json.confirmed + _totalInterest).toFixed(8)) : 0,
+                totalSats: _totalInterest > 0 ? json.confirmed + Math.floor(_totalInterest * 100000000) : 0,
+              },
+            };
+            console.warn(json);
+            dispatch(shepherdElectrumBalanceState(json));
+          });
+        } else {
+          json = {
+            msg: 'success',
+            result: {
+              balance: Number((0.00000001 * json.confirmed).toFixed(8)),
+              balanceSats: json.confirmed,
+              unconfirmed: Number((0.00000001 * json.unconfirmed).toFixed(8)),
+              unconfirmedSats: json.unconfirmed,
+            },
+          };
+          dispatch(shepherdElectrumBalanceState(json));
+        }
       } else {
         json = {
           msg: 'error',
           result: 'error',
         };
+        dispatch(shepherdElectrumBalanceState(json));
       }
-
-      dispatch(shepherdElectrumBalanceState(json));
     });
   }
 }
@@ -245,8 +275,8 @@ export function shepherdElectrumTransactions(coin, address, full = true, verify 
       } else {
         const currentHeight = result.result;
 
-        console.warn('currentHeight =>');
-        console.warn(currentHeight);
+        //console.warn('currentHeight =>');
+        //console.warn(currentHeight);
 
         fetch(`http://${appData.proxy.ip}:${appData.proxy.port}/api/listtransactions?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}&address=${address}&raw=true`, {
           method: 'GET',
@@ -300,14 +330,14 @@ export function shepherdElectrumTransactions(coin, address, full = true, verify 
                   .then(json => {
                     result = json;
 
-                    console.warn('getblock =>');
+                    // console.warn('getblock =>');
                     // console.warn(result);
 
                     if (result.msg !== 'error') {
                       const blockInfo = result.result;
 
-                      console.warn('electrum gettransaction ==>');
-                      console.warn((index + ' | ' + (transaction.raw.length - 1)));
+                      // console.warn('electrum gettransaction ==>');
+                      // console.warn((index + ' | ' + (transaction.raw.length - 1)));
                       // console.warn(transaction.raw);
 
                       // decode tx
@@ -316,7 +346,7 @@ export function shepherdElectrumTransactions(coin, address, full = true, verify 
 
                       let txInputs = [];
 
-                      console.warn('decodedtx =>');
+                      // console.warn('decodedtx =>');
                       // console.warn(decodedTx.outputs);
 
                       if (decodedTx &&
@@ -344,16 +374,16 @@ export function shepherdElectrumTransactions(coin, address, full = true, verify 
                               .then(json => {
                                 result = json;
 
-                                console.warn('gettransaction =>');
+                                // console.warn('gettransaction =>');
                                 // console.warn(result);
 
                                 if (result.msg !== 'error') {
                                   const decodedVinVout = agamalib.decoder(result.result, _network);
 
-                                  console.warn('electrum raw input tx ==>');
+                                  // console.warn('electrum raw input tx ==>');
 
                                   if (decodedVinVout) {
-                                    //console.warn(decodedVinVout.outputs[_decodedInput.n], true);
+                                    // console.warn(decodedVinVout.outputs[_decodedInput.n], true);
                                     txInputs.push(decodedVinVout.outputs[_decodedInput.n]);
                                     _resolve(true);
                                   } else {
@@ -526,75 +556,186 @@ export function shepherdElectrumSend(coin, value, sendToAddress, changeAddress, 
   }
 }
 
-export function shepherdElectrumSendPromise(coin, value, sendToAddress, changeAddress, btcFee) {
+export function shepherdElectrumSendPromise(coin, value, sendToAddress, changeAddress, fee, push) {
   value = Math.floor(value);
 
   return new Promise((resolve, reject) => {
-    return fetch(`http://127.0.0.1:${Config.agamaPort}/shepherd/electrum/createrawtx?coin=${coin}&address=${sendToAddress}&value=${value}&change=${changeAddress}${btcFee ? '&btcfee=' + btcFee : ''}&gui=true&push=true&verify=true&token=${Config.token}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-    .catch((error) => {
-      console.log(error);
-      Store.dispatch(
-        triggerToaster(
-          'shepherdElectrumSendPromise',
-          'Error',
-          'error'
-        )
+    shepherdElectrumListunspent(coin, changeAddress)
+    .then((utxoList) => {
+      let _network;
+
+      if (agamalib.coin.isKomodoCoin(coin)) {
+        _network = agamalib.btcnetworks.kmd;
+      } else {
+        _network = agamalib.btcnetworks[coin];
+      }
+
+      const _data = agamalib.transactionBuilder.data(
+        _network,
+        value,
+        fee,
+        sendToAddress,
+        changeAddress,
+        utxoList
       );
-    })
-    .then(response => response.json())
-    .then(json => {
-      resolve(json);
+
+      console.warn('send data', _data);
+
+      const _tx = agamalib.transactionBuilder.transaction(
+        sendToAddress,
+        changeAddress,
+        appData.keys[coin].priv,
+        _network,
+        _data.inputs,
+        _data.change,
+        _data.value
+      );
+
+      // TODO: err
+      console.warn('send tx', _tx);
+
+      if (push) {
+        fetch(`http://${appData.proxy.ip}:${appData.proxy.port}/api/pushtx`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            port: appData.servers[coin].port,
+            ip: appData.servers[coin].ip,
+            proto: appData.servers[coin].proto,
+            rawtx: _tx,
+          }),
+        })
+        .catch((error) => {
+          console.log(error);
+          Store.dispatch(
+            triggerToaster(
+              'shepherdElectrumSetServer',
+              'Error',
+              'error'
+            )
+          );
+        })
+        .then(response => response.json())
+        .then(json => {
+          let result = json;
+
+          if (result.msg === 'error') {
+            const _err = {
+              msg: 'error',
+              result: 'pushtx failed',
+            };
+            Store.dispatch(sendToAddressState(_err));
+          } else {
+            const txid = json.result;
+
+            const _rawObj = {
+              utxoSet: _data.inputs,
+              change: _data.change,
+              changeAdjusted: _data.change,
+              totalInterest: _data.totalInterest,
+              fee: _data.totalInterest,
+              value: _data.value,
+              outputAddress: sendToAddress,
+              changeAddress,
+              rawtx: _tx,
+              txid,
+              utxoVerified: _data.utxoVerified,
+            };
+
+            if (txid &&
+                txid.indexOf('bad-txns-inputs-spent') > -1) {
+              const successObj = {
+                msg: 'error',
+                result: 'Bad transaction inputs spent',
+                raw: _rawObj,
+              };
+
+              Store.dispatch(sendToAddressState(successObj));
+            } else {
+              if (txid &&
+                  txid.length === 64) {
+                if (txid.indexOf('bad-txns-in-belowout') > -1) {
+                  const successObj = {
+                    msg: 'error',
+                    result: 'Bad transaction inputs spent',
+                    raw: _rawObj,
+                  };
+
+                  Store.dispatch(sendToAddressState(successObj));
+                } else {
+                  const successObj = {
+                    result: _rawObj,
+                    txid: _rawObj.txid,
+                  };
+
+                  Store.dispatch(sendToAddressState(successObj));
+                }
+              } else {
+                if (txid &&
+                    txid.indexOf('bad-txns-in-belowout') > -1) {
+                  const successObj = {
+                    msg: 'error',
+                    result: 'Bad transaction inputs spent',
+                    raw: _rawObj,
+                  };
+
+                  dispatch(sendToAddressState(successObj));
+                } else {
+                  const successObj = {
+                    msg: 'error',
+                    result: 'Can\'t broadcast transaction',
+                    raw: _rawObj,
+                  };
+
+                  Store.dispatch(sendToAddressState(successObj));
+                }
+              }
+            }
+          }
+        });
+      } else {
+        resolve({
+          msg: 'success',
+          result: {
+            fee: _data.fee,
+            value: _data.value,
+            change: _data.change,
+            utxoVerified: _data.utxoVerified,
+          },
+        });
+      }
     });
   });
 }
 
-export function shepherdElectrumSendPreflight(coin, value, sendToAddress, changeAddress, btcFee) {
-  value = Math.floor(value);
-
-  return new Promise((resolve, reject) => {
-    fetch(`http://127.0.0.1:${Config.agamaPort}/shepherd/electrum/createrawtx?coin=${coin}&address=${sendToAddress}&value=${value}&change=${changeAddress}${btcFee ? '&btcfee=' + btcFee : ''}&gui=true&push=false&verify=true&token=${Config.token}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-    .catch((error) => {
-      console.log(error);
-      Store.dispatch(
-        triggerToaster(
-          'shepherdElectrumSendPreflight',
-          'Error',
-          'error'
-        )
-      );
-    })
-    .then(response => response.json())
-    .then(json => {
-      resolve(json);
-    });
-  });
-}
-
-export function shepherdElectrumListunspent(coin, address, full = false, verify = true) {
+export function shepherdElectrumListunspent(coin, address, full = true, verify = false) {
   const CONNECTION_ERROR_OR_INCOMPLETE_DATA = 'connection error or incomplete data';
   let _atLeastOneDecodeTxFailed = false;
 
   if (full) {
     return new Promise((resolve, reject) => {
-      HTTP.call('GET', `http://${proxyServer.ip}:${proxyServer.port}/api/listunspent`, {
-        params: {
-          port: electrumServer.port,
-          ip: electrumServer.ip,
-          proto: electrumServer.proto,
-          address,
+      fetch(`http://${appData.proxy.ip}:${appData.proxy.port}/api/listunspent?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}&address=${address}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      }, (error, result) => {
-        result = JSON.parse(result.content);
+      })
+      .catch((error) => {
+        console.log(error);
+        Store.dispatch(
+          triggerToaster(
+            'shepherdElectrumListunspent+listunspent remote',
+            'Error',
+            'error'
+          )
+        );
+      })
+      .then(response => response.json())
+      .then(json => {
+        console.warn('shepherdElectrumListunspent', json);
+        let result = json;
 
         if (result.msg === 'error') {
           resolve('error');
@@ -606,15 +747,26 @@ export function shepherdElectrumListunspent(coin, address, full = false, verify 
             let formattedUtxoList = [];
             let _utxo = [];
 
-            // get current height
-            HTTP.call('GET', `http://${proxyServer.ip}:${proxyServer.port}/api/getcurrentblock`, {
-              params: {
-                port: electrumServer.port,
-                ip: electrumServer.ip,
-                proto: electrumServer.proto,
+            fetch(`http://${appData.proxy.ip}:${appData.proxy.port}/api/getcurrentblock?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
               },
-            }, (error, result) => {
-              result = JSON.parse(result.content);
+            })
+            .catch((error) => {
+              console.log(error);
+              Store.dispatch(
+                triggerToaster(
+                  'shepherdElectrumTransactions+getcurrentblock remote',
+                  'Error',
+                  'error'
+                )
+              );
+            })
+            .then(response => response.json())
+            .then(json => {
+              result = json;
+              // get current height
 
               if (result.msg === 'error') {
                 resolve('cant get current height');
@@ -635,30 +787,39 @@ export function shepherdElectrumListunspent(coin, address, full = false, verify 
                   } else {
                     Promise.all(_utxo.map((_utxoItem, index) => {
                       return new Promise((resolve, reject) => {
-                        HTTP.call('GET', `http://${proxyServer.ip}:${proxyServer.port}/api/gettransaction`, {
-                          params: {
-                            port: electrumServer.port,
-                            ip: electrumServer.ip,
-                            proto: electrumServer.proto,
-                            address,
-                            txid: _utxoItem['tx_hash'],
+                        fetch(`http://${appData.proxy.ip}:${appData.proxy.port}/api/gettransaction?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}&address=${address}&txid=${_utxoItem['tx_hash']}`, {
+                          method: 'GET',
+                          headers: {
+                            'Content-Type': 'application/json',
                           },
-                        }, (error, result) => {
-                          result = JSON.parse(result.content);
+                        })
+                        .catch((error) => {
+                          console.log(error);
+                          Store.dispatch(
+                            triggerToaster(
+                              'shepherdElectrumTransactions+gettransaction remote',
+                              'Error',
+                              'error'
+                            )
+                          );
+                        })
+                        .then(response => response.json())
+                        .then(json => {
+                          result = json;
 
-                          console.warn('gettransaction =>');
-                          console.warn(result);
+                          // console.warn(result);
 
                           if (result.msg !== 'error') {
+                            console.warn('gettransaction =>');
                             const _rawtxJSON = result.result;
 
                             console.warn('electrum gettransaction ==>');
                             console.warn(index + ' | ' + (_rawtxJSON.length - 1));
-                            console.warn(_rawtxJSON);
+                            // console.warn(_rawtxJSON);
 
                             // decode tx
-                            const _network = electrumJSNetworks[isAssetChain(network) ? 'komodo' : network];
-                            const decodedTx = electrumJSTxDecoder(_rawtxJSON, network, _network);
+                            const _network = agamalib.coin.isKomodoCoin(coin) ? agamalib.btcnetworks.kmd : agamalib.btcnetworks[coin];
+                            const decodedTx = agamalib.decoder(_rawtxJSON, _network);
 
                             console.warn('decoded tx =>');
                             console.warn(decodedTx);
@@ -667,13 +828,13 @@ export function shepherdElectrumListunspent(coin, address, full = false, verify 
                               _atLeastOneDecodeTxFailed = true;
                               resolve('cant decode tx');
                             } else {
-                              if (network === 'komodo' ||
-                                  network === 'kmd') {
+                              if (coin === 'kmd') {
                                 let interest = 0;
 
                                 if (Number(_utxoItem.value) * 0.00000001 >= 10 &&
                                     decodedTx.format.locktime > 0) {
-                                  interest = kmdCalcInterest(decodedTx.format.locktime, _utxoItem.value);
+                                  console.warn('interest', agamalib.komodoInterest);
+                                  interest = agamalib.komodoInterest(decodedTx.format.locktime, _utxoItem.value);
                                 }
 
                                 let _resolveObj = {
@@ -742,6 +903,10 @@ export function shepherdElectrumListunspent(coin, address, full = false, verify 
                                 }
                               }
                             }
+                          } else {
+                            resolve(false);
+                            _atLeastOneDecodeTxFailed = true;
+                            console.warn('getcurrentblock error =>');
                           }
                         });
                       });

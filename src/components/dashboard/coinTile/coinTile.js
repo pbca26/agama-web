@@ -12,6 +12,7 @@ class CoinTile extends React.Component {
   constructor() {
     super();
     this.renderTiles = this.renderTiles.bind(this);
+    this.repeatRenderInterval = null;
   }
 
   renderTiles() {
@@ -55,10 +56,25 @@ class CoinTile extends React.Component {
     );
   }
 
+  // dirty hack to force tile re-render
+  componentDidMount() {
+    this.repeatRenderInterval = setInterval(() => {
+      this.render();
+      this.forceUpdate();
+    }, 3000);
+  }
+
+  componentWillUnmount() {
+    if (this.repeatRenderInterval) {
+      clearInterval(this.repeatRenderInterval);
+    }
+  }
+
   render() {
     return CoinTileRender.call(this);
   }
 }
+
 const mapStateToProps = (state) => {
   return {
     allCoins: state.Main.coins,
