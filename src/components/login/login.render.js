@@ -8,7 +8,7 @@ const LoginRender = function() {
   return (
     <div>
       { this.renderSwallModal() }
-      <div className="page animsition vertical-align text-center fade-in">
+      <div className="page vertical-align text-center">
         <div className="page-content vertical-align-middle col-xs-12 col-sm-6 col-sm-offset-3">
           <div className="brand">
             <img
