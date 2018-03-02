@@ -2,6 +2,7 @@ import { triggerToaster } from '../actionCreators';
 import Config from '../../config';
 import Store from '../../store';
 import { translate } from '../../translate/translate';
+import appData from './appData';
 
 export function shepherdStopCoind(coin) {
   return new Promise((resolve, reject) => {
@@ -29,43 +30,19 @@ export function shepherdStopCoind(coin) {
 
 export function shepherdRemoveCoin(coin, mode) {
   return new Promise((resolve, reject, dispatch) => {
-    fetch(`http://127.0.0.1:${Config.agamaPort}/shepherd/coins/remove`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(coin === 'KMD' && mode === 'native' ? {
-        mode,
-        token: Config.token,
-      } : {
-        mode,
-        chain: coin,
-        token: Config.token,
-      }),
-    })
-    .catch((error) => {
-      console.log(error);
-      Store.dispatch(
-        triggerToaster(
-          'shepherdRemoveCoin',
-          'Error',
-          'error'
-        )
-      );
-    })
-    .then(response => response.json())
-    .then(json => {
-      resolve(json);
-      if (mode === 'native') {
-        Store.dispatch(
-          triggerToaster(
-            `${coin} ${translate('API.DAEMON_IS_STILL_RUNNING')}`,
-            'Warning',
-            'warning'
-          )
-        );
-      }
-    });
+    delete appData.keys[coin];
+    appData.coins = appData.coins.filter(item => item !== coin);
+    appData.allcoins = {
+      spv: appData.coins,
+      total: appData.coins.length,
+    };
+    delete appData.servers[coin];
+
+    if (!appData.coins ||
+        !appData.coins.length) {
+      appData.auth.status = 'locked';
+    }
+    resolve();
   });
 }
 

@@ -95,12 +95,12 @@ const NavbarRender = function() {
                 </span>
               </a>
               <ul className="dropdown-menu">
-                { /*!this.isSectionActive('settings') &&
+                { !this.isSectionActive('settings') &&
                   <li>
                     <a onClick={ () => this.dashboardChangeSection('settings') }>
                       <i className="icon md-settings"></i> { translate('INDEX.SETTINGS') }
                     </a>
-                  </li>*/
+                  </li>
                 }
                 { !this.isSectionActive('about') &&
                   <li>

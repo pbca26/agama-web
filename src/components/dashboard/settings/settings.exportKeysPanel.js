@@ -81,7 +81,7 @@ class ExportKeysPanel extends React.Component {
         items.push(
           <tr key={ _key }>
             <td className="padding-bottom-30">
-              <strong className="padding-right-20">{ _key }</strong>{ _wifKeys[_key].pub }
+              <strong className="padding-right-20">{ _key.toUpperCase() }</strong>{ _wifKeys[_key].pub }
               <button
                 className="btn btn-default btn-xs clipboard-edexaddr margin-left-10"
                 title={ translate('INDEX.COPY_TO_CLIPBOARD') }
@@ -113,18 +113,18 @@ class ExportKeysPanel extends React.Component {
       // remove any empty chars from the start/end of the string
       const newValue = e.target.value;
 
-      clearTimeout(this.state.trimPassphraseTimer);
+      /*clearTimeout(this.state.trimPassphraseTimer);
 
       const _trimPassphraseTimer = setTimeout(() => {
         this.setState({
           wifkeysPassphrase: newValue ? newValue.trim() : '', // hardcoded field name
         });
-      }, 2000);
+      }, 2000);*/
 
       this.resizeLoginTextarea();
 
       this.setState({
-        trimPassphraseTimer: _trimPassphraseTimer,
+        //trimPassphraseTimer: _trimPassphraseTimer,
         [e.target.name === 'wifkeysPassphraseTextarea' ? 'wifkeysPassphrase' : e.target.name]: newValue,
       });
     } else {
@@ -171,7 +171,7 @@ class ExportKeysPanel extends React.Component {
         </div>
         <div className="row">
           <div className="col-sm-12">
-            <div
+            <form
               className="wifkeys-form"
               autoComplete="off">
               <div className="form-group form-material floating">
@@ -205,7 +205,7 @@ class ExportKeysPanel extends React.Component {
                   className="btn btn-primary waves-effect waves-light margin-bottom-5"
                   onClick={ this.exportWifKeys }>{ translate('INDEX.GET_WIF_KEYS') }</button>
               </div>
-            </div>
+            </form>
           </div>
         </div>
         { this.state.keys &&

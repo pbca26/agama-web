@@ -10,7 +10,6 @@ import {
   sendToAddressPromise,
   triggerToaster,
   shepherdElectrumListunspent,
-  shepherdElectrumSendPreflight,
   shepherdElectrumSendPromise,
   validateAddressPromise,
 } from '../../../actions/actionCreators';
@@ -19,6 +18,7 @@ import {
   ClaimInterestModalRender,
   _ClaimInterestTableRender
 } from './claimInterestModal.render';
+import agamalib from '../../../agamalib';
 
 // TODO: promises
 
@@ -49,12 +49,6 @@ class ClaimInterestModal extends React.Component {
     this.closeModal = this.closeModal.bind(this);
     this.isFullySynced = this.isFullySynced.bind(this);
     this.confirmClaimInterest = this.confirmClaimInterest.bind(this);
-  }
-
-  componentWillMount() {
-    if (this.props.ActiveCoin.mode === 'native') {
-      this.loadListUnspent();
-    }
   }
 
   isFullySynced() {
@@ -105,86 +99,47 @@ class ClaimInterestModal extends React.Component {
       });
     }, 1000);
 
-    if (this.props.ActiveCoin.mode === 'spv') {
-      shepherdElectrumListunspent(
-        this.props.ActiveCoin.coin,
-        this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub
-      )
-      .then((json) => {
-          console.warn('kmdinterestmodal', json);
-        if (json &&
-            json !== 'error' &&
-            typeof json.result !== 'string' &&
-            json.length) {
-          for (let i = 0; i < json.length; i++) {
-            if (Number(json[i].interest) === 0) {
-              _zeroInterestUtxo = true;
-            }
-
-            _transactionsList.push({
-              address: json[i].address,
-              locktime: json[i].locktime,
-              amount: Number(Number(json[i].amount).toFixed(8)),
-              interest: Number(Number(json[i].interest).toFixed(8)),
-              txid: json[i].txid,
-            });
-            _totalInterest += Number(Number(json[i].interest).toFixed(8));
-
-            if (i === json.length - 1) {
-              this.setState({
-                transactionsList: _transactionsList,
-                isLoading: false,
-                totalInterest: _totalInterest,
-                displayShowZeroInterestToggle: _zeroInterestUtxo,
-              });
-            }
+    shepherdElectrumListunspent(
+      this.props.ActiveCoin.coin,
+      this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub
+    )
+    .then((json) => {
+        console.warn('kmdinterestmodal', json);
+      if (json &&
+          json !== 'error' &&
+          typeof json.result !== 'string' &&
+          json.length) {
+        for (let i = 0; i < json.length; i++) {
+          if (Number(json[i].interest) === 0) {
+            _zeroInterestUtxo = true;
           }
-        } else {
-          this.setState({
-            transactionsList: [],
-            isLoading: false,
-            totalInterest: 0,
+
+          _transactionsList.push({
+            address: json[i].address,
+            locktime: json[i].locktime,
+            amount: Number(Number(json[i].amount).toFixed(8)),
+            interest: Number(Number(json[i].interest).toFixed(8)),
+            txid: json[i].txid,
           });
-        }
-      });
-    } else {
-      getListUnspent(this.props.ActiveCoin.coin)
-      .then((json) => {
-        if (json &&
-            json.length) {
-          let _addresses = {};
+          _totalInterest += Number(Number(json[i].interest).toFixed(8));
 
-          for (let i = 0; i < json.length; i++) {
-            getRawTransaction(this.props.ActiveCoin.coin, json[i].txid)
-            .then((_json) => {
-              if (json[i].interest === 0) {
-                _zeroInterestUtxo = true;
-              }
-              _addresses[json[i].address] = json[i].address;
-              _transactionsList.push({
-                address: json[i].address,
-                locktime: _json.locktime,
-                amount: json[i].amount,
-                interest: json[i].interest,
-                txid: json[i].txid,
-              });
-              _totalInterest += Number(json[i].interest);
-
-              if (i === json.length - 1) {
-                this.setState({
-                  transactionsList: _transactionsList,
-                  isLoading: false,
-                  totalInterest: _totalInterest,
-                  addressses: _addresses,
-                  selectedAddress: this.state.selectedAddress ? this.state.selectedAddress : _addresses[Object.keys(_addresses)[0]],
-                  displayShowZeroInterestToggle: _zeroInterestUtxo,
-                });
-              }
+          if (i === json.length - 1) {
+            this.setState({
+              transactionsList: _transactionsList,
+              isLoading: false,
+              totalInterest: _totalInterest,
+              displayShowZeroInterestToggle: _zeroInterestUtxo,
             });
           }
         }
-      });
-    }
+      } else {
+        this.setState({
+          transactionsList: [],
+          isLoading: false,
+          totalInterest: 0,
+        });
+      }
+    });
   }
 
   cancelClaimInterest() {
@@ -199,7 +154,9 @@ class ClaimInterestModal extends React.Component {
       this.props.ActiveCoin.coin,
       this.props.ActiveCoin.balance.balanceSats,
       this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub,
-      this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub
+      this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub,
+      agamalib.eservers[this.props.ActiveCoin.coin].txfee,
+      true
     )
     .then((res) => {
       if (res.msg === 'error') {
@@ -226,95 +183,42 @@ class ClaimInterestModal extends React.Component {
 
   claimInterest(address, amount) {
     if (this.props.ActiveCoin.coin.toUpperCase() === 'KMD') {
-      if (this.props.ActiveCoin.mode === 'spv') {
-        this.setState(Object.assign({}, this.state, {
-          spvVerificationWarning: false,
-          spvPreflightSendInProgress: true,
-        }));
+      this.setState(Object.assign({}, this.state, {
+        spvVerificationWarning: false,
+        spvPreflightSendInProgress: true,
+      }));
 
-        shepherdElectrumSendPreflight(
-          this.props.ActiveCoin.coin,
-          this.props.ActiveCoin.balance.balanceSats,
-          this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub,
-          this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub
-        )
-        .then((sendPreflight) => {
-          if (sendPreflight &&
-              sendPreflight.msg === 'success') {
-            this.setState(Object.assign({}, this.state, {
-              spvVerificationWarning: !sendPreflight.result.utxoVerified,
-              spvPreflightSendInProgress: false,
-            }));
+      shepherdElectrumSendPromise(
+        this.props.ActiveCoin.coin,
+        this.props.ActiveCoin.balance.balanceSats,
+        this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub,
+        this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub,
+        agamalib.eservers[this.props.ActiveCoin.coin].txfee
+      )
+      .then((sendPreflight) => {
+        if (sendPreflight &&
+            !sendPreflight.msg) {
+          this.setState(Object.assign({}, this.state, {
+            spvVerificationWarning: !sendPreflight.result.utxoVerified,
+            spvPreflightSendInProgress: false,
+          }));
 
-            if (sendPreflight.result.utxoVerified) {
-              this.confirmClaimInterest();
-            }
-          } else {
-            Store.dispatch(
-              triggerToaster(
-                sendPreflight.result,
-                'Error',
-                'error'
-              )
-            );
-            this.setState(Object.assign({}, this.state, {
-              spvPreflightSendInProgress: false,
-            }));
+          if (sendPreflight.result.utxoVerified) {
+            this.confirmClaimInterest();
           }
-        });
-      } else {
-        validateAddressPromise(
-          this.props.ActiveCoin.coin,
-          this.state.selectedAddress
-        )
-        .then((json) => {
-          if (json.error &&
-              json.error.code) {
-            Store.dispatch(
-              triggerToaster(
-                json.error.message,
-                translate('TOASTR.ERROR'),
-                'error'
-              )
-            );
-          } else if (json.result && !json.result.iswatchonly && json.result.ismine && json.result.isvalid && !json.result.isscript) {
-            sendToAddressPromise(
-              this.props.ActiveCoin.coin,
-              this.state.selectedAddress,
-              this.props.ActiveCoin.balance.transparent
-            ).then((json) => {
-              if (json.error &&
-                  json.error.code) {
-                Store.dispatch(
-                  triggerToaster(
-                    json.error.message,
-                    translate('TOASTR.ERROR'),
-                    'error'
-                  )
-                );
-              } else if (json.result && json.result.length && json.result.length === 64) {
-                Store.dispatch(
-                  triggerToaster(
-                    `${translate('TOASTR.CLAIM_INTEREST_BALANCE_SENT_P1')} ${this.state.selectedAddress}. ${translate('TOASTR.CLAIM_INTEREST_BALANCE_SENT_P2')}`,
-                    translate('TOASTR.WALLET_NOTIFICATION'),
-                    'success',
-                    false
-                  )
-                );
-                this.closeModal();
-              }
-            });
-          } else {
-            Store.dispatch(
-              triggerToaster(
-                `${translate('TOASTR.FAILED_TO_VERIFY_ADDR')} ${this.state.selectedAddress}`,
-                translate('TOASTR.ERROR'),
-                'error'
-              )
-            );
-          }
-        });
-      }
+        } else {
+          Store.dispatch(
+            triggerToaster(
+              sendPreflight.result,
+              'Error',
+              'error'
+            )
+          );
+          this.setState(Object.assign({}, this.state, {
+            spvPreflightSendInProgress: false,
+          }));
+        }
+      });
     }
   }
 

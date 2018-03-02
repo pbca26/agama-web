@@ -6,7 +6,7 @@ import WalletsBalance from '../walletsBalance/walletsBalance';
 import WalletsNav from '../walletsNav/walletsNav';
 import SendCoin from '../sendCoin/sendCoin';
 import WalletsData from '../walletsData/walletsData';
-//import Settings from '../settings/settings';
+import Settings from '../settings/settings';
 import ReceiveCoin from '../receiveCoin/receiveCoin';
 import About from '../about/about';
 import Support from '../support/support';
@@ -29,8 +29,8 @@ const DashboardRender = function() {
           <WalletsMain />
           <ClaimInterestModal />
         </div>
-        { /*this.isSectionActive('settings') &&
-          <Settings disableWalletSpecificUI={false} />*/
+        { this.isSectionActive('settings') &&
+          <Settings disableWalletSpecificUI={false} />
         }
         { this.isSectionActive('about') &&
           <About />

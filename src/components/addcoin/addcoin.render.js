@@ -54,6 +54,11 @@ const AddCoinRender = function() {
                     { translate('ADD_COIN.ACTIVATE_ALL') }
                 </button>
               </div>
+              <div className="col-sm-12">
+                <p>
+                  <strong>{ translate('INDEX.SPV_MODE') }:</strong> { translate('ADD_COIN.LITE_MODE_DESC') }.
+                </p>
+              </div>
             </div>
           </div>
         </div>

@@ -9,18 +9,11 @@ import Store from '../../../store';
 import {
   SettingsRender,
 } from './settings.render';
-import mainWindow from '../../../util/mainWindow';
 
-/*
-  TODO:
-  1) add fiat section
-  2) batch export/import wallet addresses
-*/
 class Settings extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isExperimentalOn: false,
     };
     this.displaySPVServerListTab = this.displaySPVServerListTab.bind(this);
   }
@@ -38,16 +31,7 @@ class Settings extends React.Component {
   }
 
   componentDidMount(props) {
-    Store.dispatch(getAppConfig());
-    Store.dispatch(getAppInfo());
-
     document.getElementById('section-iguana-wallet-settings').setAttribute('style', 'height:auto; min-height: 100%');
-  }
-
-  componentWillMount() {
-    this.setState({
-      isExperimentalOn: mainWindow.appConfig.experimentalFeatures,
-    });
   }
 
   render() {

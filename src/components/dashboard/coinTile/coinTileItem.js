@@ -166,7 +166,7 @@ class CoinTileItem extends React.Component {
     .then((res) => {
       Store.dispatch(
         triggerToaster(
-          `${coin} ${translate('TOASTR.COIN_IS_REMOVED')}`,
+          `${coin.toUpperCase()} ${translate('TOASTR.COIN_IS_REMOVED')}`,
           translate('TOASTR.COIN_NOTIFICATION'),
           'success'
         )

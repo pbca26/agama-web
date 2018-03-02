@@ -135,32 +135,13 @@ export function shepherdElectrumCheckServerConnection(address, port) {
 
 export function shepherdElectrumKeys(seed) {
   return new Promise((resolve, reject) => {
-    fetch(`http://127.0.0.1:${Config.agamaPort}/shepherd/electrum/keys`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        seed,
-        active: true,
-        iguana: true,
-        token: Config.token,
-      }),
-    })
-    .catch((error) => {
-      console.log(error);
-      Store.dispatch(
-        triggerToaster(
-          'shepherdElectrumKeys',
-          'Error',
-          'error'
-        )
-      );
-    })
-    .then(response => response.json())
-    .then(json => {
-      resolve(!json.result ? 'error' : json);
-    });
+    const _keys = agamalib.keys.stringToWif(seed, agamalib.btcnetworks[Object.keys(appData.keys)[0]], true);
+
+    if (_keys.priv === appData.keys[Object.keys(appData.keys)[0]].priv) {
+      resolve({ result: appData.keys });
+    } else {
+      resolve('error');
+    }
   });
 }
 
