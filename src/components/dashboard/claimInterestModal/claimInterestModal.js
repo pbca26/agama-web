@@ -104,7 +104,6 @@ class ClaimInterestModal extends React.Component {
       this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub
     )
     .then((json) => {
-        console.warn('kmdinterestmodal', json);
       if (json &&
           json !== 'error' &&
           typeof json.result !== 'string' &&
@@ -181,7 +180,7 @@ class ClaimInterestModal extends React.Component {
     });
   }
 
-  claimInterest(address, amount) {
+  claimInterest() {
     if (this.props.ActiveCoin.coin.toUpperCase() === 'KMD') {
       this.setState(Object.assign({}, this.state, {
         spvVerificationWarning: false,
@@ -197,7 +196,7 @@ class ClaimInterestModal extends React.Component {
       )
       .then((sendPreflight) => {
         if (sendPreflight &&
-            !sendPreflight.msg) {
+            sendPreflight.msg === 'success') {
           this.setState(Object.assign({}, this.state, {
             spvVerificationWarning: !sendPreflight.result.utxoVerified,
             spvPreflightSendInProgress: false,

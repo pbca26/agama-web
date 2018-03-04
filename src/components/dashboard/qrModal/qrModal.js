@@ -50,7 +50,8 @@ class QRModal extends React.Component {
           delay={ 50 }
           className="qr-reader-comp"
           onError={ this.handleError }
-          onScan={ this.handleScan } />, document.getElementById('webcam'));
+          onScan={ this.handleScan } />, document.getElementById('webcam')
+      );
     }
   }
 

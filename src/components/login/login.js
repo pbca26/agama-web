@@ -27,7 +27,7 @@ import {
 } from '../../actions/actions/pin';
 import agamalib from '../../agamalib';
 
-console.warn(agamalib);
+// console.warn(agamalib);
 
 const IGUNA_ACTIVE_HANDLE_TIMEOUT = 3000;
 const IGUNA_ACTIVE_COINS_TIMEOUT = 10000;
@@ -470,10 +470,25 @@ class Login extends React.Component {
       [type === 'native' ? 'selectedShortcutNative' : 'selectedShortcutSPV'] : e.value,
     });
 
-    Store.dispatch(addCoin(
-      e.value,
-      '0',
-    ));
+    if (e.value === 'kmd+revs+jumblr') {
+      Store.dispatch(addCoin(
+        'kmd',
+        '0',
+      ));
+      Store.dispatch(addCoin(
+        'revs',
+        '0',
+      ));
+      Store.dispatch(addCoin(
+        'jumblr',
+        '0',
+      ));
+    } else {
+      Store.dispatch(addCoin(
+        e.value,
+        '0',
+      ));
+    }
 
     Store.dispatch(activeHandle());
     Store.dispatch(getDexCoins());

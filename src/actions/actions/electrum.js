@@ -1,3 +1,5 @@
+// TODO: split
+
 import {
   DASHBOARD_ELECTRUM_BALANCE,
   DASHBOARD_ELECTRUM_TRANSACTIONS,
@@ -31,8 +33,6 @@ export function shepherdSelectRandomCoinServer(coin) {
     port: _randomServer[1],
     proto: agamalib.eservers[coin].proto,
   };
-
-  console.warn('shepherdSelectRandomCoinServer', appData);
 }
 
 export function shepherdElectrumLock() {
@@ -195,7 +195,6 @@ export function shepherdElectrumBalance(coin, address) {
                 totalSats: _totalInterest > 0 ? json.confirmed + Math.floor(_totalInterest * 100000000) : 0,
               },
             };
-            console.warn(json);
             dispatch(shepherdElectrumBalanceState(json));
           });
         } else {
@@ -452,7 +451,6 @@ export function shepherdElectrumTransactions(coin, address, full = true, verify 
                 });
               }))
               .then(promiseResult => {
-                console.warn('listtransactions', _rawtx);
                 Store.dispatch(shepherdElectrumTransactionsState({ result: _rawtx }));
               });
             } else {
@@ -560,7 +558,7 @@ export function shepherdElectrumSendPromise(coin, value, sendToAddress, changeAd
         utxoList
       );
 
-      console.warn('send data', _data);
+      // console.warn('send data', _data);
 
       const _tx = agamalib.transactionBuilder.transaction(
         sendToAddress,
@@ -573,7 +571,7 @@ export function shepherdElectrumSendPromise(coin, value, sendToAddress, changeAd
       );
 
       // TODO: err
-      console.warn('send tx', _tx);
+      // console.warn('send tx', _tx);
 
       if (push) {
         fetch(`http://${appData.proxy.ip}:${appData.proxy.port}/api/pushtx`, {
@@ -684,6 +682,7 @@ export function shepherdElectrumSendPromise(coin, value, sendToAddress, changeAd
             value: _data.value,
             change: _data.change,
             utxoVerified: _data.utxoVerified,
+            estimatedFee: _data.estimatedFee,
           },
         });
       }
@@ -715,7 +714,7 @@ export function shepherdElectrumListunspent(coin, address, full = true, verify =
       })
       .then(response => response.json())
       .then(json => {
-        console.warn('shepherdElectrumListunspent', json);
+        // console.warn('shepherdElectrumListunspent', json);
         let result = json;
 
         if (result.msg === 'error') {
@@ -791,19 +790,19 @@ export function shepherdElectrumListunspent(coin, address, full = true, verify =
                           // console.warn(result);
 
                           if (result.msg !== 'error') {
-                            console.warn('gettransaction =>');
+                            // console.warn('gettransaction =>');
                             const _rawtxJSON = result.result;
 
-                            console.warn('electrum gettransaction ==>');
-                            console.warn(index + ' | ' + (_rawtxJSON.length - 1));
+                            // console.warn('electrum gettransaction ==>');
+                            // console.warn(index + ' | ' + (_rawtxJSON.length - 1));
                             // console.warn(_rawtxJSON);
 
                             // decode tx
                             const _network = agamalib.coin.isKomodoCoin(coin) ? agamalib.btcnetworks.kmd : agamalib.btcnetworks[coin];
                             const decodedTx = agamalib.decoder(_rawtxJSON, _network);
 
-                            console.warn('decoded tx =>');
-                            console.warn(decodedTx);
+                            // console.warn('decoded tx =>');
+                            // console.warn(decodedTx);
 
                             if (!decodedTx) {
                               _atLeastOneDecodeTxFailed = true;
@@ -814,7 +813,7 @@ export function shepherdElectrumListunspent(coin, address, full = true, verify =
 
                                 if (Number(_utxoItem.value) * 0.00000001 >= 10 &&
                                     decodedTx.format.locktime > 0) {
-                                  console.warn('interest', agamalib.komodoInterest);
+                                  // console.warn('interest', agamalib.komodoInterest);
                                   interest = agamalib.komodoInterest(decodedTx.format.locktime, _utxoItem.value);
                                 }
 
@@ -887,17 +886,17 @@ export function shepherdElectrumListunspent(coin, address, full = true, verify =
                           } else {
                             resolve(false);
                             _atLeastOneDecodeTxFailed = true;
-                            console.warn('getcurrentblock error =>');
+                            // console.warn('getcurrentblock error =>');
                           }
                         });
                       });
                     }))
                     .then(promiseResult => {
                       if (!_atLeastOneDecodeTxFailed) {
-                        console.warn(promiseResult);
+                        // console.warn(promiseResult);
                         resolve(promiseResult);
                       } else {
-                        console.warn('listunspent error, cant decode tx(s)');
+                        // console.warn('listunspent error, cant decode tx(s)');
                         resolve('decode error');
                       }
                     });
