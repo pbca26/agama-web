@@ -244,17 +244,17 @@ export const SendRender = function() {
                   </div>
                 </div>
               }
-              { this.state.btcPreflightRes &&
+              { this.state.spvPreflightRes &&
                 <div className="row padding-top-20">
                   <div className="col-xs-12">
                     <strong>Fee</strong>
                   </div>
-                  <div className="col-lg-12 col-sm-12 col-xs-12">{ formatValue(this.state.btcPreflightRes.fee * 0.00000001) } ({ this.state.btcPreflightRes.fee } sats)</div>
+                  <div className="col-lg-12 col-sm-12 col-xs-12">{ formatValue(this.state.spvPreflightRes.fee * 0.00000001) } ({ this.state.spvPreflightRes.fee } sats)</div>
                 </div>
               }
-              { this.state.btcPreflightRes &&
+              { this.state.spvPreflightRes &&
                 <div className="row padding-top-20">
-                  { this.state.btcPreflightRes.change === 0 &&
+                  { this.state.spvPreflightRes.change === 0 &&
                     <div className="col-lg-12 col-sm-12 col-xs-12">
                       <strong>Adjusted amount</strong>
                       <span>
@@ -265,13 +265,19 @@ export const SendRender = function() {
                           effect="solid"
                           className="text-left" />
                       </span>
-                      &nbsp;{ formatValue((this.state.btcPreflightRes.value * 0.00000001) - (this.state.btcPreflightRes.fee * 0.00000001)) }
+                      &nbsp;{ formatValue((this.state.spvPreflightRes.value * 0.00000001) - (this.state.spvPreflightRes.fee * 0.00000001)) }
                     </div>
                   }
-                  { this.state.btcPreflightRes.change > 0 &&
+                  { this.state.spvPreflightRes.estimatedFee < 0 &&
+                    <div className="col-lg-12 col-sm-12 col-xs-12 padding-bottom-20">
+                      <strong>KMD interest</strong>&nbsp;
+                      { Math.abs(formatValue(this.state.spvPreflightRes.estimatedFee * 0.00000001)) } to { this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub }
+                    </div>
+                  }
+                  { this.state.spvPreflightRes.change > 0 &&
                     <div className="col-lg-12 col-sm-12 col-xs-12">
                       <strong>Total (amount + transaction fee)</strong>&nbsp;
-                      { formatValue((this.state.btcPreflightRes.value * 0.00000001) + (this.state.btcPreflightRes.fee * 0.00000001)) }
+                      { formatValue((this.state.spvPreflightRes.value * 0.00000001) + (this.state.spvPreflightRes.fee * 0.00000001)) }
                     </div>
                   }
                 </div>

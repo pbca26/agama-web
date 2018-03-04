@@ -58,7 +58,7 @@ class SendCoin extends React.Component {
       btcFeesAdvancedStep: 9,
       btcFeesSize: 0,
       btcFeesTimeBasedStep: 1,
-      btcPreflightRes: null,
+      spvPreflightRes: null,
     };
     this.defaultState = JSON.parse(JSON.stringify(this.state));
     this.updateInput = this.updateInput.bind(this);
@@ -424,7 +424,13 @@ class SendCoin extends React.Component {
             btcFeesSize: this.state.btcFeesType === 'advanced' ? res.result.electrum[this.state.btcFeesAdvancedStep] : res.result.recommended[_feeLookup[this.state.btcFeesTimeBasedStep]],
           });
         } else {
-          // TODO: fallback to local electrum
+          Store.dispatch(
+            triggerToaster(
+              'Unable to get BTC fee rates',
+              'BTC fees fetch',
+              'error'
+            )
+          );
         }
       });
     }
@@ -473,12 +479,18 @@ class SendCoin extends React.Component {
             this.props.ActiveCoin.coin.toUpperCase() === 'BTC' ? { perbyte: true, value: this.state.btcFeesSize } : fee
           )
           .then((sendPreflight) => {
+            console.warn(sendPreflight);
             if (sendPreflight &&
                 sendPreflight.msg === 'success') {
               this.setState(Object.assign({}, this.state, {
                 spvVerificationWarning: !sendPreflight.result.utxoVerified,
                 spvPreflightSendInProgress: false,
-                btcPreflightRes: this.props.ActiveCoin.coin.toUpperCase() === 'BTC' ? { fee: sendPreflight.result.fee, value: sendPreflight.result.value, change: sendPreflight.result.change } : null,
+                spvPreflightRes: {
+                  fee: sendPreflight.result.fee,
+                  value: sendPreflight.result.value,
+                  change: sendPreflight.result.change,
+                  estimatedFee: sendPreflight.result.estimatedFee,
+                },
               }));
             } else {
               this.setState(Object.assign({}, this.state, {
@@ -560,7 +572,7 @@ class SendCoin extends React.Component {
         fee = 0;
       }
 
-      if (Number(_amountSats) + fee > _balanceSats) {
+      if ((Number(_amountSats) + fee) > _balanceSats) {
         Store.dispatch(
           triggerToaster(
             `${translate('SEND.INSUFFICIENT_FUNDS')} ${translate('SEND.MAX_AVAIL_BALANCE')} ${Number((0.00000001 * (_balanceSats - fee)).toFixed(8))} ${this.props.ActiveCoin.coin.toUpperCase()}`,
@@ -581,16 +593,15 @@ class SendCoin extends React.Component {
       }
     }
 
-    if (!this.state.sendTo ||
-        (this.state.sendTo && this.state.sendTo.substring(0, 2) !== 'zc')) {
-      // TODO: version check
+    if (!this.state.sendTo) {
       let _validateAddress;
+      let _msg;
+
       if (agamalib.coin.isKomodoCoin(this.props.ActiveCoin.coin)) {
         _validateAddress = agamalib.keys.addressVersionCheck(agamalib.btcnetworks.kmd, this.state.sendTo);
       } else {
         _validateAddress = agamalib.keys.addressVersionCheck(agamalib.btcnetworks[this.props.ActiveCoin.coin], this.state.sendTo);
       }
-      let _msg;
 
       if (_validateAddress === 'Invalid pub address') {
         _msg = _validateAddress;
@@ -632,28 +643,10 @@ class SendCoin extends React.Component {
           this.state.sendTo &&
           this.state.sendTo.length > 34 &&
           this.state.sendFrom &&
-          Number(Number(this.state.amount) + 0.0001) > Number(this.state.sendFromAmount)) ||
-          (this.state.addressType === 'private' &&
-          this.state.sendTo &&
-          this.state.sendTo.length >= 34 &&
-          this.state.sendFrom &&
           Number(Number(this.state.amount) + 0.0001) > Number(this.state.sendFromAmount))) {
         Store.dispatch(
           triggerToaster(
             `${translate('SEND.INSUFFICIENT_FUNDS')} ${translate('SEND.MAX_AVAIL_BALANCE')} ${Number(this.state.sendFromAmount || this.props.ActiveCoin.balance.transparent)} ${this.props.ActiveCoin.coin.toUpperCase()}`,
-            translate('TOASTR.WALLET_NOTIFICATION'),
-            'error'
-          )
-        );
-        valid = false;
-      }
-
-      if (this.state.sendTo.length > 34 &&
-          this.state.sendTo.substring(0, 2) === 'zc' &&
-          !this.state.sendFrom) {
-        Store.dispatch(
-          triggerToaster(
-            translate('SEND.SELECT_SOURCE_ADDRESS'),
             translate('TOASTR.WALLET_NOTIFICATION'),
             'error'
           )
