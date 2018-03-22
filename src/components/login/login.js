@@ -12,6 +12,7 @@ import {
   dashboardChangeActiveCoin,
   toggleZcparamsFetchModal,
   toggleNotaryElectionsModal,
+  toggleWalletRisksModal,
   activeHandle,
   addCoin,
 } from '../../actions/actionCreators';
@@ -60,6 +61,7 @@ class Login extends React.Component {
       enableEncryptSeed: false,
       selectedShortcutNative: '',
       selectedShortcutSPV: '',
+      risksWarningRead: false,
     };
     this.defaultState = JSON.parse(JSON.stringify(this.state));
     this.toggleActivateCoinForm = this.toggleActivateCoinForm.bind(this);
@@ -79,11 +81,15 @@ class Login extends React.Component {
     this.updateSelectedShortcut = this.updateSelectedShortcut.bind(this);
     this.setRecieverFromScan = this.setRecieverFromScan.bind(this);
     this.setLoginState = this.setLoginState.bind(this);
+    this.toggleRisksWarningModal = this.toggleRisksWarningModal.bind(this);
   }
 
   // the setInterval handler for 'activeCoins'
   _iguanaActiveCoins = null;
 
+  toggleRisksWarningModal() {
+    Store.dispatch(toggleWalletRisksModal(!this.props.Dashboard.displayWalletRisksModal));
+  }
 
   setRecieverFromScan(receiver) {
     if (receiver) {
@@ -250,6 +256,14 @@ class Login extends React.Component {
 
   componentWillReceiveProps(props) {
     this.setLoginState(props);
+
+    if (this.props.Dashboard.displayWalletRisksModal) {
+      setTimeout(() => {
+        this.setState({
+          risksWarningRead: true,
+        });
+      }, 100);
+    }
   }
 
   toggleActivateCoinForm() {
@@ -347,6 +361,7 @@ class Login extends React.Component {
     }
 
     const passPhraseWords = passPhrase.split(' ');
+
     if (!agamalib.crypto.passPhraseGenerator.arePassPhraseWordsValid(passPhraseWords)) {
       return null;
     }
@@ -381,7 +396,15 @@ class Login extends React.Component {
       displaySeedBackupModal: false,
       customWalletSeed: false,
       isCustomSeedWeak: false,
-   });
+      risksWarningRead: this.state.risksWarningRead,
+    });
+
+    if (!this.state.risksWarningRead &&
+        name === 'signup') {
+      setTimeout(() => {
+        this.toggleRisksWarningModal();
+      }, 50);
+    }
   }
 
   execWalletCreate() {

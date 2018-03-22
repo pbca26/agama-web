@@ -3,11 +3,13 @@ import { translate } from '../../translate/translate';
 import QRModal from '../dashboard/qrModal/qrModal';
 import Select from 'react-select';
 import ReactTooltip from 'react-tooltip';
+import WalletRisksModal from '../dashboard/walletRisksModal/walletRisksModal';
 
 const LoginRender = function() {
   return (
     <div>
       { this.renderSwallModal() }
+      <WalletRisksModal />
       <div className="page vertical-align text-center">
         <div className="page-content vertical-align-middle col-xs-12 col-sm-6 col-sm-offset-3">
           <div className="brand">
@@ -42,7 +44,15 @@ const LoginRender = function() {
               </ul>
             </div>
           </div>*/}
-
+          { !this.state.risksWarningRead &&
+            <div className="margin-top-30 margin-bottom-40">
+              <span
+                onClick={ this.toggleRisksWarningModal }
+                className="pointer fs-16">
+                <i className="icon fa-warning margin-right-5"></i> Understand the risks in using Agama web wallet
+              </span>
+            </div>
+          }
           <div className={ this.state.activeLoginSection === 'login' ? 'show' : 'hide' }>
             <h4 className="color-white">
               { translate('INDEX.WELCOME_LOGIN') }

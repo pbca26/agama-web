@@ -8,6 +8,7 @@ import {
   DASHBOARD_ELECTRUM_COINS,
   ELECTRUM_SERVER_CHANGED,
   DISPLAY_ZCASH_PARAMS_FETCH,
+  DISPLAY_WALLET_RISKS_MODAL,
   PRICES,
 } from '../actions/storeType';
 
@@ -21,6 +22,7 @@ export function Dashboard(state = {
   electrumCoins: {},
   eletrumServerChanged: false,
   displayZcparamsModal: false,
+  displayWalletRisksModal: false,
   prices: null,
 }, action) {
   switch (action.type) {
@@ -38,6 +40,11 @@ export function Dashboard(state = {
       return {
         ...state,
         activeHandle: action.activeHandle,
+      };
+    case DISPLAY_WALLET_RISKS_MODAL:
+      return {
+        ...state,
+        displayWalletRisksModal: action.displayWalletRisksModal,
       };
     case DISPLAY_ZCASH_PARAMS_FETCH:
       return {

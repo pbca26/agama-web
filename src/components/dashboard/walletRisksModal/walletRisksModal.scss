@@ -1,0 +1,31 @@
+.wallet-risks-modal {
+  color: #545454;
+
+  .modal-body {
+    height: 320px;
+
+    > div {
+      height: 100%;
+    }
+    .form-group {
+      &.form-material {
+        &.floating {
+          height: 80%;
+          max-height: calc(100% - 100px);
+        }
+      }
+    }
+    .page-content {
+      width: 100%;
+      height: 100%;
+
+      div,
+      button {
+        margin: 0 auto;
+      }
+      textarea {
+        height: 100%;
+      }
+    }
+  }
+}

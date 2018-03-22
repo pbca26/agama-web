@@ -32,6 +32,7 @@ import {
   DASHBOARD_REMOVE_COIN,
   DISPLAY_NOTARY_ELECTIONS_MODAL,
   DASHBOARD_ACTIVE_COIN_SENDTO,
+  DISPLAY_WALLET_RISKS_MODAL,
 } from './storeType';
 
 export * from './actions/coinList';
@@ -296,6 +297,13 @@ export function toggleNotaryElectionsModal(display) {
   return {
     type: DISPLAY_NOTARY_ELECTIONS_MODAL,
     displayNotaryElectionsModal: display,
+  }
+}
+
+export function toggleWalletRisksModal(display) {
+  return {
+    type: DISPLAY_WALLET_RISKS_MODAL,
+    displayWalletRisksModal: display,
   }
 }
 
