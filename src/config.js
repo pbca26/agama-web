@@ -4,6 +4,7 @@ let Config = {
   debug: true,
   defaultLang: 'EN',
   roundValues: false,
+  https: true,
 };
 
 export default Config;

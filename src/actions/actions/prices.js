@@ -4,7 +4,7 @@ import Config from '../../config';
 
 function fiatRates(pricesJson) {
   return dispatch => {
-    return fetch(`http://atomicexplorer.com/api/rates/kmd`, {
+    return fetch(`https://www.atomicexplorer.com/api/rates/kmd`, {
       method: 'GET',
     })
     .catch((error) => {
@@ -29,7 +29,7 @@ function fiatRates(pricesJson) {
 
 export function prices() {
   return dispatch => {
-    return fetch(`http://atomicexplorer.com/api/mm/prices`, {
+    return fetch(`https://www.atomicexplorer.com/api/mm/prices`, {
       method: 'GET',
     })
     .catch((error) => {
