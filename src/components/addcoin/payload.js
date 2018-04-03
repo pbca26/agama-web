@@ -27,6 +27,7 @@ export function checkAC(coinVal) {
 			coinVal === 'BEER' ||
 			coinVal === 'PIZZA' ||
 			coinVal === 'VOTE' ||
+	    		coinVal === 'OOT' ||
 			coinVal === 'USD' ||
 			coinVal === 'RON' ||
 			coinVal === 'EUR' ||
@@ -124,6 +125,7 @@ export function checkCoinType(coin) {
 			coin === 'BTCH' ||
 			coin === 'BEER' ||
 			coin === 'PIZZA' ||
+	    		coin === 'OOT' ||
 			coin === 'VOTE') {
 		return 'ac';
 	}
