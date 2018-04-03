@@ -109,7 +109,11 @@ const addCoinOptionsCrypto = () => {
     label: 'BitcoinZ (BTCZ)',
     icon: 'BTCZ',
     value: `BTCZ|spv`,
-  }];
+  }, {
+    label: 'Utrum (OOT)',
+    icon: 'OOT',
+    value: `OOT|spv`,
+}];
 
   return _coins;
 }
