@@ -45,6 +45,7 @@ const explorerList = {
   BLK: 'https://explorer.coinpayments.net/transaction.php?chain=4&hash=',
   ARG: 'https://prohashing.com/explorer/Argentum/',
   FAIR: 'https://chain.fair.to/transaction?transaction=',
+  OOT: 'https://explorer.utrum.io/transaction?transaction='
 };
 
 export default explorerList;
