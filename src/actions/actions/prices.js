@@ -9,13 +9,6 @@ function fiatRates(pricesJson) {
     })
     .catch((error) => {
       console.log(error);
-      dispatch(
-        triggerToaster(
-          'fiatRates',
-          'Error',
-          'error'
-        )
-      );
     })
     .then(response => response.json())
     .then(json => {
@@ -34,13 +27,6 @@ export function prices() {
     })
     .catch((error) => {
       console.log(error);
-      dispatch(
-        triggerToaster(
-          'prices',
-          'Error',
-          'error'
-        )
-      );
     })
     .then(response => response.json())
     .then(json => {

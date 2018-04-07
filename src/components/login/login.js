@@ -458,7 +458,8 @@ class Login extends React.Component {
   handleKeydown(e) {
     this.updateLoginPassPhraseInput(e);
 
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' &&
+        this.state.loginPassphrase) {
       this.loginSeed();
     }
   }
