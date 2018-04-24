@@ -6,6 +6,7 @@ const addCoinOptionsAC = () => {
     'bots',
     'ceal',
     'coqui',
+    'glxt',
     'crypto',
     'hodl',
     'dex',

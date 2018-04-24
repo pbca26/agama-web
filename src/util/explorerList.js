@@ -17,6 +17,7 @@ const explorerList = {
   WLC: 'http://WIRELESS.explorer.supernet.org',
   CHIPS: 'http://CHIPS1.explorer.supernet.org',
   COQUI: 'https://explorer.coqui.cash',
+  GLX: 'http://glx.info',
   MNZ: 'https://www.mnzexplorer.com',
   BTCH: 'http://www.btch.host',
   BTC: 'https://blockchain.info',
