@@ -848,6 +848,7 @@ export const LANG_EN = {
     'BEER': 'BEER (Test coin)',
     'PIZZA': 'PIZZA (Test coin)',
     'VOTE': 'VOTE (Notary Elections)',
+    'OOT': 'Utrum (OOT)',
   },
   'DEX': {
     'GEN_NEW_PASSPHRASE': 'Generate a new passphrase',

@@ -6,9 +6,7 @@ import {
   getAppInfo,
 } from '../../../actions/actionCreators';
 import Store from '../../../store';
-import {
-  SettingsRender,
-} from './settings.render';
+import { SettingsRender } from './settings.render';
 
 class Settings extends React.Component {
   constructor(props) {

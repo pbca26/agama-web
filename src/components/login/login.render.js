@@ -177,8 +177,8 @@ const LoginRender = function() {
                     { this.props.Login.pinList.map((pin) => {
                       return <option
                               className="login-option"
-                              value={pin}
-                              key={pin}>{ pin }</option>
+                              value={ pin }
+                              key={ pin }>{ pin }</option>
                       })
                     }
                   </select>
@@ -198,6 +198,7 @@ const LoginRender = function() {
 
             <button
               type="button"
+              disabled={ !this.state.loginPassphrase || !this.state.loginPassphrase.length }
               className="btn btn-primary btn-block margin-top-20"
               onClick={ this.loginSeed }>
               { translate('INDEX.SIGN_IN') }

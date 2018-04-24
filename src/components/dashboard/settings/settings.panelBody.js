@@ -58,7 +58,8 @@ class PanelSection extends React.Component {
       unq,
       toggle,
     } = this.props;
-    toggle(unq);
+
+    // toggle(unq);
   }
 
   toggleOpen(active) {
