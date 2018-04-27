@@ -28,8 +28,6 @@ import {
 } from '../../actions/actions/pin';
 import agamalib from '../../agamalib';
 
- console.warn(agamalib);
-
 const IGUNA_ACTIVE_HANDLE_TIMEOUT = 3000;
 const IGUNA_ACTIVE_COINS_TIMEOUT = 10000;
 

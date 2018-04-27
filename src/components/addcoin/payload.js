@@ -12,6 +12,7 @@ export function checkAC(coinVal) {
 			coinVal === 'BET' ||
 			coinVal === 'CRYPTO' ||
 			coinVal === 'COQUI' ||
+			coinVal === 'GLXT' ||
 			coinVal === 'HODL' ||
 			coinVal === 'MSHARK' ||
 			coinVal === 'BOTS' ||
@@ -110,6 +111,7 @@ export function checkCoinType(coin) {
 			coin === 'BET' ||
 			coin === 'CRYPTO' ||
 			coin === 'COQUI' ||
+			coin === 'GLXT' ||
 			coin === 'HODL' ||
 			coin === 'MSHARK' ||
 			coin === 'BOTS' ||
