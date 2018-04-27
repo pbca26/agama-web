@@ -28,7 +28,7 @@ import {
 } from '../../actions/actions/pin';
 import agamalib from '../../agamalib';
 
-// console.warn(agamalib);
+ console.warn(agamalib);
 
 const IGUNA_ACTIVE_HANDLE_TIMEOUT = 3000;
 const IGUNA_ACTIVE_COINS_TIMEOUT = 10000;
@@ -45,7 +45,7 @@ class Login extends React.Component {
       seedInputVisibility: false,
       loginPassPhraseSeedType: null,
       bitsOption: 256,
-      randomSeed: agamalib.crypto.passPhraseGenerator.generatePassPhrase(256),
+      randomSeed: agamalib.crypto.passphraseGenerator.generatePassPhrase(256),
       randomSeedConfirm: '',
       isSeedConfirmError: false,
       isSeedBlank: false,
@@ -118,7 +118,7 @@ class Login extends React.Component {
       // if customWalletSeed is set to false, regenerate the seed
       if (!this.state.customWalletSeed) {
         this.setState({
-          randomSeed: agamalib.crypto.passPhraseGenerator.generatePassPhrase(this.state.bitsOption),
+          randomSeed: agamalib.crypto.passphraseGenerator.generatePassPhrase(this.state.bitsOption),
           isSeedConfirmError: false,
           isSeedBlank: false,
           isCustomSeedWeak: false,
@@ -175,7 +175,7 @@ class Login extends React.Component {
 
   generateNewSeed(bits) {
     this.setState(Object.assign({}, this.state, {
-      randomSeed: agamalib.crypto.passPhraseGenerator.generatePassPhrase(bits),
+      randomSeed: agamalib.crypto.passphraseGenerator.generatePassPhrase(bits),
       bitsOption: bits,
       isSeedBlank: false,
     }));
@@ -362,19 +362,19 @@ class Login extends React.Component {
 
     const passPhraseWords = passPhrase.split(' ');
 
-    if (!agamalib.crypto.passPhraseGenerator.arePassPhraseWordsValid(passPhraseWords)) {
+    if (!agamalib.crypto.passphraseGenerator.arePassPhraseWordsValid(passPhraseWords)) {
       return null;
     }
 
-    if (agamalib.crypto.passPhraseGenerator.isPassPhraseValid(passPhraseWords, 256)) {
+    if (agamalib.crypto.passphraseGenerator.isPassPhraseValid(passPhraseWords, 256)) {
       return translate('LOGIN.IGUANA_SEED');
     }
 
-    if (agamalib.crypto.passPhraseGenerator.isPassPhraseValid(passPhraseWords, 160)) {
+    if (agamalib.crypto.passphraseGenerator.isPassPhraseValid(passPhraseWords, 160)) {
       return translate('LOGIN.WAVES_SEED');
     }
 
-    if (agamalib.crypto.passPhraseGenerator.isPassPhraseValid(passPhraseWords, 128)) {
+    if (agamalib.crypto.passphraseGenerator.isPassPhraseValid(passPhraseWords, 128)) {
       return translate('LOGIN.NXT_SEED');
     }
 
@@ -389,7 +389,7 @@ class Login extends React.Component {
       loginPassPhraseSeedType: null,
       seedInputVisibility: false,
       bitsOption: 256,
-      randomSeed: agamalib.crypto.passPhraseGenerator.generatePassPhrase(256),
+      randomSeed: agamalib.crypto.passphraseGenerator.generatePassPhrase(256),
       randomSeedConfirm: '',
       isSeedConfirmError: false,
       isSeedBlank: false,

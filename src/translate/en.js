@@ -849,6 +849,11 @@ export const LANG_EN = {
     'PIZZA': 'PIZZA (Test coin)',
     'VOTE': 'VOTE (Notary Elections)',
     'OOT': 'Utrum (OOT)',
+    'BNTN': 'Blocnation (BNTN)',
+    'OOT': 'Utrum (OOT)',
+    'EQL': 'Equaliser (EQL)',
+    'NINJA': 'NINJA (NINJA)',
+    'GLXT': 'GLXToken (GLXT)',
   },
   'DEX': {
     'GEN_NEW_PASSPHRASE': 'Generate a new passphrase',

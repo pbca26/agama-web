@@ -1,6 +1,6 @@
 // obsolete(?)
 let Config = {
-  version: '0.1.1',
+  version: '0.1.2',
   debug: true,
   defaultLang: 'EN',
   roundValues: false,

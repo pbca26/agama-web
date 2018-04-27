@@ -1,33 +1,20 @@
 import { translate } from '../../translate/translate';
+import agamalib from '../../agamalib';
 
 const addCoinOptionsAC = () => {
-  const _assetChains = [
-    'bet',
-    'bots',
-    'ceal',
-    'coqui',
-    'crypto',
-    'hodl',
-    'dex',
-    'jumblr',
-    //'kv',
-    'mgw',
-    //'mvp',
-    'mnz',
-    'pangea',
-    'revs',
-    'mshark',
-    'supernet',
-    'wlc',
-    //'axo',
-    //'etomic',
-    'btch',
-    'beer',
-    'pizza',
-    'vote',
-    'oot'
-  ];
+  let _assetChains = [];
   let _items = [];
+
+  for (let i = 0; i < agamalib.coin.kmdAssetChains.length; i++) {
+    const _ac = agamalib.coin.kmdAssetChains[i].toLowerCase();
+
+    if (agamalib.eservers[_ac] &&
+        _ac !== 'chips' &&
+        _ac !== 'kmd' &&
+        _ac !== 'komodo') {
+      _assetChains.push(_ac);
+    }
+  }
 
   for (let i = 0; i < _assetChains.length; i++) {
     let availableModes = 'spv';
