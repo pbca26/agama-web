@@ -15,7 +15,7 @@ import {
 } from '../../components/addcoin/payload';
 import agamalib from '../../agamalib';
 
-function iguanaActiveHandleState(json) {
+const iguanaActiveHandleState = (json) => {
   return {
     type: ACTIVE_HANDLE,
     isLoggedIn: json.status === 'unlocked' ? true : false,
@@ -23,7 +23,7 @@ function iguanaActiveHandleState(json) {
   }
 }
 
-export function activeHandle() {
+export const activeHandle = () => {
   return dispatch => {
     return dispatch(
       iguanaActiveHandleState(appData.auth)
@@ -31,7 +31,7 @@ export function activeHandle() {
   }
 }
 
-export function shepherdElectrumAuth(seed) {
+export const shepherdElectrumAuth = (seed) => {
   let _pubKeys = {};
 
   for (let i = 0; i < appData.coins.length; i++) {
@@ -50,7 +50,7 @@ export function shepherdElectrumAuth(seed) {
   };
 }
 
-export function shepherdElectrumAddCoin(coin) {
+export const shepherdElectrumAddCoin = (coin) => {
   return dispatch => {
     return dispatch(
       addCoinResult(coin, '0')
@@ -58,13 +58,13 @@ export function shepherdElectrumAddCoin(coin) {
   }
 }
 
-export function addCoin(coin, mode, startupParams) {
+export const addCoin = (coin, mode, startupParams) => {
   return dispatch => {
     dispatch(shepherdElectrumAddCoin(coin.toLowerCase()));
   }
 }
 
-export function addCoinResult(coin, mode) {
+export const addCoinResult = (coin, mode) => {
   const modeToValue = {
     '0': 'spv',
   };

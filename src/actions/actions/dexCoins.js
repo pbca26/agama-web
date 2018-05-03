@@ -5,8 +5,7 @@ import {
 import Config from '../../config';
 import appData from './appData';
 
-// TODO: find out why it errors on slow systems
-export function getDexCoins() {
+export const getDexCoins = () => {
   return dispatch => {
     return dispatch(
       dashboardCoinsState(appData.allcoins)

@@ -4,7 +4,7 @@ export const set = (name, json) => {
   localStorage.setItem(name, _json);
 }
 
-export function get(name) {
+export const get = (name) => {
   const _var = localStorage.getItem(name);
 
   if (_var) {

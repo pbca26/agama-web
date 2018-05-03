@@ -16,16 +16,35 @@ import Store from '../../store';
 import agamalib from '../../agamalib';
 import proxyServers from '../../util/proxyServers';
 
-export function shepherdSelectProxy() {
+const getCache = (coin, type, key, data) => {
+  if (!appData.cache[coin]) {
+    appData.cache[coin] = {
+      blocks: {},
+      txs: {},
+    };
+  }
+
+  if (!appData.cache[coin][type][key]) {
+    // console.warn(`not cached ${coin} ${type} ${key}`);
+    appData.cache[coin][type][key] = data;
+    return false;
+  } else {
+    // console.warn(`cached ${coin} ${type} ${key}`);
+    return appData.cache[coin][type][key];
+  }
+}
+
+export const shepherdSelectProxy = () => {
   // pick a random proxy server
   const _randomServer = proxyServers[agamalib.utils.getRandomIntInclusive(0, proxyServers.length - 1)];
   appData.proxy = {
     ip: _randomServer.ip,
     port: _randomServer.port,
+    ssl: _randomServer.ssl,
   };
 }
 
-export function shepherdSelectRandomCoinServer(coin) {
+export const shepherdSelectRandomCoinServer = (coin) => {
   // pick a random proxy server
   const _randomServer = agamalib.eservers[coin].serverList[agamalib.utils.getRandomIntInclusive(0, agamalib.eservers[coin].serverList.length - 1)].split(':');
   appData.servers[coin] = {
@@ -35,7 +54,7 @@ export function shepherdSelectRandomCoinServer(coin) {
   };
 }
 
-export function shepherdElectrumLock() {
+export const shepherdElectrumLock = () => {
   return new Promise((resolve, reject) => {
     appData.auth.status = 'locked';
     appData.keys = {};
@@ -43,7 +62,7 @@ export function shepherdElectrumLock() {
   });
 }
 
-export function shepherdElectrumLogout() {
+export const shepherdElectrumLogout = () => {
   return new Promise((resolve, reject) => {
     appData.auth.status = 'locked';
     appData.keys = {};
@@ -58,7 +77,7 @@ export function shepherdElectrumLogout() {
 }
 
 // src: atomicexplorer
-export function shepherdGetRemoteBTCFees() {
+export const shepherdGetRemoteBTCFees = () => {
   return new Promise((resolve, reject) => {
     fetch(`https://www.atomicexplorer.com/api/btc/fees`, {
       method: 'GET',
@@ -83,7 +102,7 @@ export function shepherdGetRemoteBTCFees() {
   });
 }
 
-export function shepherdElectrumSetServer(coin, address, port) {
+export const shepherdElectrumSetServer = (coin, address, port) => {
   return new Promise((resolve, reject) => {
     fetch(`http://127.0.0.1:${Config.agamaPort}/shepherd/electrum/coins/server/set?address=${address}&port=${port}&coin=${coin}&token=${Config.token}`, {
       method: 'GET',
@@ -108,7 +127,7 @@ export function shepherdElectrumSetServer(coin, address, port) {
   });
 }
 
-export function shepherdElectrumCheckServerConnection(address, port) {
+export const shepherdElectrumCheckServerConnection = (address, port) => {
   return new Promise((resolve, reject) => {
     fetch(`http://127.0.0.1:${Config.agamaPort}/shepherd/electrum/servers/test?address=${address}&port=${port}&token=${Config.token}`, {
       method: 'GET',
@@ -133,7 +152,7 @@ export function shepherdElectrumCheckServerConnection(address, port) {
   });
 }
 
-export function shepherdElectrumKeys(seed) {
+export const shepherdElectrumKeys = (seed) => {
   return new Promise((resolve, reject) => {
     const _keys = agamalib.keys.stringToWif(seed, agamalib.btcnetworks[Object.keys(appData.keys)[0]], true);
 
@@ -145,9 +164,9 @@ export function shepherdElectrumKeys(seed) {
   });
 }
 
-export function shepherdElectrumBalance(coin, address) {
+export const shepherdElectrumBalance = (coin, address) => {
   return dispatch => {
-    fetch(`${Config.https ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/getbalance?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}&address=${address}`, {
+    fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/getbalance?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}&address=${address}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -220,17 +239,17 @@ export function shepherdElectrumBalance(coin, address) {
   }
 }
 
-export function shepherdElectrumBalanceState(json) {
+export const shepherdElectrumBalanceState = (json) => {
   return {
     type: DASHBOARD_ELECTRUM_BALANCE,
     balance: json.result,
   }
 }
 
-export function shepherdElectrumTransactions(coin, address, full = true, verify = false) {
+export const shepherdElectrumTransactions = (coin, address, full = true, verify = false) => {
   return dispatch => {
     // get current height
-    fetch(`${Config.https ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/getcurrentblock?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}`, {
+    fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/getcurrentblock?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -258,7 +277,7 @@ export function shepherdElectrumTransactions(coin, address, full = true, verify 
         //console.warn('currentHeight =>');
         //console.warn(currentHeight);
 
-        fetch(`${Config.https ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/listtransactions?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}&address=${address}&raw=true`, {
+        fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/listtransactions?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}&address=${address}&raw=true`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -290,7 +309,7 @@ export function shepherdElectrumTransactions(coin, address, full = true, verify 
 
               Promise.all(json.map((transaction, index) => {
                 return new Promise((resolve, reject) => {
-                  fetch(`${Config.https ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/getblockinfo?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}&address=${address}&height=${transaction.height}`, {
+                  fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/getblockinfo?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}&address=${address}&height=${transaction.height}`, {
                     method: 'GET',
                     headers: {
                       'Content-Type': 'application/json',
@@ -334,43 +353,60 @@ export function shepherdElectrumTransactions(coin, address, full = true, verify 
                         Promise.all(decodedTx.inputs.map((_decodedInput, index) => {
                           return new Promise((_resolve, _reject) => {
                             if (_decodedInput.txid !== '0000000000000000000000000000000000000000000000000000000000000000') {
-                              fetch(`${Config.https ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/gettransaction?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}&address=${address}&txid=${_decodedInput.txid}`, {
-                                method: 'GET',
-                                headers: {
-                                  'Content-Type': 'application/json',
-                                },
-                              })
-                              .catch((error) => {
-                                console.log(error);
-                                Store.dispatch(
-                                  triggerToaster(
-                                    'shepherdElectrumTransactions+gettransaction remote',
-                                    'Error',
-                                    'error'
-                                  )
-                                );
-                              })
-                              .then(response => response.json())
-                              .then(json => {
-                                result = json;
+                              const _cachedTx = getCache(coin, 'txs', _decodedInput.txid);
 
-                                // console.warn('gettransaction =>');
-                                // console.warn(result);
+                              if (_cachedTx) {
+                                const decodedVinVout = agamalib.decoder(_cachedTx, _network);
 
-                                if (result.msg !== 'error') {
-                                  const decodedVinVout = agamalib.decoder(result.result, _network);
+                                // console.warn('electrum raw input tx ==>');
 
-                                  // console.warn('electrum raw input tx ==>');
-
-                                  if (decodedVinVout) {
-                                    // console.warn(decodedVinVout.outputs[_decodedInput.n], true);
-                                    txInputs.push(decodedVinVout.outputs[_decodedInput.n]);
-                                    _resolve(true);
-                                  } else {
-                                    _resolve(true);
-                                  }
+                                if (decodedVinVout) {
+                                  // console.warn(decodedVinVout.outputs[_decodedInput.n], true);
+                                  txInputs.push(decodedVinVout.outputs[_decodedInput.n]);
+                                  _resolve(true);
+                                } else {
+                                  _resolve(true);
                                 }
-                              });
+                              } else {
+                                fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/gettransaction?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}&address=${address}&txid=${_decodedInput.txid}`, {
+                                  method: 'GET',
+                                  headers: {
+                                    'Content-Type': 'application/json',
+                                  },
+                                })
+                                .catch((error) => {
+                                  console.log(error);
+                                  Store.dispatch(
+                                    triggerToaster(
+                                      'shepherdElectrumTransactions+gettransaction remote',
+                                      'Error',
+                                      'error'
+                                    )
+                                  );
+                                })
+                                .then(response => response.json())
+                                .then(json => {
+                                  result = json;
+
+                                  // console.warn('gettransaction =>');
+                                  // console.warn(result);
+
+                                  if (result.msg !== 'error') {
+                                    const decodedVinVout = agamalib.decoder(result.result, _network);
+
+                                    getCache(coin, 'txs', _decodedInput.txid, result.result);
+                                    // console.warn('electrum raw input tx ==>');
+
+                                    if (decodedVinVout) {
+                                      // console.warn(decodedVinVout.outputs[_decodedInput.n], true);
+                                      txInputs.push(decodedVinVout.outputs[_decodedInput.n]);
+                                      _resolve(true);
+                                    } else {
+                                      _resolve(true);
+                                    }
+                                  }
+                                });
+                              }
                             } else {
                               _resolve(true);
                             }
@@ -466,7 +502,7 @@ export function shepherdElectrumTransactions(coin, address, full = true, verify 
   }
 }
 
-export function shepherdElectrumTransactionsState(json) {
+export const shepherdElectrumTransactionsState = (json) => {
   json = json.result;
 
   if (json &&
@@ -482,7 +518,7 @@ export function shepherdElectrumTransactionsState(json) {
   }
 }
 
-export function shepherdElectrumCoins() {
+export const shepherdElectrumCoins = () => {
   let _coins = {};
 
   for (let i = 0; i < appData.coins.length; i++) {
@@ -500,7 +536,7 @@ export function shepherdElectrumCoins() {
   }
 }
 
-export function shepherdElectrumCoinsState(json) {
+export const shepherdElectrumCoinsState = (json) => {
   return {
     type: DASHBOARD_ELECTRUM_COINS,
     electrumCoins: json.result,
@@ -508,7 +544,7 @@ export function shepherdElectrumCoinsState(json) {
 }
 
 // value in sats
-export function shepherdElectrumSend(coin, value, sendToAddress, changeAddress, btcFee) {
+export const shepherdElectrumSend = (coin, value, sendToAddress, changeAddress, btcFee) => {
   value = Math.floor(value);
 
   return dispatch => {
@@ -535,7 +571,7 @@ export function shepherdElectrumSend(coin, value, sendToAddress, changeAddress, 
   }
 }
 
-export function shepherdElectrumSendPromise(coin, value, sendToAddress, changeAddress, fee, push) {
+export const shepherdElectrumSendPromise = (coin, value, sendToAddress, changeAddress, fee, push) => {
   value = Math.floor(value);
 
   return new Promise((resolve, reject) => {
@@ -574,7 +610,7 @@ export function shepherdElectrumSendPromise(coin, value, sendToAddress, changeAd
       // console.warn('send tx', _tx);
 
       if (push) {
-        fetch(`${Config.https ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/pushtx`, {
+        fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/pushtx`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -608,7 +644,6 @@ export function shepherdElectrumSendPromise(coin, value, sendToAddress, changeAd
             Store.dispatch(sendToAddressState(_err));
           } else {
             const txid = json.result;
-
             const _rawObj = {
               utxoSet: _data.inputs,
               change: _data.change,
@@ -690,13 +725,13 @@ export function shepherdElectrumSendPromise(coin, value, sendToAddress, changeAd
   });
 }
 
-export function shepherdElectrumListunspent(coin, address, full = true, verify = false) {
+export const shepherdElectrumListunspent = (coin, address, full = true, verify = false) => {
   const CONNECTION_ERROR_OR_INCOMPLETE_DATA = 'connection error or incomplete data';
   let _atLeastOneDecodeTxFailed = false;
 
   if (full) {
     return new Promise((resolve, reject) => {
-      fetch(`${Config.https ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/listunspent?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}&address=${address}`, {
+      fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/listunspent?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}&address=${address}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -727,7 +762,7 @@ export function shepherdElectrumListunspent(coin, address, full = true, verify =
             let formattedUtxoList = [];
             let _utxo = [];
 
-            fetch(`${Config.https ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/getcurrentblock?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}`, {
+            fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/getcurrentblock?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}`, {
               method: 'GET',
               headers: {
                 'Content-Type': 'application/json',
@@ -767,128 +802,223 @@ export function shepherdElectrumListunspent(coin, address, full = true, verify =
                   } else {
                     Promise.all(_utxo.map((_utxoItem, index) => {
                       return new Promise((resolve, reject) => {
-                        fetch(`${Config.https ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/gettransaction?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}&address=${address}&txid=${_utxoItem['tx_hash']}`, {
-                          method: 'GET',
-                          headers: {
-                            'Content-Type': 'application/json',
-                          },
-                        })
-                        .catch((error) => {
-                          console.log(error);
-                          Store.dispatch(
-                            triggerToaster(
-                              'shepherdElectrumTransactions+gettransaction remote',
-                              'Error',
-                              'error'
-                            )
-                          );
-                        })
-                        .then(response => response.json())
-                        .then(json => {
-                          result = json;
+                        const _cachedTx = getCache(coin, 'txs', _utxoItem['tx_hash']);
 
-                          // console.warn(result);
+                        if (_cachedTx) {
+                          // decode tx
+                          const _network = agamalib.coin.isKomodoCoin(coin) ? agamalib.btcnetworks.kmd : agamalib.btcnetworks[coin];
+                          const decodedTx = agamalib.decoder(_cachedTx, _network);
 
-                          if (result.msg !== 'error') {
-                            // console.warn('gettransaction =>');
-                            const _rawtxJSON = result.result;
+                          // console.warn('decoded tx =>');
+                          // console.warn(decodedTx);
 
-                            // console.warn('electrum gettransaction ==>');
-                            // console.warn(index + ' | ' + (_rawtxJSON.length - 1));
-                            // console.warn(_rawtxJSON);
+                          if (!decodedTx) {
+                            _atLeastOneDecodeTxFailed = true;
+                            resolve('cant decode tx');
+                          } else {
+                            if (coin === 'kmd') {
+                              let interest = 0;
 
-                            // decode tx
-                            const _network = agamalib.coin.isKomodoCoin(coin) ? agamalib.btcnetworks.kmd : agamalib.btcnetworks[coin];
-                            const decodedTx = agamalib.decoder(_rawtxJSON, _network);
+                              if (Number(_utxoItem.value) * 0.00000001 >= 10 &&
+                                  decodedTx.format.locktime > 0) {
+                                // console.warn('interest', agamalib.komodoInterest);
+                                interest = agamalib.komodoInterest(decodedTx.format.locktime, _utxoItem.value);
+                              }
 
-                            // console.warn('decoded tx =>');
-                            // console.warn(decodedTx);
+                              let _resolveObj = {
+                                txid: _utxoItem['tx_hash'],
+                                vout: _utxoItem['tx_pos'],
+                                address,
+                                amount: Number(_utxoItem.value) * 0.00000001,
+                                amountSats: _utxoItem.value,
+                                interest: interest,
+                                interestSats: Math.floor(interest * 100000000),
+                                confirmations: Number(_utxoItem.height) === 0 ? 0 : currentHeight - _utxoItem.height,
+                                spendable: true,
+                                verified: false,
+                                locktime: decodedTx.format.locktime,
+                              };
 
-                            if (!decodedTx) {
-                              _atLeastOneDecodeTxFailed = true;
-                              resolve('cant decode tx');
-                            } else {
-                              if (coin === 'kmd') {
-                                let interest = 0;
+                              // merkle root verification agains another electrum server
+                              if (verify) {
+                                verifyMerkleByCoin(
+                                  _utxoItem['tx_hash'],
+                                  _utxoItem.height,
+                                  electrumServer,
+                                  proxyServer
+                                )
+                                .then((verifyMerkleRes) => {
+                                  if (verifyMerkleRes &&
+                                      verifyMerkleRes === CONNECTION_ERROR_OR_INCOMPLETE_DATA) {
+                                    verifyMerkleRes = false;
+                                  }
 
-                                if (Number(_utxoItem.value) * 0.00000001 >= 10 &&
-                                    decodedTx.format.locktime > 0) {
-                                  // console.warn('interest', agamalib.komodoInterest);
-                                  interest = agamalib.komodoInterest(decodedTx.format.locktime, _utxoItem.value);
-                                }
-
-                                let _resolveObj = {
-                                  txid: _utxoItem['tx_hash'],
-                                  vout: _utxoItem['tx_pos'],
-                                  address,
-                                  amount: Number(_utxoItem.value) * 0.00000001,
-                                  amountSats: _utxoItem.value,
-                                  interest: interest,
-                                  interestSats: Math.floor(interest * 100000000),
-                                  confirmations: Number(_utxoItem.height) === 0 ? 0 : currentHeight - _utxoItem.height,
-                                  spendable: true,
-                                  verified: false,
-                                  locktime: decodedTx.format.locktime,
-                                };
-
-                                // merkle root verification agains another electrum server
-                                if (verify) {
-                                  verifyMerkleByCoin(
-                                    _utxoItem['tx_hash'],
-                                    _utxoItem.height,
-                                    electrumServer,
-                                    proxyServer
-                                  ).then((verifyMerkleRes) => {
-                                    if (verifyMerkleRes &&
-                                        verifyMerkleRes === CONNECTION_ERROR_OR_INCOMPLETE_DATA) {
-                                      verifyMerkleRes = false;
-                                    }
-
-                                    _resolveObj.verified = verifyMerkleRes;
-                                    resolve(_resolveObj);
-                                  });
-                                } else {
+                                  _resolveObj.verified = verifyMerkleRes;
                                   resolve(_resolveObj);
-                                }
+                                });
                               } else {
-                                let _resolveObj = {
-                                  txid: _utxoItem['tx_hash'],
-                                  vout: _utxoItem['tx_pos'],
-                                  address,
-                                  amount: Number(_utxoItem.value) * 0.00000001,
-                                  amountSats: _utxoItem.value,
-                                  confirmations: Number(_utxoItem.height) === 0 ? 0 : currentHeight - _utxoItem.height,
-                                  spendable: true,
-                                  verified: false,
-                                };
+                                resolve(_resolveObj);
+                              }
+                            } else {
+                              let _resolveObj = {
+                                txid: _utxoItem['tx_hash'],
+                                vout: _utxoItem['tx_pos'],
+                                address,
+                                amount: Number(_utxoItem.value) * 0.00000001,
+                                amountSats: _utxoItem.value,
+                                confirmations: Number(_utxoItem.height) === 0 ? 0 : currentHeight - _utxoItem.height,
+                                spendable: true,
+                                verified: false,
+                              };
 
-                                // merkle root verification agains another electrum server
-                                if (verify) {
-                                  verifyMerkleByCoin(
-                                    _utxoItem['tx_hash'],
-                                    _utxoItem.height,
-                                    electrumServer,
-                                    proxyServer
-                                  ).then((verifyMerkleRes) => {
-                                    if (verifyMerkleRes &&
-                                        verifyMerkleRes === CONNECTION_ERROR_OR_INCOMPLETE_DATA) {
-                                      verifyMerkleRes = false;
-                                    }
+                              // merkle root verification agains another electrum server
+                              if (verify) {
+                                verifyMerkleByCoin(
+                                  _utxoItem['tx_hash'],
+                                  _utxoItem.height,
+                                  electrumServer,
+                                  proxyServer
+                                ).then((verifyMerkleRes) => {
+                                  if (verifyMerkleRes &&
+                                      verifyMerkleRes === CONNECTION_ERROR_OR_INCOMPLETE_DATA) {
+                                    verifyMerkleRes = false;
+                                  }
 
-                                    _resolveObj.verified = verifyMerkleRes;
-                                    resolve(_resolveObj);
-                                  });
-                                } else {
+                                  _resolveObj.verified = verifyMerkleRes;
                                   resolve(_resolveObj);
-                                }
+                                });
+                              } else {
+                                resolve(_resolveObj);
                               }
                             }
-                          } else {
-                            resolve(false);
-                            _atLeastOneDecodeTxFailed = true;
-                            // console.warn('getcurrentblock error =>');
                           }
-                        });
+                        } else {
+                          fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/gettransaction?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}&address=${address}&txid=${_utxoItem['tx_hash']}`, {
+                            method: 'GET',
+                            headers: {
+                              'Content-Type': 'application/json',
+                            },
+                          })
+                          .catch((error) => {
+                            console.log(error);
+                            Store.dispatch(
+                              triggerToaster(
+                                'shepherdElectrumTransactions+gettransaction remote',
+                                'Error',
+                                'error'
+                              )
+                            );
+                          })
+                          .then(response => response.json())
+                          .then(json => {
+                            result = json;
+
+                            // console.warn(result);
+
+                            if (result.msg !== 'error') {
+                              // console.warn('gettransaction =>');
+                              const _rawtxJSON = result.result;
+
+                              getCache(coin, 'txs', _utxoItem['tx_hash'], _rawtxJSON);
+
+                              // console.warn('electrum gettransaction ==>');
+                              // console.warn(index + ' | ' + (_rawtxJSON.length - 1));
+                              // console.warn(_rawtxJSON);
+
+                              // decode tx
+                              const _network = agamalib.coin.isKomodoCoin(coin) ? agamalib.btcnetworks.kmd : agamalib.btcnetworks[coin];
+                              const decodedTx = agamalib.decoder(_rawtxJSON, _network);
+
+                              // console.warn('decoded tx =>');
+                              // console.warn(decodedTx);
+
+                              if (!decodedTx) {
+                                _atLeastOneDecodeTxFailed = true;
+                                resolve('cant decode tx');
+                              } else {
+                                if (coin === 'kmd') {
+                                  let interest = 0;
+
+                                  if (Number(_utxoItem.value) * 0.00000001 >= 10 &&
+                                      decodedTx.format.locktime > 0) {
+                                    // console.warn('interest', agamalib.komodoInterest);
+                                    interest = agamalib.komodoInterest(decodedTx.format.locktime, _utxoItem.value);
+                                  }
+
+                                  let _resolveObj = {
+                                    txid: _utxoItem['tx_hash'],
+                                    vout: _utxoItem['tx_pos'],
+                                    address,
+                                    amount: Number(_utxoItem.value) * 0.00000001,
+                                    amountSats: _utxoItem.value,
+                                    interest: interest,
+                                    interestSats: Math.floor(interest * 100000000),
+                                    confirmations: Number(_utxoItem.height) === 0 ? 0 : currentHeight - _utxoItem.height,
+                                    spendable: true,
+                                    verified: false,
+                                    locktime: decodedTx.format.locktime,
+                                  };
+
+                                  // merkle root verification agains another electrum server
+                                  if (verify) {
+                                    verifyMerkleByCoin(
+                                      _utxoItem['tx_hash'],
+                                      _utxoItem.height,
+                                      electrumServer,
+                                      proxyServer
+                                    )
+                                    .then((verifyMerkleRes) => {
+                                      if (verifyMerkleRes &&
+                                          verifyMerkleRes === CONNECTION_ERROR_OR_INCOMPLETE_DATA) {
+                                        verifyMerkleRes = false;
+                                      }
+
+                                      _resolveObj.verified = verifyMerkleRes;
+                                      resolve(_resolveObj);
+                                    });
+                                  } else {
+                                    resolve(_resolveObj);
+                                  }
+                                } else {
+                                  let _resolveObj = {
+                                    txid: _utxoItem['tx_hash'],
+                                    vout: _utxoItem['tx_pos'],
+                                    address,
+                                    amount: Number(_utxoItem.value) * 0.00000001,
+                                    amountSats: _utxoItem.value,
+                                    confirmations: Number(_utxoItem.height) === 0 ? 0 : currentHeight - _utxoItem.height,
+                                    spendable: true,
+                                    verified: false,
+                                  };
+
+                                  // merkle root verification agains another electrum server
+                                  if (verify) {
+                                    verifyMerkleByCoin(
+                                      _utxoItem['tx_hash'],
+                                      _utxoItem.height,
+                                      electrumServer,
+                                      proxyServer
+                                    ).then((verifyMerkleRes) => {
+                                      if (verifyMerkleRes &&
+                                          verifyMerkleRes === CONNECTION_ERROR_OR_INCOMPLETE_DATA) {
+                                        verifyMerkleRes = false;
+                                      }
+
+                                      _resolveObj.verified = verifyMerkleRes;
+                                      resolve(_resolveObj);
+                                    });
+                                  } else {
+                                    resolve(_resolveObj);
+                                  }
+                                }
+                              }
+                            } else {
+                              resolve(false);
+                              _atLeastOneDecodeTxFailed = true;
+                              // console.warn('getcurrentblock error =>');
+                            }
+                          });
+                        }
                       });
                     }))
                     .then(promiseResult => {
@@ -914,7 +1044,7 @@ export function shepherdElectrumListunspent(coin, address, full = true, verify =
     });
   } else {
     return new Promise((resolve, reject) => {
-      fetch(`${Config.https ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/listunspent?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}&address=${address}`, {
+      fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/listunspent?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}&address=${address}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -938,7 +1068,7 @@ export function shepherdElectrumListunspent(coin, address, full = true, verify =
   }
 }
 
-export function shepherdElectrumBip39Keys(seed, match, addressdepth, accounts) {
+export const shepherdElectrumBip39Keys = (seed, match, addressdepth, accounts) => {
   return new Promise((resolve, reject) => {
     fetch(`http://127.0.0.1:${Config.agamaPort}/shepherd/electrum/seed/bip39/match`, {
       method: 'POST',
@@ -971,7 +1101,7 @@ export function shepherdElectrumBip39Keys(seed, match, addressdepth, accounts) {
 }
 
 // split utxo
-export function shepherdElectrumSplitUtxoPromise(payload) {
+export const shepherdElectrumSplitUtxoPromise = (payload) => {
   console.warn(payload);
 
   return new Promise((resolve, reject) => {

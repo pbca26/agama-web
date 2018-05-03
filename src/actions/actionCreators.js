@@ -36,7 +36,6 @@ import {
 } from './storeType';
 
 export * from './actions/coinList';
-export * from './actions/settings';
 export * from './actions/addCoin';
 export * from './actions/copyAddress';
 export * from './actions/dexCoins';
@@ -45,21 +44,21 @@ export * from './actions/electrum';
 // export * from './actions/tools';
 export * from './actions/prices';
 
-export function changeActiveAddress(address) {
+export const changeActiveAddress = (address) => {
   return {
     type: DASHBOARD_ACTIVE_ADDRESS,
     address,
   }
 }
 
-export function toggleDashboardActiveSection(name) {
+export const toggleDashboardActiveSection = (name) => {
   return {
     type: DASHBOARD_ACTIVE_SECTION,
     section: name,
   }
 }
 
-export function toggleDashboardTxInfoModal(display, txIndex) {
+export const toggleDashboardTxInfoModal = (display, txIndex) => {
   return {
     type: DASHBOARD_ACTIVE_TXINFO_MODAL,
     showTransactionInfo: display,
@@ -67,7 +66,7 @@ export function toggleDashboardTxInfoModal(display, txIndex) {
   }
 }
 
-export function syncingNativeModeState(display, json) {
+export const syncingNativeModeState = (display, json) => {
   return {
     type: SYNCING_NATIVE_MODE,
     syncingNativeMode: display,
@@ -75,21 +74,21 @@ export function syncingNativeModeState(display, json) {
   }
 }
 
-export function toggleSendCoinFormState(display) {
+export const toggleSendCoinFormState = (display) => {
   return {
     type: DASHBOARD_ACTIVE_COIN_SEND_FORM,
     send: display,
   }
 }
 
-export function toggleReceiveCoinFormState(display) {
+export const toggleReceiveCoinFormState = (display) => {
   return {
     type: DASHBOARD_ACTIVE_COIN_RECEIVE_FORM,
     receive: display,
   }
 }
 
-export function toggleSendReceiveCoinFormsState() {
+export const toggleSendReceiveCoinFormsState = () => {
   return {
     type: DASHBOARD_ACTIVE_COIN_RESET_FORMS,
     send: false,
@@ -97,7 +96,7 @@ export function toggleSendReceiveCoinFormsState() {
   }
 }
 
-export function triggerToaster(message, title, _type, autoClose = true, className) {
+export const triggerToaster = (message, title, _type, autoClose = true, className) => {
   return {
     type: ADD_TOASTER_MESSAGE,
     message,
@@ -109,14 +108,14 @@ export function triggerToaster(message, title, _type, autoClose = true, classNam
 }
 
 // triggers removing of the toast with the provided toastId
-export function dismissToaster(toastId) {
+export const dismissToaster = (toastId) => {
   return {
     type: REMOVE_TOASTER_MESSAGE,
     toastId: toastId,
   }
 }
 
-export function toggleAddcoinModalState(display, isLogin) {
+export const toggleAddcoinModalState = (display, isLogin) => {
   return {
     type: DISPLAY_ADDCOIN_MODAL,
     display: display,
@@ -124,7 +123,7 @@ export function toggleAddcoinModalState(display, isLogin) {
   }
 }
 
-export function dashboardCoinsState(json) {
+export const dashboardCoinsState = (json) => {
   return {
     type: GET_ACTIVE_COINS,
     coins: json,
@@ -132,45 +131,45 @@ export function dashboardCoinsState(json) {
   }
 }
 
-export function getMainAddressState(json) {
+export const getMainAddressState = (json) => {
   return {
     type: GET_MAIN_ADDRESS,
     activeHandle: json,
   }
 }
 
-export function toggleSendCoinForm(display) {
+export const toggleSendCoinForm = (display) => {
   return dispatch => {
     dispatch(toggleSendCoinFormState(display));
   }
 }
 
-export function toggleReceiveCoinForm(display) {
+export const toggleReceiveCoinForm = (display) => {
   return dispatch => {
     dispatch(toggleReceiveCoinFormState(display));
   }
 }
 
-export function toggleSendReceiveCoinForms() {
+export const toggleSendReceiveCoinForms = () => {
   return dispatch => {
     dispatch(toggleSendReceiveCoinFormsState());
   }
 }
 
-export function dashboardChangeSectionState(sectionName) {
+export const dashboardChangeSectionState = (sectionName) => {
   return {
     type: DASHBOARD_SECTION_CHANGE,
     activeSection: sectionName,
   }
 }
 
-export function dashboardChangeSection(sectionName) {
+export const dashboardChangeSection = (sectionName) => {
   return dispatch => {
     dispatch(dashboardChangeSectionState(sectionName));
   }
 }
 
-export function dashboardChangeActiveCoinState(coin, mode, skipCoinsArrayUpdate) {
+export const dashboardChangeActiveCoinState = (coin, mode, skipCoinsArrayUpdate) => {
   return {
     type: DASHBOARD_ACTIVE_COIN_CHANGE,
     coin: coin,
@@ -179,25 +178,25 @@ export function dashboardChangeActiveCoinState(coin, mode, skipCoinsArrayUpdate)
   }
 }
 
-export function dashboardChangeActiveCoin(coin, mode, skipCoinsArrayUpdate) {
+export const dashboardChangeActiveCoin = (coin, mode, skipCoinsArrayUpdate) => {
   return dispatch => {
     dispatch(dashboardChangeActiveCoinState(coin, mode, skipCoinsArrayUpdate));
   }
 }
 
-export function toggleAddcoinModal(display, isLogin) {
+export const toggleAddcoinModal = (display, isLogin) => {
   return dispatch => {
     dispatch(toggleAddcoinModalState(display, isLogin));
   }
 }
 
-export function dismissToasterMessage(toastId) {
+export const dismissToasterMessage = (toastId) => {
   return dispatch => {
     dispatch(dismissToaster(toastId));
   }
 }
 
-export function getNativeTxHistoryState(json) {
+export const getNativeTxHistoryState = (json) => {
   if (json &&
       json.error) {
     json = null;
@@ -213,7 +212,7 @@ export function getNativeTxHistoryState(json) {
   }
 }
 
-export function startInterval(name, handle) {
+export const startInterval = (name, handle) => {
   return {
     type: START_INTERVAL,
     name,
@@ -221,7 +220,7 @@ export function startInterval(name, handle) {
   }
 }
 
-export function stopInterval(name, intervals) {
+export const stopInterval = (name, intervals) => {
   clearInterval(intervals[name]);
 
   return {
@@ -230,91 +229,91 @@ export function stopInterval(name, intervals) {
   }
 }
 
-export function toggleCoindDownModal(display) {
+export const toggleCoindDownModal = (display) => {
   return {
     type: DISPLAY_COIND_DOWN_MODAL,
     displayCoindDownModal: display,
   }
 }
 
-export function toggleLoginSettingsModal(display) {
+export const toggleLoginSettingsModal = (display) => {
   return {
     type: DISPLAY_LOGIN_SETTINGS_MODAL,
     displayLoginSettingsModal: display,
   }
 }
 
-export function toggleClaimInterestModal(display) {
+export const toggleClaimInterestModal = (display) => {
   return {
     type: DISPLAY_CLAIM_INTEREST_MODAL,
     displayClaimInterestModal: display,
   }
 }
 
-export function getPinList(pinList) {
+export const getPinList = (pinList) => {
   return {
     type: GET_PIN_LIST,
     pinList: pinList,
   }
 }
 
-export function skipFullDashboardUpdate(skip) {
+export const skipFullDashboardUpdate = (skip) => {
   return {
     type: DASHBOARD_SYNC_ONLY_UPDATE,
     skipFullDashboardUpdate: skip,
   }
 }
 
-export function displayImportKeyModal(display) {
+export const displayImportKeyModal = (display) => {
   return {
     type: DISPLAY_IMPORT_KEY_MODAL,
     displayImportKeyModal: display,
   }
 }
 
-export function electrumServerChanged(isChanged) {
+export const electrumServerChanged = (isChanged) => {
   return {
     type: ELECTRUM_SERVER_CHANGED,
     eletrumServerChanged: isChanged,
   }
 }
 
-export function toggleZcparamsFetchModal(display) {
+export const toggleZcparamsFetchModal = (display) => {
   return {
     type: DISPLAY_ZCASH_PARAMS_FETCH,
     displayZcparamsModal: display,
   }
 }
 
-export function dashboardRemoveCoin(coin) {
+export const dashboardRemoveCoin = (coin) => {
   return {
     type: DASHBOARD_REMOVE_COIN,
     coin,
   }
 }
 
-export function toggleNotaryElectionsModal(display) {
+export const toggleNotaryElectionsModal = (display) => {
   return {
     type: DISPLAY_NOTARY_ELECTIONS_MODAL,
     displayNotaryElectionsModal: display,
   }
 }
 
-export function toggleWalletRisksModal(display) {
+export const toggleWalletRisksModal = (display) => {
   return {
     type: DISPLAY_WALLET_RISKS_MODAL,
     displayWalletRisksModal: display,
   }
 }
 
-export function clearLastSendToResponseState() {
+export const clearLastSendToResponseState = () => {
   return {
     type: DASHBOARD_ACTIVE_COIN_SENDTO,
     lastSendToResponse: null,
   }
 }
 
-export function sendToAddressState(json) {
+export const sendToAddressState = (json) => {
   return {
     type: DASHBOARD_ACTIVE_COIN_SENDTO,
     lastSendToResponse: json,

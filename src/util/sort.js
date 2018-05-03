@@ -1,5 +1,5 @@
-export function sortByDate(data, sortKey) { // deprecated
-  return data.sort(function(a, b) {
+export const sortByDate = (data, sortKey) => { // deprecated
+  return data.sort((a, b) => {
     if (a[sortKey] < b[sortKey]) {
       return -1;
     }

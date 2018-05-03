@@ -21,11 +21,6 @@ import Store from '../../store';
 import SwallModalRender from './swall-modal.render';
 import LoginRender from './login.render';
 import { translate } from '../../translate/translate';
-import {
-  encryptPassphrase,
-  loadPinList,
-  loginWithPin,
-} from '../../actions/actions/pin';
 import agamalib from '../../agamalib';
 
 const IGUNA_ACTIVE_HANDLE_TIMEOUT = 3000;

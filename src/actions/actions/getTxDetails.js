@@ -2,7 +2,7 @@ import { triggerToaster } from '../actionCreators';
 import Config from '../../config';
 import Store from '../../store';
 
-export function getTxDetails(coin, txid, type) {
+export const getTxDetails = (coin, txid, type) => {
   return new Promise((resolve, reject) => {
     let payload = {
       mode: null,

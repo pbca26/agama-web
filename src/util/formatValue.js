@@ -1,5 +1,5 @@
 // display rounding
-export function formatValue(formatValue) {
+export const formatValue = (formatValue) => {
   const _valueToStr = formatValue.toString();
 
   if (_valueToStr.indexOf('.') === -1) {

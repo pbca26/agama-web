@@ -12,6 +12,7 @@ let appData = {
   keys: {},
   servers: {},
   proxy: {},
+  cache: {},
 };
 
 export default appData;

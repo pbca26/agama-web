@@ -2,7 +2,7 @@ import { PRICES } from '../storeType';
 import { triggerToaster } from '../actionCreators';
 import Config from '../../config';
 
-function fiatRates(pricesJson) {
+const fiatRates = (pricesJson) => {
   return dispatch => {
     return fetch(`https://www.atomicexplorer.com/api/rates/kmd`, {
       method: 'GET',
@@ -20,7 +20,7 @@ function fiatRates(pricesJson) {
   }
 }
 
-export function prices() {
+export const prices = () => {
   return dispatch => {
     return fetch(`https://www.atomicexplorer.com/api/mm/prices`, {
       method: 'GET',
@@ -35,7 +35,7 @@ export function prices() {
   }
 }
 
-function pricesState(json) {
+const pricesState = (json) => {
   return {
     type: PRICES,
     prices: json,

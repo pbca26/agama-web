@@ -2,10 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import {
   copyCoinAddress,
-  dumpPrivKey,
   copyString,
   triggerToaster,
-  validateAddress,
 } from '../../../actions/actionCreators';
 import Store from '../../../store';
 import {

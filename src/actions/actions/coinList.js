@@ -4,7 +4,7 @@ import Store from '../../store';
 import { translate } from '../../translate/translate';
 import appData from './appData';
 
-export function shepherdStopCoind(coin) {
+export const shepherdStopCoind = (coin) => {
   return new Promise((resolve, reject) => {
     fetch(`http://127.0.0.1:${Config.agamaPort}/shepherd/coind/stop`, {
       method: 'POST',
@@ -28,7 +28,7 @@ export function shepherdStopCoind(coin) {
   });
 }
 
-export function shepherdRemoveCoin(coin, mode) {
+export const shepherdRemoveCoin = (coin, mode) => {
   return new Promise((resolve, reject, dispatch) => {
     delete appData.keys[coin];
     appData.coins = appData.coins.filter(item => item !== coin);
@@ -46,7 +46,7 @@ export function shepherdRemoveCoin(coin, mode) {
   });
 }
 
-export function shepherdGetCoinList() {
+export const shepherdGetCoinList = () => {
   return new Promise((resolve, reject) => {
     fetch(`http://127.0.0.1:${Config.agamaPort}/shepherd/coinslist?token=${Config.token}`, {
       method: 'GET',
@@ -69,7 +69,7 @@ export function shepherdGetCoinList() {
   });
 }
 
-export function shepherdPostCoinList(data) {
+export const shepherdPostCoinList = (data) => {
   return new Promise((resolve, reject) => {
     fetch(`http://127.0.0.1:${Config.agamaPort}/shepherd/coinslist`, {
       method: 'POST',
@@ -96,7 +96,7 @@ export function shepherdPostCoinList(data) {
   });
 }
 
-export function shepherdClearCoindFolder(coin, keepWalletDat) {
+export const shepherdClearCoindFolder = (coin, keepWalletDat) => {
   return new Promise((resolve, reject) => {
     fetch(keepWalletDat ? `http://127.0.0.1:${Config.agamaPort}/shepherd/kick?coin=${coin}&keepwallet=true&token=${Config.token}` : `http://127.0.0.1:${Config.agamaPort}/shepherd/kick?coin=${coin}&token=${Config.token}`, {
       method: 'GET',
