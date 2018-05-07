@@ -170,7 +170,7 @@ export const ReceiveCoinRender = function() {
     );
   } else {
     return (
-      <div>
+      <div className="receive-coin-block">
         <div className="col-xs-12 margin-top-20">
           <div className="panel nav-tabs-horizontal">
             <div>

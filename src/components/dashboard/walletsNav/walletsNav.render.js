@@ -41,17 +41,17 @@ export const WalletsNavWithWalletRender = function() {
         }
         <div className="page-header-actions">
           <div id="kmd_header_button">
-            {/*<button
+            <button
               type="button"
               className="btn btn-info waves-effect waves-light"
               onClick={ this.toggleNativeWalletInfo }>
               <i className="icon fa-info"></i>
-            </button>*/}
+            </button>
             <button
               type="button"
               className="btn btn-dark waves-effect waves-light"
               onClick={ this.toggleNativeWalletTransactions }>
-              <i className="icon md-view-dashboard"></i> { translate('INDEX.TRANSACTIONS') }
+              <i className="icon md-view-dashboard"></i> <span className="placeholder">{ translate('INDEX.TRANSACTIONS') }</span>
             </button>
             { this.props.ActiveCoin &&
               <button
@@ -59,14 +59,14 @@ export const WalletsNavWithWalletRender = function() {
                 className="btn btn-primary waves-effect waves-light"
                 onClick={ () => this.toggleSendCoinForm(!this.props.ActiveCoin.send) }
                 disabled={ this.checkTotalBalance() <= 0 }>
-                <i className="icon fa-send"></i> { translate('INDEX.SEND') }
+                <i className="icon fa-send"></i> <span className="placeholder">{ translate('INDEX.SEND') }</span>
               </button>
             }
             <button
               type="button"
               className="btn btn-success waves-effect waves-light"
               onClick={ () => this.toggleReceiveCoinForm(!this.props.ActiveCoin.receive) }>
-              <i className="icon fa-inbox"></i> { translate('INDEX.RECEIVE') }
+              <i className="icon fa-inbox"></i> <span className="placeholder">{ translate('INDEX.RECEIVE') }</span>
             </button>
           </div>
         </div>

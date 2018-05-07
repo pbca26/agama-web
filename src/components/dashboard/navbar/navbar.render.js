@@ -7,17 +7,6 @@ const NavbarRender = function() {
   return (
     <nav className="site-navbar navbar navbar-default navbar-fixed-top navbar-mega">
       <div className="navbar-header">
-        <button
-          type="button"
-          className="navbar-toggle hamburger hamburger-close navbar-toggle-left hided">
-          <span className="sr-only">{ translate('INDEX.TOGGLE_NAV') }</span>
-          <span className="hamburger-bar"></span>
-        </button>
-        <button
-          type="button"
-          className="navbar-toggle collapsed">
-          <i className="icon md-more"></i>
-        </button>
         <div className="navbar-brand navbar-brand-center site-gridmenu-toggle">
           <img
             className="navbar-brand-logo hidden-xs"
@@ -26,17 +15,11 @@ const NavbarRender = function() {
             width="100"
             title={ translate('ABOUT.AGAMA_WALLET') } />
           <img
-            className="navbar-brand-logo hidden-md hidden-sm hidden-lg"
+            className="navbar-brand-logo hidden-lg"
             src="assets/images/agama-icon.svg"
             title={ translate('ABOUT.AGAMA_WALLET') } />
           <span className="navbar-brand-text hidden-xs"></span>
         </div>
-        <button
-          type="button"
-          className="navbar-toggle collapsed">
-          <span className="sr-only">{ translate('INDEX.TOGGLE_SEARCH') }</span>
-          <i className="icon md-search"></i>
-        </button>
       </div>
       <div className="navbar-container container-fluid">
         <div className="collapse navbar-collapse navbar-collapse-toolbar">

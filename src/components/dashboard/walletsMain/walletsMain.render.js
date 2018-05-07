@@ -17,7 +17,14 @@ const WalletsMainRender = function() {
           <ol className={ 'coin-logo breadcrumb' + (this.props.ActiveCoin.coin.toUpperCase() === 'KMD' || this.props.ActiveCoin.coin.toUpperCase() === 'JUMBLR' || this.props.ActiveCoin.coin.toUpperCase() === 'MESH' || this.props.ActiveCoin.coin.toUpperCase() === 'MVP' ? ' coin-logo-wide' : '') + ' native-coin-logo' }>
             <li className="header-easydex-section">
               { this.getCoinStyle('title') &&
-                <img src={ this.getCoinStyle('title') } />
+                <img
+                  className={ 'coin-icon' + (this.props.ActiveCoin.coin.toUpperCase() === 'KMD' ? ' kmd' : '') }
+                  src={ this.getCoinStyle('title') } />
+              }
+              { this.props.ActiveCoin.coin.toUpperCase() === 'KMD' &&
+                <img
+                  className="kmd-mobile-icon"
+                  src={ `assets/images/cryptologo/kmd.png` } />
               }
               <span className={ `margin-left-20 easydex-section-image ${(this.props.ActiveCoin.coin.toUpperCase() === 'KMD' || this.props.ActiveCoin.coin.toUpperCase() === 'JUMBLR' || this.props.ActiveCoin.coin.toUpperCase() === 'MESH' || this.props.ActiveCoin.coin.toUpperCase() === 'MVP' ? 'hide' : '')}` }>
                 { getCoinTitle(this.props.ActiveCoin.coin.toUpperCase()).name }
