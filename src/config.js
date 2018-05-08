@@ -1,6 +1,6 @@
 // web app config
 let Config = {
-  version: '0.1.3',
+  version: '0.1.5',
   debug: true,
   defaultLang: 'EN',
   roundValues: false,
