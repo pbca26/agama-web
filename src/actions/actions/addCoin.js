@@ -13,7 +13,11 @@ import {
   checkCoinType,
   checkAC,
 } from '../../components/addcoin/payload';
-import agamalib from '../../agamalib';
+import {
+  keys,
+  coin,
+  btcnetworks,
+} from 'agama-wallet-lib/src/index-fe';
 
 const iguanaActiveHandleState = (json) => {
   return {
@@ -35,10 +39,10 @@ export const shepherdElectrumAuth = (seed) => {
   let _pubKeys = {};
 
   for (let i = 0; i < appData.coins.length; i++) {
-    if (agamalib.coin.isKomodoCoin(appData.coins[i])) {
-      appData.keys[appData.coins[i]] = agamalib.keys.stringToWif(seed, agamalib.btcnetworks.kmd, true);
+    if (coin.isKomodoCoin(appData.coins[i])) {
+      appData.keys[appData.coins[i]] = keys.stringToWif(seed, btcnetworks.kmd, true);
     } else {
-      appData.keys[appData.coins[i]] = agamalib.keys.stringToWif(seed, agamalib.btcnetworks[appData.coins[i]], true);
+      appData.keys[appData.coins[i]] = keys.stringToWif(seed, btcnetworks[appData.coins[i]], true);
     }
   }
 
@@ -75,10 +79,10 @@ export const addCoinResult = (coin, mode) => {
     appData.allcoins.total++;
 
     if (Object.keys(appData.keys).length) {
-      if (agamalib.coin.isKomodoCoin(coin)) {
-        appData.keys[coin] = agamalib.keys.stringToWif(appData.keys[Object.keys(appData.keys)[0]].priv, agamalib.btcnetworks.kmd, true);
+      if (coin.isKomodoCoin(coin)) {
+        appData.keys[coin] = keys.stringToWif(appData.keys[Object.keys(appData.keys)[0]].priv, btcnetworks.kmd, true);
       } else {
-        appData.keys[coin] = agamalib.keys.stringToWif(appData.keys[Object.keys(appData.keys)[0]].priv, agamalib.btcnetworks[coin], true);
+        appData.keys[coin] = keys.stringToWif(appData.keys[Object.keys(appData.keys)[0]].priv, btcnetworks[coin], true);
       }
     }
   }

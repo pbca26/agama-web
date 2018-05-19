@@ -16,9 +16,9 @@ import {
 import { translate } from '../../../translate/translate';
 import {
   ClaimInterestModalRender,
-  _ClaimInterestTableRender
+  _ClaimInterestTableRender,
 } from './claimInterestModal.render';
-import agamalib from '../../../agamalib';
+import { eservers } from 'agama-wallet-lib/src/index-fe';
 
 // TODO: promises
 
@@ -154,7 +154,7 @@ class ClaimInterestModal extends React.Component {
       this.props.ActiveCoin.balance.balanceSats,
       this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub,
       this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub,
-      agamalib.eservers[this.props.ActiveCoin.coin].txfee,
+      eservers[this.props.ActiveCoin.coin].txfee,
       true
     )
     .then((res) => {
@@ -192,7 +192,7 @@ class ClaimInterestModal extends React.Component {
         this.props.ActiveCoin.balance.balanceSats,
         this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub,
         this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub,
-        agamalib.eservers[this.props.ActiveCoin.coin].txfee
+        eservers[this.props.ActiveCoin.coin].txfee
       )
       .then((sendPreflight) => {
         if (sendPreflight &&

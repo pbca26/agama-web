@@ -1,14 +1,17 @@
 import { translate } from '../../translate/translate';
-import agamalib from '../../agamalib';
+import {
+  eservers,
+  coin,
+} from 'agama-wallet-lib/src/index-fe';
 
 const addCoinOptionsAC = () => {
   let _assetChains = [];
   let _items = [];
 
-  for (let i = 0; i < agamalib.coin.kmdAssetChains.length; i++) {
-    const _ac = agamalib.coin.kmdAssetChains[i].toLowerCase();
+  for (let i = 0; i < coin.kmdAssetChains.length; i++) {
+    const _ac = coin.kmdAssetChains[i].toLowerCase();
 
-    if (agamalib.eservers[_ac] &&
+    if (eservers[_ac] &&
         _ac !== 'chips' &&
         _ac !== 'kmd' &&
         _ac !== 'komodo') {

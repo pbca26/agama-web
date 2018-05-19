@@ -13,7 +13,17 @@ import {
   sendToAddressState,
 } from '../actionCreators';
 import Store from '../../store';
-import agamalib from '../../agamalib';
+import {
+  keys,
+  coin,
+  decoder,
+  utils,
+  eservers,
+  btcnetworks,
+  komodoInterest,
+  transactionType,
+  transactionBuilder,
+} from 'agama-wallet-lib/src/index-fe';
 import proxyServers from '../../util/proxyServers';
 
 const getCache = (coin, type, key, data) => {
@@ -36,7 +46,7 @@ const getCache = (coin, type, key, data) => {
 
 export const shepherdSelectProxy = () => {
   // pick a random proxy server
-  const _randomServer = proxyServers[agamalib.utils.getRandomIntInclusive(0, proxyServers.length - 1)];
+  const _randomServer = proxyServers[utils.getRandomIntInclusive(0, proxyServers.length - 1)];
   appData.proxy = {
     ip: _randomServer.ip,
     port: _randomServer.port,
@@ -46,11 +56,11 @@ export const shepherdSelectProxy = () => {
 
 export const shepherdSelectRandomCoinServer = (coin) => {
   // pick a random proxy server
-  const _randomServer = agamalib.eservers[coin].serverList[agamalib.utils.getRandomIntInclusive(0, agamalib.eservers[coin].serverList.length - 1)].split(':');
+  const _randomServer = eservers[coin].serverList[utils.getRandomIntInclusive(0, eservers[coin].serverList.length - 1)].split(':');
   appData.servers[coin] = {
     ip: _randomServer[0],
     port: _randomServer[1],
-    proto: agamalib.eservers[coin].proto,
+    proto: eservers[coin].proto,
   };
 }
 
@@ -154,7 +164,7 @@ export const shepherdElectrumCheckServerConnection = (address, port) => {
 
 export const shepherdElectrumKeys = (seed) => {
   return new Promise((resolve, reject) => {
-    const _keys = agamalib.keys.stringToWif(seed, agamalib.btcnetworks[Object.keys(appData.keys)[0]], true);
+    const _keys = keys.stringToWif(seed, btcnetworks[Object.keys(appData.keys)[0]], true);
 
     if (_keys.priv === appData.keys[Object.keys(appData.keys)[0]].priv) {
       resolve({ result: appData.keys });
@@ -340,8 +350,8 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
                       // console.warn(transaction.raw);
 
                       // decode tx
-                      const _network = agamalib.coin.isKomodoCoin(coin) ? agamalib.btcnetworks.kmd : agamalib.btcnetworks[coin];
-                      const decodedTx = agamalib.decoder(transaction.raw, _network);
+                      const _network = coin.isKomodoCoin(coin) ? btcnetworks.kmd : btcnetworks[coin];
+                      const decodedTx = decoder(transaction.raw, _network);
 
                       let txInputs = [];
 
@@ -356,7 +366,7 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
                               const _cachedTx = getCache(coin, 'txs', _decodedInput.txid);
 
                               if (_cachedTx) {
-                                const decodedVinVout = agamalib.decoder(_cachedTx, _network);
+                                const decodedVinVout = decoder(_cachedTx, _network);
 
                                 // console.warn('electrum raw input tx ==>');
 
@@ -392,7 +402,7 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
                                   // console.warn(result);
 
                                   if (result.msg !== 'error') {
-                                    const decodedVinVout = agamalib.decoder(result.result, _network);
+                                    const decodedVinVout = decoder(result.result, _network);
 
                                     getCache(coin, 'txs', _decodedInput.txid, result.result);
                                     // console.warn('electrum raw input tx ==>');
@@ -423,7 +433,7 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
                             confirmations: Number(transaction.height) === 0 ? 0 : currentHeight - transaction.height,
                           };
 
-                          const formattedTx = agamalib.transactionType(_parsedTx, address, coin === 'kmd' ? true : false);
+                          const formattedTx = transactionType(_parsedTx, address, coin === 'kmd' ? true : false);
 
                           if (formattedTx.type) {
                             formattedTx.height = transaction.height;
@@ -465,7 +475,7 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
                           confirmations: Number(transaction.height) === 0 ? 0 : currentHeight - transaction.height,
                         };
 
-                        const formattedTx = agamalib.transactionType(_parsedTx, address, coin === 'kmd' ? true : false);
+                        const formattedTx = transactionType(_parsedTx, address, coin === 'kmd' ? true : false);
                         _rawtx.push(formattedTx);
                         resolve(true);
                       }
@@ -479,7 +489,7 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
                         timestamp: 'cant get block info',
                         confirmations: Number(transaction.height) === 0 ? 0 : currentHeight - transaction.height,
                       };
-                      const formattedTx = agamalib.transactionType(_parsedTx, address, coin === 'kmd' ? true : false);
+                      const formattedTx = transactionType(_parsedTx, address, coin === 'kmd' ? true : false);
                       _rawtx.push(formattedTx);
                       resolve(true);
                     }
@@ -579,13 +589,13 @@ export const shepherdElectrumSendPromise = (coin, value, sendToAddress, changeAd
     .then((utxoList) => {
       let _network;
 
-      if (agamalib.coin.isKomodoCoin(coin)) {
-        _network = agamalib.btcnetworks.kmd;
+      if (coin.isKomodoCoin(coin)) {
+        _network = btcnetworks.kmd;
       } else {
-        _network = agamalib.btcnetworks[coin];
+        _network = btcnetworks[coin];
       }
 
-      const _data = agamalib.transactionBuilder.data(
+      const _data = transactionBuilder.data(
         _network,
         value,
         fee,
@@ -596,7 +606,7 @@ export const shepherdElectrumSendPromise = (coin, value, sendToAddress, changeAd
 
       // console.warn('send data', _data);
 
-      const _tx = agamalib.transactionBuilder.transaction(
+      const _tx = transactionBuilder.transaction(
         sendToAddress,
         changeAddress,
         appData.keys[coin].priv,
@@ -806,8 +816,8 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
 
                         if (_cachedTx) {
                           // decode tx
-                          const _network = agamalib.coin.isKomodoCoin(coin) ? agamalib.btcnetworks.kmd : agamalib.btcnetworks[coin];
-                          const decodedTx = agamalib.decoder(_cachedTx, _network);
+                          const _network = coin.isKomodoCoin(coin) ? btcnetworks.kmd : btcnetworks[coin];
+                          const decodedTx = decoder(_cachedTx, _network);
 
                           // console.warn('decoded tx =>');
                           // console.warn(decodedTx);
@@ -821,8 +831,8 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
 
                               if (Number(_utxoItem.value) * 0.00000001 >= 10 &&
                                   decodedTx.format.locktime > 0) {
-                                // console.warn('interest', agamalib.komodoInterest);
-                                interest = agamalib.komodoInterest(decodedTx.format.locktime, _utxoItem.value);
+                                // console.warn('interest', komodoInterest);
+                                interest = komodoInterest(decodedTx.format.locktime, _utxoItem.value);
                               }
 
                               let _resolveObj = {
@@ -926,8 +936,8 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                               // console.warn(_rawtxJSON);
 
                               // decode tx
-                              const _network = agamalib.coin.isKomodoCoin(coin) ? agamalib.btcnetworks.kmd : agamalib.btcnetworks[coin];
-                              const decodedTx = agamalib.decoder(_rawtxJSON, _network);
+                              const _network = coin.isKomodoCoin(coin) ? btcnetworks.kmd : btcnetworks[coin];
+                              const decodedTx = decoder(_rawtxJSON, _network);
 
                               // console.warn('decoded tx =>');
                               // console.warn(decodedTx);
@@ -941,8 +951,8 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
 
                                   if (Number(_utxoItem.value) * 0.00000001 >= 10 &&
                                       decodedTx.format.locktime > 0) {
-                                    // console.warn('interest', agamalib.komodoInterest);
-                                    interest = agamalib.komodoInterest(decodedTx.format.locktime, _utxoItem.value);
+                                    // console.warn('interest', komodoInterest);
+                                    interest = komodoInterest(decodedTx.format.locktime, _utxoItem.value);
                                   }
 
                                   let _resolveObj = {

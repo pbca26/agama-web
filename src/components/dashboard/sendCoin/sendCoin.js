@@ -22,7 +22,12 @@ import { isPositiveNumber } from '../../../util/number';
 import explorerList from '../../../util/explorerList';
 import Slider, { Range } from 'rc-slider';
 import ReactTooltip from 'react-tooltip';
-import agamalib from '../../../agamalib';
+import {
+  eservers,
+  coin,
+  keys,
+  btcnetworks,
+} from 'agama-wallet-lib/src/index-fe';
 
 // TODO: - add links to explorers
 //       - render z address trim
@@ -83,13 +88,7 @@ class SendCoin extends React.Component {
     const _amount = this.state.amount;
     const _amountSats = this.state.amount * 100000000;
     const _balanceSats = this.props.ActiveCoin.balance.balanceSats;
-    let fee;
-
-    if (this.props.ActiveCoin.coin !== 'btc') {
-      fee = agamalib.eservers[this.props.ActiveCoin.coin].txfee;
-    } else {
-      fee = 0;
-    }
+    const fee = this.props.ActiveCoin.coin !== 'btc' ? eservers[this.props.ActiveCoin.coin].txfee : 0;
 
     this.setState({
       amount: Number((0.00000001 * (_balanceSats - fee)).toFixed(8)),
@@ -464,13 +463,8 @@ class SendCoin extends React.Component {
 
         // spv pre tx push request
         if (this.props.ActiveCoin.mode === 'spv') {
-          let fee;
+          const fee = this.props.ActiveCoin.coin !== 'btc' ? eservers[this.props.ActiveCoin.coin].txfee : 0;
 
-          if (this.props.ActiveCoin.coin !== 'btc') {
-            fee = agamalib.eservers[this.props.ActiveCoin.coin].txfee;
-          } else {
-            fee = 0;
-          }
           shepherdElectrumSendPromise(
             this.props.ActiveCoin.coin,
             this.state.amount * 100000000,
@@ -536,13 +530,7 @@ class SendCoin extends React.Component {
     } else if (this.props.ActiveCoin.mode === 'spv') {
       // no op
       if (this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub) {
-        let fee;
-
-        if (this.props.ActiveCoin.coin !== 'btc') {
-          fee = agamalib.eservers[this.props.ActiveCoin.coin].txfee;
-        } else {
-          fee = 0;
-        }
+        const fee = this.props.ActiveCoin.coin !== 'btc' ? eservers[this.props.ActiveCoin.coin].txfee : 0;
 
         shepherdElectrumSendPromise(
           this.props.ActiveCoin.coin,
@@ -564,13 +552,7 @@ class SendCoin extends React.Component {
       const _amount = this.state.amount;
       const _amountSats = Math.floor(this.state.amount * 100000000);
       const _balanceSats = this.props.ActiveCoin.balance.balanceSats;
-      let fee;
-
-      if (this.props.ActiveCoin.coin !== 'btc') {
-        fee = agamalib.eservers[this.props.ActiveCoin.coin].txfee;
-      } else {
-        fee = 0;
-      }
+      const fee = this.props.ActiveCoin.coin !== 'btc' ? eservers[this.props.ActiveCoin.coin].txfee : 0;
 
       if ((Number(_amountSats) + fee) > _balanceSats) {
         Store.dispatch(
@@ -597,10 +579,10 @@ class SendCoin extends React.Component {
       let _validateAddress;
       let _msg;
 
-      if (agamalib.coin.isKomodoCoin(this.props.ActiveCoin.coin)) {
-        _validateAddress = agamalib.keys.addressVersionCheck(agamalib.btcnetworks.kmd, this.state.sendTo);
+      if (coin.isKomodoCoin(this.props.ActiveCoin.coin)) {
+        _validateAddress = keys.addressVersionCheck(btcnetworks.kmd, this.state.sendTo);
       } else {
-        _validateAddress = agamalib.keys.addressVersionCheck(agamalib.btcnetworks[this.props.ActiveCoin.coin], this.state.sendTo);
+        _validateAddress = keys.addressVersionCheck(btcnetworks[this.props.ActiveCoin.coin], this.state.sendTo);
       }
 
       if (_validateAddress === 'Invalid pub address') {
@@ -698,22 +680,24 @@ class SendCoin extends React.Component {
         this.props.ActiveCoin.coin.toUpperCase() === 'BTC' &&
         !this.state.btcFees.lastUpdated) {
       return (<div className="col-lg-6 form-group form-material">Fetching BTC fees...</div>);
-    } else if (this.props.ActiveCoin.mode === 'spv' && this.props.ActiveCoin.coin.toUpperCase() === 'BTC' && this.state.btcFees.lastUpdated) {
-      const _min = 0;
-      const _max = this.state.btcFees.electrum.length - 1;
+    } else if (
+      this.props.ActiveCoin.mode === 'spv' &&
+      this.props.ActiveCoin.coin.toUpperCase() === 'BTC' &&
+      this.state.btcFees.lastUpdated
+    ) {
+      const _blockBased = {
+        min: 0,
+        max: this.state.btcFees.electrum.length - 1,
+      };
       const _confTime = [
         'within less than 30 min',
         'within 30 min',
         'within 60 min',
       ];
-      const _minTimeBased = 0;
-      const _maxTimeBased = 3;
-
-      /*let _marks = {};
-
-      for (let i = _min; i < _max; i++) {
-        _marks[i] = i + 1;
-      }*/
+      const _timeBased = {
+        min: 0,
+        max: 3,
+      };
 
       return (
         <div className="col-lg-12 form-group form-material">
@@ -742,8 +726,8 @@ class SendCoin extends React.Component {
               className="send-slider-time-based margin-bottom-70"
               onChange={ this.onSliderChangeTime }
               defaultValue={ this.state.btcFeesTimeBasedStep }
-              min={ _minTimeBased }
-              max={ _maxTimeBased }
+              min={ _timeBased.min }
+              max={ _timeBased.max }
               dots={ true }
               marks={{
                 0: 'fast',
@@ -753,16 +737,16 @@ class SendCoin extends React.Component {
               }} />
             { this.state.btcFeesType === 'advanced' &&
               <div className="margin-bottom-20">
-                <div className="send-target-block">Estimated to be included within the next <strong>{this.state.btcFeesAdvancedStep + 1} {(this.state.btcFeesAdvancedStep + 1) > 1 ? 'blocks' : 'block'}</strong></div>
+                <div className="send-target-block">Estimated to be included within the next <strong>{ this.state.btcFeesAdvancedStep + 1 } { (this.state.btcFeesAdvancedStep + 1) > 1 ? 'blocks' : 'block' }</strong></div>
                 <Slider
                   onChange={ this.onSliderChange }
                   defaultValue={ this.state.btcFeesAdvancedStep }
-                  min={ _min }
-                  max={ _max } />
+                  min={ _blockBased.min }
+                  max={ _blockBased.max } />
               </div>
             }
             { this.state.btcFeesSize > 0 &&
-              <div className="margin-top-10">Fee per byte {this.state.btcFeesSize}, per KB {this.state.btcFeesSize * 1024}</div>
+              <div className="margin-top-10">Fee per byte { this.state.btcFeesSize }, per KB { this.state.btcFeesSize * 1024 }</div>
             }
           </div>
         </div>

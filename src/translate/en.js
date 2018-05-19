@@ -854,6 +854,7 @@ export const LANG_EN = {
     'EQL': 'Equaliser (EQL)',
     'NINJA': 'NINJA (NINJA)',
     'GLXT': 'GLXToken (GLXT)',
+    'VOTE2018': 'Notary Node (VOTE2018)'
   },
   'DEX': {
     'GEN_NEW_PASSPHRASE': 'Generate a new passphrase',
