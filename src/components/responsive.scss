@@ -20,7 +20,57 @@
   }
 }
 
+@media only screen and (max-width : 500px) {
+  .wallet-risks-modal .modal-body {
+    overflow-y: scroll;
+    margin-bottom: 20px;
+  }
+  .page-login .addcoin-shortcut {
+    width: 100%;
+  }
+  .page-main .header-easydex.page-header--spv {
+    height: 160px;
+  }
+  .panel-group .panel-title {
+    padding: 15px 45px 15px 15px;
+  }
+  .modal-header {
+    padding: 15px 10px;
+
+    .close {
+      margin-top: -2px;
+    }
+  }
+  .modal-footer {
+    padding: 6px 10px 20px;
+  }
+  .page-main .page-content .receive-coin-block .panel-body {
+    overflow-x: auto !important;
+  }
+  .page .header-easydex-section img {
+    top: -11px !important;
+  }
+  .coin-send-form {
+    a {
+      position: absolute;
+      left: 10px;
+    }
+  }
+  .modal-claim-interest {
+    .page-content.vertical-align-middle.full-width {
+      padding: 30px 0px 10px 0;
+    }
+  }
+}
 @media only screen and (max-width : 767px) {
+  .page-login {
+    .qr-modal-login-block {
+      display: none;
+    }
+    form {
+      margin-top: 50px;
+    }
+  }
   .navbar-container.container-fluid {
     padding-left: 80px;
   }

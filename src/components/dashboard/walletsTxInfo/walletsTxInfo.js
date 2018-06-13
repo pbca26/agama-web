@@ -1,14 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { translate } from '../../../translate/translate';
-import { sortByDate } from '../../../util/sort';
+import { sortByDate } from 'agama-wallet-lib/src/utils';
 import {
   toggleDashboardTxInfoModal,
   getTxDetails,
 } from '../../../actions/actionCreators';
 import Store from '../../../store';
 import WalletsTxInfoRender from './walletsTxInfo.render';
-import explorerList from '../../../util/explorerList';
+import { explorerList } from 'agama-wallet-lib/src/coin-helpers';
 
 class WalletsTxInfo extends React.Component {
   constructor() {

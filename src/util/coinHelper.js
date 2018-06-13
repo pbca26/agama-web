@@ -6,6 +6,10 @@ export const getCoinTitle = (coin) => {
   let hideTitle = false;
 
   switch (coin) {
+    case 'CHAIN':
+    coinlogo = 'chain';
+    coinname = 'Chainmakers';
+    break;
     case 'BCBC':
       coinlogo = 'bcbc';
       coinname = 'Bitcoin CBC';

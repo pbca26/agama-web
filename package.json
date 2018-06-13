@@ -30,7 +30,7 @@
   "author": "SuperNET Team",
   "license": "MIT",
   "dependencies": {
-    "agama-wallet-lib": "git://github.com/pbca26/agama-wallet-lib#dev",
+    "agama-wallet-lib": "git://github.com/pbca26/agama-wallet-lib.git#dev",
     "babel-core": "^6.14.0",
     "babel-loader": "^6.2.5",
     "babel-preset-es2015": "^6.14.0",

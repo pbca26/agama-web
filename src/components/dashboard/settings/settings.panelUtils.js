@@ -1,8 +1,8 @@
-export function checkUndef(item) {
+export const checkUndef = (item) => {
   return (typeof item !== 'undefined');
 }
 
-export function toggleSection(sectionId, activeSections, singleOpen) {
+export const toggleSection = (sectionId, activeSections, singleOpen) => {
   let present = null;
   let newActiveSections = activeSections;
 
@@ -29,7 +29,7 @@ export function toggleSection(sectionId, activeSections, singleOpen) {
   return newActiveSections;
 }
 
-export function setupAccordion(info) {
+export const setupAccordion = (info) => {
   const singleOpen = (checkUndef(info.singleOpen)) ? info.singleOpen : false;
   const activeSections = [];
   const singleChild = typeof info.kids.length === 'undefined';

@@ -15,7 +15,7 @@ import {
 import Store from '../../store';
 import {
   keys,
-  coin,
+  coin as _coin,
   decoder,
   utils,
   eservers,
@@ -60,7 +60,7 @@ export const shepherdSelectRandomCoinServer = (coin) => {
   appData.servers[coin] = {
     ip: _randomServer[0],
     port: _randomServer[1],
-    proto: eservers[coin].proto,
+    proto: _randomServer[2],
   };
 }
 
@@ -280,7 +280,7 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
       let result = json;
 
       if (result.msg === 'error') {
-        resolve('error');
+        Store.dispatch(shepherdElectrumTransactionsState({ error: 'error' }));
       } else {
         const currentHeight = result.result;
 
@@ -350,11 +350,12 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
                       // console.warn(transaction.raw);
 
                       // decode tx
-                      const _network = coin.isKomodoCoin(coin) ? btcnetworks.kmd : btcnetworks[coin];
+                      const _network = _coin.isKomodoCoin(coin) ? btcnetworks.kmd : btcnetworks[coin];
                       const decodedTx = decoder(transaction.raw, _network);
 
                       let txInputs = [];
 
+                      // console.warn(_network);
                       // console.warn('decodedtx =>');
                       // console.warn(decodedTx.outputs);
 
@@ -589,7 +590,7 @@ export const shepherdElectrumSendPromise = (coin, value, sendToAddress, changeAd
     .then((utxoList) => {
       let _network;
 
-      if (coin.isKomodoCoin(coin)) {
+      if (_coin.isKomodoCoin(coin)) {
         _network = btcnetworks.kmd;
       } else {
         _network = btcnetworks[coin];
@@ -659,7 +660,7 @@ export const shepherdElectrumSendPromise = (coin, value, sendToAddress, changeAd
               change: _data.change,
               changeAdjusted: _data.change,
               totalInterest: _data.totalInterest,
-              fee: _data.totalInterest,
+              fee: _data.fee,
               value: _data.value,
               outputAddress: sendToAddress,
               changeAddress,
@@ -816,7 +817,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
 
                         if (_cachedTx) {
                           // decode tx
-                          const _network = coin.isKomodoCoin(coin) ? btcnetworks.kmd : btcnetworks[coin];
+                          const _network = _coin.isKomodoCoin(coin) ? btcnetworks.kmd : btcnetworks[coin];
                           const decodedTx = decoder(_cachedTx, _network);
 
                           // console.warn('decoded tx =>');
@@ -832,7 +833,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                               if (Number(_utxoItem.value) * 0.00000001 >= 10 &&
                                   decodedTx.format.locktime > 0) {
                                 // console.warn('interest', komodoInterest);
-                                interest = komodoInterest(decodedTx.format.locktime, _utxoItem.value);
+                                interest = komodoInterest(decodedTx.format.locktime, _utxoItem.value, _utxoItem.height);
                               }
 
                               let _resolveObj = {
@@ -888,7 +889,8 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                                   _utxoItem.height,
                                   electrumServer,
                                   proxyServer
-                                ).then((verifyMerkleRes) => {
+                                )
+                                .then((verifyMerkleRes) => {
                                   if (verifyMerkleRes &&
                                       verifyMerkleRes === CONNECTION_ERROR_OR_INCOMPLETE_DATA) {
                                     verifyMerkleRes = false;
@@ -936,7 +938,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                               // console.warn(_rawtxJSON);
 
                               // decode tx
-                              const _network = coin.isKomodoCoin(coin) ? btcnetworks.kmd : btcnetworks[coin];
+                              const _network = _coin.isKomodoCoin(coin) ? btcnetworks.kmd : btcnetworks[coin];
                               const decodedTx = decoder(_rawtxJSON, _network);
 
                               // console.warn('decoded tx =>');
@@ -952,7 +954,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                                   if (Number(_utxoItem.value) * 0.00000001 >= 10 &&
                                       decodedTx.format.locktime > 0) {
                                     // console.warn('interest', komodoInterest);
-                                    interest = komodoInterest(decodedTx.format.locktime, _utxoItem.value);
+                                    interest = komodoInterest(decodedTx.format.locktime, _utxoItem.value, _utxoItem.height);
                                   }
 
                                   let _resolveObj = {
@@ -1008,7 +1010,8 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                                       _utxoItem.height,
                                       electrumServer,
                                       proxyServer
-                                    ).then((verifyMerkleRes) => {
+                                    )
+                                    .then((verifyMerkleRes) => {
                                       if (verifyMerkleRes &&
                                           verifyMerkleRes === CONNECTION_ERROR_OR_INCOMPLETE_DATA) {
                                         verifyMerkleRes = false;

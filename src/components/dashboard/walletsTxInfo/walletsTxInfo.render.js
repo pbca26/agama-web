@@ -1,8 +1,8 @@
 import React from 'react';
 import { translate } from '../../../translate/translate';
-import { secondsToString } from '../../../util/time';
+import { secondsToString } from 'agama-wallet-lib/src/time';
 import Config from '../../../config';
-import explorerList from '../../../util/explorerList';
+import { explorerList } from 'agama-wallet-lib/src/coin-helpers';
 
 const WalletsTxInfoRender = function(txInfo) {
   return (

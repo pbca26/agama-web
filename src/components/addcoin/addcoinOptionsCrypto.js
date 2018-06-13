@@ -109,6 +109,26 @@ const addCoinOptionsCrypto = () => {
     label: 'BitcoinZ (BTCZ)',
     icon: 'BTCZ',
     value: `BTCZ|spv`,
+  }, {
+    label: 'Einsteinium (EMC2)',
+    icon: 'EMC2',
+    value: `EMC2|spv`,
+  }, {
+    label: 'Fujicoin (FJC)',
+    icon: 'FJC',
+    value: `FJC|spv`,
+  }, {
+    label: 'Denarius (DNR)',
+    icon: 'DNR',
+    value: `DNR|spv`,
+  }, {
+    label: 'GameCredits (GAME)',
+    icon: 'GAME',
+    value: `GAME|spv`,
+  }, {
+    label: 'Bitcoin CBC (BCBC)',
+    icon: 'BCBC',
+    value: `BCBC|spv`,
   }];
 
   return _coins;

@@ -3,7 +3,7 @@ import ReactTooltip from 'react-tooltip';
 import { translate } from '../../../translate/translate';
 import ReactTable from 'react-table';
 import TablePaginationRenderer from './pagination';
-import { formatValue } from '../../../util/formatValue';
+import { formatValue } from 'agama-wallet-lib/src/utils';
 import Config from '../../../config';
 import Spinner from '../spinner/spinner';
 
@@ -127,8 +127,10 @@ export const TxTypeRender = function(category) {
         <i className="icon fa-arrow-circle-left"></i> <span>{ translate('DASHBOARD.OUT') }</span>
       </span>
     );
-  } else if (category === 'receive' ||
-      category === 'received') {
+  } else if (
+    category === 'receive' ||
+    category === 'received'
+  ) {
     return (
       <span className="label label-success">
         <i className="icon fa-arrow-circle-right"></i> <span>{ translate('DASHBOARD.IN') } &nbsp; &nbsp;</span>

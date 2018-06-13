@@ -1,8 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { translate } from '../../../translate/translate';
-import { sortByDate } from '../../../util/sort';
-import { formatValue } from '../../../util/formatValue';
+import {
+  formatValue,
+  sortByDate,
+} from 'agama-wallet-lib/src/utils';
 import Config from '../../../config';
 import {
   toggleDashboardTxInfoModal,
@@ -27,7 +29,7 @@ import {
   AddressListRender,
   WalletsDataRender,
 } from  './walletsData.render';
-import { secondsToString } from '../../../util/time';
+import { secondsToString } from 'agama-wallet-lib/src/time';
 import getRandomElectrumServer from '../../../util/serverRandom';
 import DoubleScrollbar from 'react-double-scrollbar';
 
@@ -85,9 +87,12 @@ class WalletsData extends React.Component {
         this.props.ActiveCoin.coin.toUpperCase() === 'KMD' &&
         this.props.ActiveCoin.balance) {
       if (this.props.ActiveCoin.balance.interest &&
-        this.props.ActiveCoin.balance.interest > 0) {
+          this.props.ActiveCoin.balance.interest > 0) {
         return 777;
-      } else if ((this.props.ActiveCoin.balance.transparent && this.props.ActiveCoin.balance.transparent >= 10) || (this.props.ActiveCoin.balance.balance && this.props.ActiveCoin.balance.balance >= 10)) {
+      } else if (
+        (this.props.ActiveCoin.balance.transparent && this.props.ActiveCoin.balance.transparent >= 10) ||
+        (this.props.ActiveCoin.balance.balance && this.props.ActiveCoin.balance.balance >= 10)
+      ) {
         return -777;
       }
     }
@@ -241,7 +246,6 @@ class WalletsData extends React.Component {
         e.srcElement.className !== 'dropdown-toggle btn-xs btn-default') {
       this.setState({
         addressSelectorOpen: false,
-        basiliskActionsMenu: false,
       });
     }
   }
@@ -298,13 +302,18 @@ class WalletsData extends React.Component {
         itemsList: 'no data',
         reconnectInProgress: false,
       });
-    } else if (this.props.ActiveCoin.txhistory && this.props.ActiveCoin.txhistory === 'loading') {
+    } else if (
+      this.props.ActiveCoin.txhistory &&
+      this.props.ActiveCoin.txhistory === 'loading'
+    ) {
       _stateChange = Object.assign({}, _stateChange, {
         itemsList: 'loading',
         reconnectInProgress: false,
       });
-    } else if ((this.props.ActiveCoin.txhistory && this.props.ActiveCoin.txhistory === 'connection error or incomplete data') ||
-      (this.props.ActiveCoin.txhistory && this.props.ActiveCoin.txhistory === 'cant get current height')) {
+    } else if (
+      (this.props.ActiveCoin.txhistory && this.props.ActiveCoin.txhistory === 'connection error or incomplete data') ||
+      (this.props.ActiveCoin.txhistory && this.props.ActiveCoin.txhistory === 'cant get current height')
+    ) {
       _stateChange = Object.assign({}, _stateChange, {
         itemsList: 'connection error',
         reconnectInProgress: this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].serverList !== 'none' ? true : false,
@@ -411,7 +420,10 @@ class WalletsData extends React.Component {
           </td>
         </tr>
       );
-    } else if (this.state.itemsList && this.state.itemsList.length) {
+    } else if (
+      this.state.itemsList &&
+      this.state.itemsList.length
+    ) {
       return (
         <DoubleScrollbar>
         { TxHistoryListRender.call(this) }

@@ -27,8 +27,13 @@ export function checkAC(coinVal) {
 			coinVal === 'BTCH' ||
 			coinVal === 'BEER' ||
 			coinVal === 'PIZZA' ||
-			coinVal === 'VOTE' ||
-	    		coinVal === 'OOT' ||
+			coinVal === 'VOTE2018' ||
+			coinVal === 'OOT' ||
+			coinVal === 'PRLPAY' ||
+			coinVal === 'NINJA' ||
+			coinVal === 'CHAIN' ||
+			coinVal === 'EQL' ||
+			//coinVal === 'DSEC' ||
 			coinVal === 'USD' ||
 			coinVal === 'RON' ||
 			coinVal === 'EUR' ||
@@ -127,8 +132,13 @@ export function checkCoinType(coin) {
 			coin === 'BTCH' ||
 			coin === 'BEER' ||
 			coin === 'PIZZA' ||
-	    		coin === 'OOT' ||
-			coin === 'VOTE') {
+	    coin === 'OOT' ||
+			coin === 'VOTE2018' ||
+			coin === 'PRLPAY' ||
+			coin === 'NINJA' ||
+			coin === 'CHAIN' ||
+			//coin === 'DSEC' ||
+			coin === 'EQL') {
 		return 'ac';
 	}
 

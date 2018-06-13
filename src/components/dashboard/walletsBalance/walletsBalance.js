@@ -5,7 +5,7 @@ import {
   shepherdElectrumBalance,
 } from '../../../actions/actionCreators';
 import Config from '../../../config';
-import { formatValue } from '../../../util/formatValue';
+import { formatValue } from 'agama-wallet-lib/src/utils';
 import ReactTooltip from 'react-tooltip';
 
 import Store from '../../../store';
@@ -65,7 +65,10 @@ class WalletsBalance extends React.Component {
           this.props.ActiveCoin.balance[type]) {
         _balance = this.props.ActiveCoin.balance[type];
       }
-    } else if (_mode === 'spv' && this.props.ActiveCoin.balance.balance) {
+    } else if (
+      _mode === 'spv' &&
+      this.props.ActiveCoin.balance.balance
+    ) {
       if (this.props.ActiveCoin.coin.toUpperCase() === 'KMD') {
         if (type === 'total' &&
             this.props.ActiveCoin.balance &&

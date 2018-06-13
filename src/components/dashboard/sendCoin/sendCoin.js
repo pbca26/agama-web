@@ -18,8 +18,8 @@ import {
   SendFormRender,
   _SendFormRender,
 } from './sendCoin.render';
-import { isPositiveNumber } from '../../../util/number';
-import explorerList from '../../../util/explorerList';
+import { isPositiveNumber } from 'agama-wallet-lib/src/utils';
+import { explorerList } from 'agama-wallet-lib/src/coin-helpers';
 import Slider, { Range } from 'rc-slider';
 import ReactTooltip from 'react-tooltip';
 import {

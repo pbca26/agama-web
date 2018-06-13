@@ -391,3 +391,36 @@ select{
 .site-navbar .navbar-brand-logo.hidden-lg {
   display: none;
 }
+
+.support-box-wrapper {
+  .support-box {
+    color: #757575;
+  }
+}
+
+.native-coin-logo .header-easydex-section img {
+  width: inherit !important;
+}
+
+#section-iguana-wallet-settings .panel-title:before,
+#section-iguana-wallet-settings .panel-title:after {
+  display: none;
+}
+
+.seed-toggle {
+  right: 10px;
+}
+
+.navbar-default .navbar-collapse,
+.navbar-default .navbar-form {
+  border: none;
+  padding: 0;
+}
+
+.page-main .page-content .receive-coin-block .panel-body {
+  padding: 0 0 40px 12px !important;
+}
+
+.modal-claim-interest .modal-dialog .table-scroll {
+  overflow-x: auto;
+}

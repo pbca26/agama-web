@@ -6,25 +6,6 @@ class About extends React.Component {
     super();
   }
 
-  openExternalWindow(url) {
-    const remote = window.require('electron').remote;
-    const BrowserWindow = remote.BrowserWindow;
-
-    const externalWindow = new BrowserWindow({
-      width: 1280,
-      height: 800,
-      title: `${translate('INDEX.LOADING')}...`,
-      icon: remote.getCurrentWindow().iguanaIcon,
-    });
-
-    externalWindow.loadURL(url);
-    externalWindow.webContents.on('did-finish-load', () => {
-      setTimeout(() => {
-        externalWindow.show();
-      }, 40);
-    });
-  }
-
   render() {
     return (
       <div className="page margin-left-0">
@@ -48,8 +29,8 @@ class About extends React.Component {
           <br /><br />
 
           <div className="font-weight-600">{ translate('ABOUT.TESTERS') }</div>
-          { translate('ABOUT.TESTERS_P1') } <a className="link" onClick={ () => this.openExternalWindow('https://supernet.org/en/products/agama-wallet') }>{ translate('ABOUT.TESTERS_P2') }</a>.
-          { translate('ABOUT.TESTERS_P3') } <a className="link" onClick={ () => this.openExternalWindow('https://sprnt.slack.com/messages/C0HT9MH96/') }>#testing-agama</a> Slack { translate('ABOUT.CHANNEL') }. <a className="link" onClick={ () => this.openExternalWindow('http://slackinvite.supernet.org/') }>{ translate('ABOUT.GET_AN_INVITE') }</a> { translate('ABOUT.GET_AN_INVITE_P2') }.
+          { translate('ABOUT.TESTERS_P1') } <a className="link" target="_blank" href="https://komodoplatform.com/komodo-wallets">{ translate('ABOUT.TESTERS_P2') }</a>.
+          { translate('ABOUT.TESTERS_P3') } <a className="link" target="_blank" href="https://sprnt.slack.com/messages/C0HT9MH96/">#testing-agama</a> Slack { translate('ABOUT.CHANNEL') }. <a className="link" target="_blank" href="http://slackinvite.supernet.org">{ translate('ABOUT.GET_AN_INVITE') }</a> { translate('ABOUT.GET_AN_INVITE_P2') }.
           { translate('ABOUT.TESTERS_P4') }
 
           <br /><br />

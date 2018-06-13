@@ -15,7 +15,7 @@ import {
 } from '../../components/addcoin/payload';
 import {
   keys,
-  coin,
+  coin as _coin,
   btcnetworks,
 } from 'agama-wallet-lib/src/index-fe';
 
@@ -39,7 +39,7 @@ export const shepherdElectrumAuth = (seed) => {
   let _pubKeys = {};
 
   for (let i = 0; i < appData.coins.length; i++) {
-    if (coin.isKomodoCoin(appData.coins[i])) {
+    if (_coin.isKomodoCoin(appData.coins[i])) {
       appData.keys[appData.coins[i]] = keys.stringToWif(seed, btcnetworks.kmd, true);
     } else {
       appData.keys[appData.coins[i]] = keys.stringToWif(seed, btcnetworks[appData.coins[i]], true);
@@ -79,7 +79,7 @@ export const addCoinResult = (coin, mode) => {
     appData.allcoins.total++;
 
     if (Object.keys(appData.keys).length) {
-      if (coin.isKomodoCoin(coin)) {
+      if (_coin.isKomodoCoin(coin)) {
         appData.keys[coin] = keys.stringToWif(appData.keys[Object.keys(appData.keys)[0]].priv, btcnetworks.kmd, true);
       } else {
         appData.keys[coin] = keys.stringToWif(appData.keys[Object.keys(appData.keys)[0]].priv, btcnetworks[coin], true);
