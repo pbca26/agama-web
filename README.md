@@ -17,5 +17,6 @@ In order to use your own proxy modify the following file src/util/proxyServers.j
 Electrum proxy source code is available here https://github.com/pbca26/electrum-proxy
 
 ### How to use whitelabel version
-Make changes to config.js
+Make changes in src/config.js
+
 Update app title in www/index.html
