@@ -56,7 +56,12 @@ export const shepherdSelectProxy = () => {
 
 export const shepherdSelectRandomCoinServer = (coin) => {
   // pick a random proxy server
-  const _randomServer = eservers[coin].serverList[utils.getRandomIntInclusive(0, eservers[coin].serverList.length - 1)].split(':');
+  let _randomServer = eservers[coin].serverList[utils.getRandomIntInclusive(0, eservers[coin].serverList.length - 1)].split(':');
+  
+  if (Config.whitelabel) {
+    _randomServer = Config.wlConfig.serverList[utils.getRandomIntInclusive(0, Config.wlConfig.serverList.length - 1)].split(':');
+  }
+  
   appData.servers[coin] = {
     ip: _randomServer[0],
     port: _randomServer[1],
@@ -350,7 +355,7 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
                       // console.warn(transaction.raw);
 
                       // decode tx
-                      const _network = _coin.isKomodoCoin(coin) ? btcnetworks.kmd : btcnetworks[coin];
+                      const _network = _coin.isKomodoCoin(coin) || Config.whitelabel ? btcnetworks.kmd : btcnetworks[coin];
                       const decodedTx = decoder(transaction.raw, _network);
 
                       let txInputs = [];
@@ -590,7 +595,7 @@ export const shepherdElectrumSendPromise = (coin, value, sendToAddress, changeAd
     .then((utxoList) => {
       let _network;
 
-      if (_coin.isKomodoCoin(coin)) {
+      if (_coin.isKomodoCoin(coin) || Config.whitelabel) {
         _network = btcnetworks.kmd;
       } else {
         _network = btcnetworks[coin];
@@ -938,7 +943,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                               // console.warn(_rawtxJSON);
 
                               // decode tx
-                              const _network = _coin.isKomodoCoin(coin) ? btcnetworks.kmd : btcnetworks[coin];
+                              const _network = _coin.isKomodoCoin(coin) || Config.whitelabel ? btcnetworks.kmd : btcnetworks[coin];
                               const decodedTx = decoder(_rawtxJSON, _network);
 
                               // console.warn('decoded tx =>');

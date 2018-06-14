@@ -190,7 +190,7 @@ const WalletsTxInfoRender = function(txInfo) {
             </div>
             <div className="modal-footer">
               { this.state.txDetails &&
-                explorerList[this.props.ActiveCoin.coin.toUpperCase()] &&
+                (explorerList[this.props.ActiveCoin.coin.toUpperCase()] || Config.whitelabel) &&
                 <a
                   href={ this.openExplorerWindow(this.state.txDetails.txid) }
                   target="_blank">

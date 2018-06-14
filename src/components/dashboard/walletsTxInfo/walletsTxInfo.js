@@ -9,6 +9,7 @@ import {
 import Store from '../../../store';
 import WalletsTxInfoRender from './walletsTxInfo.render';
 import { explorerList } from 'agama-wallet-lib/src/coin-helpers';
+import Config from '../../../config';
 
 class WalletsTxInfo extends React.Component {
   constructor() {
@@ -92,7 +93,12 @@ class WalletsTxInfo extends React.Component {
   }
 
   openExplorerWindow(txid) {
-    const url = explorerList[this.props.ActiveCoin.coin.toUpperCase()].split('/').length - 1 > 2 ? `${explorerList[this.props.ActiveCoin.coin.toUpperCase()]}${txid}` : `${explorerList[this.props.ActiveCoin.coin.toUpperCase()]}/tx/${txid}`;
+    let url = explorerList[this.props.ActiveCoin.coin.toUpperCase()].split('/').length - 1 > 2 ? `${explorerList[this.props.ActiveCoin.coin.toUpperCase()]}${txid}` : `${explorerList[this.props.ActiveCoin.coin.toUpperCase()]}/tx/${txid}`;
+    
+    if (Config.whitelabel) {
+      url = `${Config.wlConfig.explorer}/tx/${txid}`;
+    }
+
     return url;
   }
 
