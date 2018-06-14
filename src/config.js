@@ -14,6 +14,11 @@ let Config = {
       name: 'Komodo',
       logo: 'cryptologo/kmd.png', // dashboard coin logo
     },
+    explorer: 'https://kmdexplorer.ru', // insight or iquidus
+    serverList: [ // electrum servers list
+      'electrum1.cipig.net:10001:tcp',
+      'electrum2.cipig.net:10001:tcp',
+    ],
   },
 };
 

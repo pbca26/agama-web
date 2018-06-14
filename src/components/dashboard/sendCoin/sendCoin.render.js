@@ -4,6 +4,7 @@ import QRModal from '../qrModal/qrModal';
 import { formatValue } from 'agama-wallet-lib/src/utils';
 import { explorerList } from 'agama-wallet-lib/src/coin-helpers';
 import ReactTooltip from 'react-tooltip';
+import Config from '../../../config';
 
 export const AddressListRender = function() {
   return (
@@ -377,7 +378,7 @@ export const SendRender = function() {
                           { this.props.ActiveCoin.mode === 'spv' &&
                             this.state.lastSendToResponse &&
                             this.state.lastSendToResponse.txid &&
-                            explorerList[this.props.ActiveCoin.coin.toUpperCase()] &&
+                            (explorerList[this.props.ActiveCoin.coin.toUpperCase()] || Config.whitelabel) &&
                             <div className="margin-top-10">
                               <a
                                 href={ this.openExplorerWindow(this.props.ActiveCoin.mode === 'spv' ? (this.state.lastSendToResponse && this.state.lastSendToResponse.txid ? this.state.lastSendToResponse.txid : '') : this.state.lastSendToResponse) }
