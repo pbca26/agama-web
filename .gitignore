@@ -1,7 +1,7 @@
-# Logs
-logs
-*.log
-npm-debug.log*
-
-# Ignore node.js modules folder
 node_modules
+npm-debug.log
+.DS_Store
+www/bundle.js
+examples
+build
+wallet
