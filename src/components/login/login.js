@@ -259,6 +259,12 @@ class Login extends React.Component {
     }
   }
 
+  componentWillMount() {
+    if (Config.whitelabel) {
+      Store.dispatch(addCoin(Config.wlConfig.coin.ticker));
+    }
+  }
+
   toggleActivateCoinForm() {
     Store.dispatch(toggleAddcoinModal(true, false));
   }

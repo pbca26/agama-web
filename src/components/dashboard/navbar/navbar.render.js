@@ -9,14 +9,17 @@ const NavbarRender = function() {
       <div className="navbar-header">
         <div className="navbar-brand navbar-brand-center site-gridmenu-toggle">
           <img
-            className="navbar-brand-logo hidden-xs"
-            src="assets/images/agama-logo-side.svg"
+            className={ 'navbar-brand-logo hidden-xs' + (Config.whitelabel ? ' whitelabel' : '') }
+            src={ Config.whitelabel ? 'assets/images/' + Config.wlConfig.coin.logo : 'assets/images/agama-logo-side.svg' }
             height="100"
             width="100"
             title={ translate('ABOUT.AGAMA_WALLET') } />
+          { Config.whitelabel &&
+            <span className="whitelabel-icon-title">{ Config.wlConfig.coin.ticker }</span>
+          }
           <img
-            className="navbar-brand-logo hidden-lg"
-            src="assets/images/agama-icon.svg"
+            className={ 'navbar-brand-logo hidden-lg' + (Config.whitelabel ? ' whitelabel' : '') }
+            src={ Config.whitelabel ? 'assets/images/' + Config.wlConfig.coin.logo : 'assets/images/agama-icon.svg' }
             title={ translate('ABOUT.AGAMA_WALLET') } />
           <span className="navbar-brand-text hidden-xs"></span>
         </div>
@@ -56,17 +59,19 @@ const NavbarRender = function() {
             }
           </ul>
           <ul className="nav navbar-toolbar navbar-right navbar-toolbar-right">
-            <li>
-              <a
-                className="pointer padding-bottom-10 padding-top-16"
-                onClick={ this.toggleAddCoinModal }>
-                <span>
-                  <img
-                    src="assets/images/icons/activatecoin.png"
-                    alt={ translate('INDEX.ADD_COIN') } />
-                </span>
-              </a>
-            </li>
+            { !Config.whitelabel &&
+              <li>
+                <a
+                  className="pointer padding-bottom-10 padding-top-16"
+                  onClick={ this.toggleAddCoinModal }>
+                  <span>
+                    <img
+                      src="assets/images/icons/activatecoin.png"
+                      alt={ translate('INDEX.ADD_COIN') } />
+                  </span>
+                </a>
+              </li>
+            }
             <li
               className={ 'pointer dropdown' + (this.state.openDropMenu ? ' open' : '') }
               onClick={ this.openDropMenu }>
@@ -86,6 +91,7 @@ const NavbarRender = function() {
                   </li>
                 }
                 { !this.isSectionActive('about') &&
+                  !Config.whitelabel &&
                   <li>
                     <a onClick={ () => this.dashboardChangeSection('about') }>
                       <i className="icon fa-users"></i> { translate('ABOUT.ABOUT_AGAMA') }
@@ -93,6 +99,7 @@ const NavbarRender = function() {
                   </li>
                 }
                 { !this.isSectionActive('support') &&
+                  !Config.whitelabel &&
                   <li>
                     <a onClick={ () => this.dashboardChangeSection('support') }>
                       <i className="icon fa-life-ring"></i> { translate('SETTINGS.SUPPORT') }

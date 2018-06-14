@@ -63,6 +63,9 @@
   }
 }
 @media only screen and (max-width : 767px) {
+  .whitelabel-icon-title {
+    display: none;
+  }
   .page-login {
     .qr-modal-login-block {
       display: none;

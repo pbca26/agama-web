@@ -88,13 +88,15 @@ export const addCoinResult = (coin, mode) => {
   }
 
   return dispatch => {
-    dispatch(
-      triggerToaster(
-        `${coin.toUpperCase()} ${translate('TOASTR.STARTED_IN')} ${modeToValue[mode].toUpperCase()} ${translate('TOASTR.MODE')}`,
-        translate('TOASTR.COIN_NOTIFICATION'),
-        'success'
-      )
-    );
+    if (!Config.whitelabel) {
+      dispatch(
+        triggerToaster(
+          `${coin.toUpperCase()} ${translate('TOASTR.STARTED_IN')} ${modeToValue[mode].toUpperCase()} ${translate('TOASTR.MODE')}`,
+          translate('TOASTR.COIN_NOTIFICATION'),
+          'success'
+        )
+      );
+    }
     dispatch(toggleAddcoinModal(false, false));
 
     shepherdSelectRandomCoinServer(coin);

@@ -18,7 +18,7 @@ class Main extends React.Component {
   }
 
   componentDidMount() {
-    document.title = `Agama Web (v${Config.version}-beta)`;
+    document.title = `${Config.whitelabel ? Config.wlConfig.title : 'Agama Web'} (v${Config.version})`;
   }
 
   componentWillMount() {

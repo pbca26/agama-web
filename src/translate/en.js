@@ -96,6 +96,7 @@ export const LANG_EN = {
     'NO_ACTIVE_COIN': 'No active coin',
   },
   'INDEX': {
+    'UNDERSTAND_RISKS_LINK': 'Understand the risks in using Agama web wallet',
     'WALLET_OFFLINE': 'Agama is currently unable to connect to the Internet.',
     'OFFLINE': 'Offline',
     'TOGGLE_COIN_CONTEXT_MENU': 'Toggle coin context menu',
@@ -865,5 +866,11 @@ export const LANG_EN = {
     'TRADE_HISTORY_SM': 'trade history',
     'ELECTRUM_MODE': 'Electrum mode',
     'NATIVE_MODE': 'Native mode',
+  },
+  'RISKS_MODAL': {
+    'DESC_P1': 'This wallet is a web-based interface that allows you to use',
+    'DESC_P2': 'and other Komodo chains',
+    'DESC_P3': 'without running a full @template@ node. However, because this convenience comes at a cost: it is extremely difficult for Agama to securely deliver its code to your browser. This means that there is considerable risk in using Agama web wallet for large amounts!',
+    'DESC_P4': 'It is recommended that you treat Agama web as you would treat your actual wallet, and not store very large amounts in it. For long-term storage of @template@ and any other cryptocurrency you should create a cold wallet.',
   },
 };
