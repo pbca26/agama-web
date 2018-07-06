@@ -424,3 +424,16 @@ select{
 .modal-claim-interest .modal-dialog .table-scroll {
   overflow-x: auto;
 }
+
+.site-navbar .navbar-brand-logo.whitelabel {
+  width: inherit;
+  height: 45px;
+  margin-top: -10px;
+}
+
+.whitelabel-icon-title {
+  position: relative;
+  left: 15px;
+  top: -2px;
+  color: #757575;
+}

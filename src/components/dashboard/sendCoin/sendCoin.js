@@ -106,7 +106,12 @@ class SendCoin extends React.Component {
   }
 
   openExplorerWindow(txid) {
-    const url = explorerList[this.props.ActiveCoin.coin.toUpperCase()].split('/').length - 1 > 2 ? `${explorerList[this.props.ActiveCoin.coin.toUpperCase()]}${txid}` : `${explorerList[this.props.ActiveCoin.coin.toUpperCase()]}/tx/${txid}`;
+    let url = explorerList[this.props.ActiveCoin.coin.toUpperCase()].split('/').length - 1 > 2 ? `${explorerList[this.props.ActiveCoin.coin.toUpperCase()]}${txid}` : `${explorerList[this.props.ActiveCoin.coin.toUpperCase()]}/tx/${txid}`;
+
+    if (Config.whitelabel) {
+      url = `${Config.wlConfig.explorer}/tx/${txid}`;
+    }
+
     return url;
   }
 
@@ -579,7 +584,7 @@ class SendCoin extends React.Component {
       let _validateAddress;
       let _msg;
 
-      if (coin.isKomodoCoin(this.props.ActiveCoin.coin)) {
+      if (coin.isKomodoCoin(this.props.ActiveCoin.coin) || Config.whitelabel) {
         _validateAddress = keys.addressVersionCheck(btcnetworks.kmd, this.state.sendTo);
       } else {
         _validateAddress = keys.addressVersionCheck(btcnetworks[this.props.ActiveCoin.coin], this.state.sendTo);

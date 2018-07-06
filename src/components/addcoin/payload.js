@@ -2,6 +2,8 @@
 //			 move to nodejs
 //			 cleanup
 
+import Config from '../../config';
+
 export function checkAC(coinVal) {
 	if (coinVal === 'SUPERNET' ||
 			coinVal === 'REVS' ||
@@ -34,38 +36,7 @@ export function checkAC(coinVal) {
 			coinVal === 'CHAIN' ||
 			coinVal === 'EQL' ||
 			//coinVal === 'DSEC' ||
-			coinVal === 'USD' ||
-			coinVal === 'RON' ||
-			coinVal === 'EUR' ||
-			coinVal === 'JPY' ||
-			coinVal === 'GBP' ||
-			coinVal === 'AUD' ||
-			coinVal === 'CAD' ||
-			coinVal === 'CHF' ||
-			coinVal === 'NZD' ||
-			coinVal === 'CNY' ||
-			coinVal === 'RUB' ||
-			coinVal === 'MXN' ||
-			coinVal === 'BRL' ||
-			coinVal === 'INR' ||
-			coinVal === 'HKD' ||
-			coinVal === 'TRY' ||
-			coinVal === 'ZAR' ||
-			coinVal === 'PLN' ||
-			coinVal === 'NOK' ||
-			coinVal === 'SEK' ||
-			coinVal === 'DKK' ||
-			coinVal === 'CZK' ||
-			coinVal === 'HUF' ||
-			coinVal === 'ILS' ||
-			coinVal === 'KRW' ||
-			coinVal === 'MYR' ||
-			coinVal === 'PHP' ||
-			coinVal === 'SGD' ||
-			coinVal === 'THB' ||
-			coinVal === 'BGN' ||
-			coinVal === 'IDR' ||
-			coinVal === 'HRK')	{
+			(Config.whitelabel && coinVal === Config.wlConfig.coin))	{
 		return true;
 	} else {
 		return false;
@@ -138,7 +109,8 @@ export function checkCoinType(coin) {
 			coin === 'NINJA' ||
 			coin === 'CHAIN' ||
 			//coin === 'DSEC' ||
-			coin === 'EQL') {
+			coin === 'EQL' ||
+			(Config.whitelabel && coinVal === Config.wlConfig.coin)) {
 		return 'ac';
 	}
 

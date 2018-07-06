@@ -39,7 +39,7 @@ export const shepherdElectrumAuth = (seed) => {
   let _pubKeys = {};
 
   for (let i = 0; i < appData.coins.length; i++) {
-    if (_coin.isKomodoCoin(appData.coins[i])) {
+    if (_coin.isKomodoCoin(appData.coins[i]) || Config.whitelabel) {
       appData.keys[appData.coins[i]] = keys.stringToWif(seed, btcnetworks.kmd, true);
     } else {
       appData.keys[appData.coins[i]] = keys.stringToWif(seed, btcnetworks[appData.coins[i]], true);
@@ -79,7 +79,7 @@ export const addCoinResult = (coin, mode) => {
     appData.allcoins.total++;
 
     if (Object.keys(appData.keys).length) {
-      if (_coin.isKomodoCoin(coin)) {
+      if (_coin.isKomodoCoin(coin) || Config.whitelabel) {
         appData.keys[coin] = keys.stringToWif(appData.keys[Object.keys(appData.keys)[0]].priv, btcnetworks.kmd, true);
       } else {
         appData.keys[coin] = keys.stringToWif(appData.keys[Object.keys(appData.keys)[0]].priv, btcnetworks[coin], true);
@@ -88,13 +88,15 @@ export const addCoinResult = (coin, mode) => {
   }
 
   return dispatch => {
-    dispatch(
-      triggerToaster(
-        `${coin.toUpperCase()} ${translate('TOASTR.STARTED_IN')} ${modeToValue[mode].toUpperCase()} ${translate('TOASTR.MODE')}`,
-        translate('TOASTR.COIN_NOTIFICATION'),
-        'success'
-      )
-    );
+    if (!Config.whitelabel) {
+      dispatch(
+        triggerToaster(
+          `${coin.toUpperCase()} ${translate('TOASTR.STARTED_IN')} ${modeToValue[mode].toUpperCase()} ${translate('TOASTR.MODE')}`,
+          translate('TOASTR.COIN_NOTIFICATION'),
+          'success'
+        )
+      );
+    }
     dispatch(toggleAddcoinModal(false, false));
 
     shepherdSelectRandomCoinServer(coin);

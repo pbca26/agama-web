@@ -1,9 +1,11 @@
 // web app config
 let Config = {
   version: '0.1.7',
-  debug: false,
+  debug: true,
   defaultLang: 'EN',
   roundValues: false,
+  // single coin option
+  whitelabel: false,
 };
 
 export const devlog = (msg, data) => {

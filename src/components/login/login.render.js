@@ -4,6 +4,7 @@ import QRModal from '../dashboard/qrModal/qrModal';
 import Select from 'react-select';
 import ReactTooltip from 'react-tooltip';
 import WalletRisksModal from '../dashboard/walletRisksModal/walletRisksModal';
+import Config from '../../config';
 
 const LoginRender = function() {
   return (
@@ -13,43 +14,27 @@ const LoginRender = function() {
       <div className="page vertical-align text-center">
         <div className="page-content vertical-align-middle col-xs-12 col-sm-6 col-sm-offset-3">
           <div className="brand">
-            <img
-              className="brand-img"
-              src="assets/images/agama-login-logo.svg"
-              width="200"
-              height="160"
-              alt="SuperNET Agama" />
+            { !Config.whitelabel &&
+              <img
+                className="brand-img"
+                src="assets/images/agama-login-logo.svg"
+                width="200"
+                height="160"
+                alt="SuperNET Agama" />
+            }
+            { Config.whitelabel &&
+              <img
+                className="brand-img"
+                src={ 'assets/images/' + Config.wlConfig.mainLogo }
+                alt={ Config.wlConfig.title } />
+            }
           </div>
-          { /*<div className="login-settings-dropdown margin-bottom-30">
-            <div>
-              <span
-                className="login-settings-dropdown-trigger"
-                onClick={ this.toggleLoginSettingsDropdown }>
-                <i className="icon fa-cogs"></i>&nbsp;
-                <span className="login-settings-dropdown-label">{ translate('LOGIN.QUICK_ACCESS') }</span>
-              </span>
-            </div>
-            <div>
-              <ul className={ this.state.displayLoginSettingsDropdown ? 'dropdown-menu show' : 'hide' }>
-                <li>
-                  <a onClick={ () => this.toggleLoginSettingsDropdownSection('settings') }>
-                    <i className="icon md-settings"></i> { translate('INDEX.SETTINGS') }
-                  </a>
-                </li>
-                <li>
-                  <a onClick={ () => this.toggleLoginSettingsDropdownSection('about') }>
-                    <i className="icon fa-users"></i> { translate('ABOUT.ABOUT_AGAMA') }
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>*/}
           { !this.state.risksWarningRead &&
             <div className="margin-top-30 margin-bottom-40">
               <span
                 onClick={ this.toggleRisksWarningModal }
                 className="pointer fs-16">
-                <i className="icon fa-warning margin-right-5"></i> Understand the risks in using Agama web wallet
+                <i className="icon fa-warning margin-right-5"></i> { translate('INDEX.UNDERSTAND_RISKS_LINK') }
               </span>
             </div>
           }
@@ -215,19 +200,21 @@ const LoginRender = function() {
                 id="logint-another-wallet">
                 { translate('INDEX.LOGIN_ANOTHER_WALLET') }
               </button>
-              <button
-                className="btn btn-lg btn-flat btn-block waves-effect margin-top-20"
-                id="register-btn"
-                onClick={ this.toggleActivateCoinForm }
-                disabled={ !this.props.Main }>
-                <span className="ladda-label">
-                  { translate('ADD_COIN.ADD_ANOTHER_COIN') }
-                </span>
-              </button>
+              { !Config.whitelabel &&
+                <button
+                  className="btn btn-lg btn-flat btn-block waves-effect margin-top-20"
+                  id="register-btn"
+                  onClick={ this.toggleActivateCoinForm }
+                  disabled={ !this.props.Main }>
+                  <span className="ladda-label">
+                    { translate('ADD_COIN.ADD_ANOTHER_COIN') }
+                  </span>
+                </button>
+              }
             </div>
           </div>
 
-          <div className={ this.state.activeLoginSection === 'activateCoin' ? 'show' : 'hide' }>
+          <div className={ this.state.activeLoginSection === 'activateCoin' && !Config.whitelabel ? 'show' : 'hide' }>
             <h4 className="color-white">
               { translate('INDEX.WELCOME_PLEASE_ADD') }
             </h4>
