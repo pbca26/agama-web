@@ -1,9 +1,10 @@
 // web app config
 let Config = {
   version: '0.1.7',
-  debug: true,
+  debug: false,
   defaultLang: 'EN',
   roundValues: false,
+  fiatRates: true,
   // single coin option
   whitelabel: false,
 };
