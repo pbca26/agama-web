@@ -855,6 +855,7 @@ export const LANG_EN = {
     'VOTE2018': 'Notary Node (VOTE2018)',
     'PRLPAY': 'Pearl Pay (PRLPAY)',
     'CHAIN': 'Chainmakers (CHAIN)',
+    'ZILLA': 'Chainzilla (ZILLA)',
   },
   'DEX': {
     'GEN_NEW_PASSPHRASE': 'Generate a new passphrase',
