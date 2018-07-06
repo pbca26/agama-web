@@ -26,6 +26,8 @@ import {
 } from 'agama-wallet-lib/src/index-fe';
 import proxyServers from '../../util/proxyServers';
 
+let proxyConErr = false;
+
 const getCache = (coin, type, key, data) => {
   if (!appData.cache[coin]) {
     appData.cache[coin] = {
@@ -175,6 +177,21 @@ export const shepherdElectrumKeys = (seed) => {
 }
 
 export const shepherdElectrumBalance = (coin, address) => {
+  proxyConErr = true;
+
+  setTimeout(() => {
+    if (proxyConErr) {
+      Store.dispatch(
+        triggerToaster(
+          'Proxy connection error',
+          'Error',
+          'error',
+          false
+        )
+      );
+    }
+  }, 20000);
+
   return dispatch => {
     fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/getbalance?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}&address=${address}`, {
       method: 'GET',
@@ -211,34 +228,37 @@ export const shepherdElectrumBalance = (coin, address) => {
               }
             }
 
+            proxyConErr = false;
             json = {
               msg: 'success',
               result: {
-                balance: Number((0.00000001 * json.confirmed).toFixed(8)),
+                balance: Number(utils.fromSats(json.confirmed).toFixed(8)),
                 balanceSats: json.confirmed,
-                unconfirmed: Number((0.00000001 * json.unconfirmed).toFixed(8)),
+                unconfirmed: Number(utils.fromSats(json.unconfirmed).toFixed(8)),
                 unconfirmedSats: json.unconfirmed,
                 interest: Number(_totalInterest.toFixed(8)),
-                interestSats: Math.floor(_totalInterest * 100000000),
-                total: _totalInterest > 0 ? Number((0.00000001 * json.confirmed + _totalInterest).toFixed(8)) : 0,
-                totalSats: _totalInterest > 0 ? json.confirmed + Math.floor(_totalInterest * 100000000) : 0,
+                interestSats: Math.floor(utils.toSats(_totalInterest)),
+                total: _totalInterest > 0 ? Number((utils.fromSats(json.confirmed) + _totalInterest).toFixed(8)) : 0,
+                totalSats: _totalInterest > 0 ? json.confirmed + Math.floor(utils.toSats(_totalInterest)) : 0,
               },
             };
             dispatch(shepherdElectrumBalanceState(json));
           });
         } else {
+          proxyConErr = false;
           json = {
             msg: 'success',
             result: {
-              balance: Number((0.00000001 * json.confirmed).toFixed(8)),
+              balance: Number(utils.fromSats(json.confirmed).toFixed(8)),
               balanceSats: json.confirmed,
-              unconfirmed: Number((0.00000001 * json.unconfirmed).toFixed(8)),
+              unconfirmed: Number(utils.fromSats(json.unconfirmed).toFixed(8)),
               unconfirmedSats: json.unconfirmed,
             },
           };
           dispatch(shepherdElectrumBalanceState(json));
         }
       } else {
+        proxyConErr = false;
         json = {
           msg: 'error',
           result: 'error',
@@ -346,7 +366,7 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
                       const blockInfo = result.result;
 
                       Config.log('electrum gettransaction ==>');
-                      Config.log((index + ' | ' + (transaction.raw.length - 1)));
+                      Config.log(`${index} | ${(transaction.raw.length - 1)}`);
                       Config.log(transaction.raw);
 
                       // decode tx
@@ -831,7 +851,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                             if (coin === 'kmd') {
                               let interest = 0;
 
-                              if (Number(_utxoItem.value) * 0.00000001 >= 10 &&
+                              if (Number(utils.fromSats(_utxoItem.value)) >= 10 &&
                                   decodedTx.format.locktime > 0) {
                                 Config.log('interest', komodoInterest);
                                 interest = komodoInterest(decodedTx.format.locktime, _utxoItem.value, _utxoItem.height);
@@ -841,10 +861,10 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                                 txid: _utxoItem['tx_hash'],
                                 vout: _utxoItem['tx_pos'],
                                 address,
-                                amount: Number(_utxoItem.value) * 0.00000001,
+                                amount: Number(utils.fromSats(_utxoItem.value)),
                                 amountSats: _utxoItem.value,
                                 interest: interest,
-                                interestSats: Math.floor(interest * 100000000),
+                                interestSats: Math.floor(utils.toSats(interest)),
                                 confirmations: Number(_utxoItem.height) === 0 ? 0 : currentHeight - _utxoItem.height,
                                 spendable: true,
                                 verified: false,
@@ -876,7 +896,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                                 txid: _utxoItem['tx_hash'],
                                 vout: _utxoItem['tx_pos'],
                                 address,
-                                amount: Number(_utxoItem.value) * 0.00000001,
+                                amount: Number(utils.fromSats(_utxoItem.value)),
                                 amountSats: _utxoItem.value,
                                 confirmations: Number(_utxoItem.height) === 0 ? 0 : currentHeight - _utxoItem.height,
                                 spendable: true,
@@ -936,7 +956,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                               getCache(coin, 'txs', _utxoItem['tx_hash'], _rawtxJSON);
 
                               Config.log('electrum gettransaction ==>');
-                              Config.log(index + ' | ' + (_rawtxJSON.length - 1));
+                              Config.log(`${index} | ${(_rawtxJSON.length - 1)}`);
                               Config.log(_rawtxJSON);
 
                               // decode tx
@@ -953,7 +973,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                                 if (coin === 'kmd') {
                                   let interest = 0;
 
-                                  if (Number(_utxoItem.value) * 0.00000001 >= 10 &&
+                                  if (Number(utils.fromSats(_utxoItem.value)) >= 10 &&
                                       decodedTx.format.locktime > 0) {
                                     Config.log('interest', komodoInterest);
                                     interest = komodoInterest(decodedTx.format.locktime, _utxoItem.value, _utxoItem.height);
@@ -963,10 +983,10 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                                     txid: _utxoItem['tx_hash'],
                                     vout: _utxoItem['tx_pos'],
                                     address,
-                                    amount: Number(_utxoItem.value) * 0.00000001,
+                                    amount: Number(utils.fromSats(_utxoItem.value)),
                                     amountSats: _utxoItem.value,
                                     interest: interest,
-                                    interestSats: Math.floor(interest * 100000000),
+                                    interestSats: Math.floor(utils.toSats(interest)),
                                     confirmations: Number(_utxoItem.height) === 0 ? 0 : currentHeight - _utxoItem.height,
                                     spendable: true,
                                     verified: false,
@@ -998,7 +1018,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                                     txid: _utxoItem['tx_hash'],
                                     vout: _utxoItem['tx_pos'],
                                     address,
-                                    amount: Number(_utxoItem.value) * 0.00000001,
+                                    amount: Number(utils.fromSats(_utxoItem.value)),
                                     amountSats: _utxoItem.value,
                                     confirmations: Number(_utxoItem.height) === 0 ? 0 : currentHeight - _utxoItem.height,
                                     spendable: true,
