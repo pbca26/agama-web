@@ -129,6 +129,18 @@ const addCoinOptionsCrypto = () => {
     label: 'Bitcoin CBC (BCBC)',
     icon: 'BCBC',
     value: `BCBC|spv`,
+  }, {
+    label: 'Zcoin (XZC)',
+    icon: 'XZC',
+    value: `XZC|spv`,
+  }, {
+    label: 'Feathercoin (FTC)',
+    icon: 'FTC',
+    value: `FTC|spv`,
+  }, {
+    label: 'GoByte (GBX)',
+    icon: 'GBX',
+    value: `GBX|spv`,
   }];
 
   return _coins;

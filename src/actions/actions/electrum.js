@@ -26,6 +26,8 @@ import {
 } from 'agama-wallet-lib/src/index-fe';
 import proxyServers from '../../util/proxyServers';
 
+let proxyConErr = false;
+
 const getCache = (coin, type, key, data) => {
   if (!appData.cache[coin]) {
     appData.cache[coin] = {
@@ -35,11 +37,11 @@ const getCache = (coin, type, key, data) => {
   }
 
   if (!appData.cache[coin][type][key]) {
-    // console.warn(`not cached ${coin} ${type} ${key}`);
+    Config.log(`not cached ${coin} ${type} ${key}`);
     appData.cache[coin][type][key] = data;
     return false;
   } else {
-    // console.warn(`cached ${coin} ${type} ${key}`);
+    Config.log(`cached ${coin} ${type} ${key}`);
     return appData.cache[coin][type][key];
   }
 }
@@ -180,6 +182,21 @@ export const shepherdElectrumKeys = (seed) => {
 }
 
 export const shepherdElectrumBalance = (coin, address) => {
+  proxyConErr = true;
+
+  setTimeout(() => {
+    if (proxyConErr) {
+      Store.dispatch(
+        triggerToaster(
+          'Proxy connection error',
+          'Error',
+          'error',
+          false
+        )
+      );
+    }
+  }, 20000);
+
   return dispatch => {
     fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/getbalance?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}&address=${address}`, {
       method: 'GET',
@@ -216,34 +233,37 @@ export const shepherdElectrumBalance = (coin, address) => {
               }
             }
 
+            proxyConErr = false;
             json = {
               msg: 'success',
               result: {
-                balance: Number((0.00000001 * json.confirmed).toFixed(8)),
+                balance: Number(utils.fromSats(json.confirmed).toFixed(8)),
                 balanceSats: json.confirmed,
-                unconfirmed: Number((0.00000001 * json.unconfirmed).toFixed(8)),
+                unconfirmed: Number(utils.fromSats(json.unconfirmed).toFixed(8)),
                 unconfirmedSats: json.unconfirmed,
                 interest: Number(_totalInterest.toFixed(8)),
-                interestSats: Math.floor(_totalInterest * 100000000),
-                total: _totalInterest > 0 ? Number((0.00000001 * json.confirmed + _totalInterest).toFixed(8)) : 0,
-                totalSats: _totalInterest > 0 ? json.confirmed + Math.floor(_totalInterest * 100000000) : 0,
+                interestSats: Math.floor(utils.toSats(_totalInterest)),
+                total: _totalInterest > 0 ? Number((utils.fromSats(json.confirmed) + _totalInterest).toFixed(8)) : 0,
+                totalSats: _totalInterest > 0 ? json.confirmed + Math.floor(utils.toSats(_totalInterest)) : 0,
               },
             };
             dispatch(shepherdElectrumBalanceState(json));
           });
         } else {
+          proxyConErr = false;
           json = {
             msg: 'success',
             result: {
-              balance: Number((0.00000001 * json.confirmed).toFixed(8)),
+              balance: Number(utils.fromSats(json.confirmed).toFixed(8)),
               balanceSats: json.confirmed,
-              unconfirmed: Number((0.00000001 * json.unconfirmed).toFixed(8)),
+              unconfirmed: Number(utils.fromSats(json.unconfirmed).toFixed(8)),
               unconfirmedSats: json.unconfirmed,
             },
           };
           dispatch(shepherdElectrumBalanceState(json));
         }
       } else {
+        proxyConErr = false;
         json = {
           msg: 'error',
           result: 'error',
@@ -289,8 +309,8 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
       } else {
         const currentHeight = result.result;
 
-        //console.warn('currentHeight =>');
-        //console.warn(currentHeight);
+        Config.log('currentHeight =>');
+        Config.log(currentHeight);
 
         fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/listtransactions?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}&address=${address}&raw=true`, {
           method: 'GET',
@@ -344,15 +364,15 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
                   .then(json => {
                     result = json;
 
-                    // console.warn('getblock =>');
-                    // console.warn(result);
+                    Config.log('getblock =>');
+                    Config.log(result);
 
                     if (result.msg !== 'error') {
                       const blockInfo = result.result;
 
-                      // console.warn('electrum gettransaction ==>');
-                      // console.warn((index + ' | ' + (transaction.raw.length - 1)));
-                      // console.warn(transaction.raw);
+                      Config.log('electrum gettransaction ==>');
+                      Config.log(`${index} | ${(transaction.raw.length - 1)}`);
+                      Config.log(transaction.raw);
 
                       // decode tx
                       const _network = _coin.isKomodoCoin(coin) || Config.whitelabel ? btcnetworks.kmd : btcnetworks[coin];
@@ -360,9 +380,9 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
 
                       let txInputs = [];
 
-                      // console.warn(_network);
-                      // console.warn('decodedtx =>');
-                      // console.warn(decodedTx.outputs);
+                      Config.log(_network);
+                      Config.log('decodedtx =>');
+                      Config.log(decodedTx.outputs);
 
                       if (decodedTx &&
                           decodedTx.inputs) {
@@ -374,10 +394,10 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
                               if (_cachedTx) {
                                 const decodedVinVout = decoder(_cachedTx, _network);
 
-                                // console.warn('electrum raw input tx ==>');
+                                Config.log('electrum raw input tx ==>');
 
                                 if (decodedVinVout) {
-                                  // console.warn(decodedVinVout.outputs[_decodedInput.n], true);
+                                  Config.log(decodedVinVout.outputs[_decodedInput.n], true);
                                   txInputs.push(decodedVinVout.outputs[_decodedInput.n]);
                                   _resolve(true);
                                 } else {
@@ -404,17 +424,17 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
                                 .then(json => {
                                   result = json;
 
-                                  // console.warn('gettransaction =>');
-                                  // console.warn(result);
+                                  Config.log('gettransaction =>');
+                                  Config.log(result);
 
                                   if (result.msg !== 'error') {
                                     const decodedVinVout = decoder(result.result, _network);
 
                                     getCache(coin, 'txs', _decodedInput.txid, result.result);
-                                    // console.warn('electrum raw input tx ==>');
+                                    Config.log('electrum raw input tx ==>');
 
                                     if (decodedVinVout) {
-                                      // console.warn(decodedVinVout.outputs[_decodedInput.n], true);
+                                      Config.log(decodedVinVout.outputs[_decodedInput.n], true);
                                       txInputs.push(decodedVinVout.outputs[_decodedInput.n]);
                                       _resolve(true);
                                     } else {
@@ -610,7 +630,7 @@ export const shepherdElectrumSendPromise = (coin, value, sendToAddress, changeAd
         utxoList
       );
 
-      // console.warn('send data', _data);
+      Config.log('send data', _data);
 
       const _tx = transactionBuilder.transaction(
         sendToAddress,
@@ -623,7 +643,7 @@ export const shepherdElectrumSendPromise = (coin, value, sendToAddress, changeAd
       );
 
       // TODO: err
-      // console.warn('send tx', _tx);
+      Config.log('send tx', _tx);
 
       if (push) {
         fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/pushtx`, {
@@ -765,8 +785,9 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
       })
       .then(response => response.json())
       .then(json => {
-        // console.warn('shepherdElectrumListunspent', json);
         let result = json;
+
+        Config.log('shepherdElectrumListunspent', json);
 
         if (result.msg === 'error') {
           resolve('error');
@@ -825,8 +846,8 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                           const _network = _coin.isKomodoCoin(coin) ? btcnetworks.kmd : btcnetworks[coin];
                           const decodedTx = decoder(_cachedTx, _network);
 
-                          // console.warn('decoded tx =>');
-                          // console.warn(decodedTx);
+                          Config.log('decoded tx =>');
+                          Config.log(decodedTx);
 
                           if (!decodedTx) {
                             _atLeastOneDecodeTxFailed = true;
@@ -835,9 +856,9 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                             if (coin === 'kmd') {
                               let interest = 0;
 
-                              if (Number(_utxoItem.value) * 0.00000001 >= 10 &&
+                              if (Number(utils.fromSats(_utxoItem.value)) >= 10 &&
                                   decodedTx.format.locktime > 0) {
-                                // console.warn('interest', komodoInterest);
+                                Config.log('interest', komodoInterest);
                                 interest = komodoInterest(decodedTx.format.locktime, _utxoItem.value, _utxoItem.height);
                               }
 
@@ -845,10 +866,10 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                                 txid: _utxoItem['tx_hash'],
                                 vout: _utxoItem['tx_pos'],
                                 address,
-                                amount: Number(_utxoItem.value) * 0.00000001,
+                                amount: Number(utils.fromSats(_utxoItem.value)),
                                 amountSats: _utxoItem.value,
                                 interest: interest,
-                                interestSats: Math.floor(interest * 100000000),
+                                interestSats: Math.floor(utils.toSats(interest)),
                                 confirmations: Number(_utxoItem.height) === 0 ? 0 : currentHeight - _utxoItem.height,
                                 spendable: true,
                                 verified: false,
@@ -880,7 +901,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                                 txid: _utxoItem['tx_hash'],
                                 vout: _utxoItem['tx_pos'],
                                 address,
-                                amount: Number(_utxoItem.value) * 0.00000001,
+                                amount: Number(utils.fromSats(_utxoItem.value)),
                                 amountSats: _utxoItem.value,
                                 confirmations: Number(_utxoItem.height) === 0 ? 0 : currentHeight - _utxoItem.height,
                                 spendable: true,
@@ -930,24 +951,25 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                           .then(json => {
                             result = json;
 
-                            // console.warn(result);
+                            Config.log(result);
 
                             if (result.msg !== 'error') {
-                              // console.warn('gettransaction =>');
                               const _rawtxJSON = result.result;
+
+                              Config.log('gettransaction =>');
 
                               getCache(coin, 'txs', _utxoItem['tx_hash'], _rawtxJSON);
 
-                              // console.warn('electrum gettransaction ==>');
-                              // console.warn(index + ' | ' + (_rawtxJSON.length - 1));
-                              // console.warn(_rawtxJSON);
+                              Config.log('electrum gettransaction ==>');
+                              Config.log(`${index} | ${(_rawtxJSON.length - 1)}`);
+                              Config.log(_rawtxJSON);
 
                               // decode tx
                               const _network = _coin.isKomodoCoin(coin) || Config.whitelabel ? btcnetworks.kmd : btcnetworks[coin];
                               const decodedTx = decoder(_rawtxJSON, _network);
 
-                              // console.warn('decoded tx =>');
-                              // console.warn(decodedTx);
+                              Config.log('decoded tx =>');
+                              Config.log(decodedTx);
 
                               if (!decodedTx) {
                                 _atLeastOneDecodeTxFailed = true;
@@ -956,9 +978,9 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                                 if (coin === 'kmd') {
                                   let interest = 0;
 
-                                  if (Number(_utxoItem.value) * 0.00000001 >= 10 &&
+                                  if (Number(utils.fromSats(_utxoItem.value)) >= 10 &&
                                       decodedTx.format.locktime > 0) {
-                                    // console.warn('interest', komodoInterest);
+                                    Config.log('interest', komodoInterest);
                                     interest = komodoInterest(decodedTx.format.locktime, _utxoItem.value, _utxoItem.height);
                                   }
 
@@ -966,10 +988,10 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                                     txid: _utxoItem['tx_hash'],
                                     vout: _utxoItem['tx_pos'],
                                     address,
-                                    amount: Number(_utxoItem.value) * 0.00000001,
+                                    amount: Number(utils.fromSats(_utxoItem.value)),
                                     amountSats: _utxoItem.value,
                                     interest: interest,
-                                    interestSats: Math.floor(interest * 100000000),
+                                    interestSats: Math.floor(utils.toSats(interest)),
                                     confirmations: Number(_utxoItem.height) === 0 ? 0 : currentHeight - _utxoItem.height,
                                     spendable: true,
                                     verified: false,
@@ -1001,7 +1023,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                                     txid: _utxoItem['tx_hash'],
                                     vout: _utxoItem['tx_pos'],
                                     address,
-                                    amount: Number(_utxoItem.value) * 0.00000001,
+                                    amount: Number(utils.fromSats(_utxoItem.value)),
                                     amountSats: _utxoItem.value,
                                     confirmations: Number(_utxoItem.height) === 0 ? 0 : currentHeight - _utxoItem.height,
                                     spendable: true,
@@ -1033,7 +1055,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                             } else {
                               resolve(false);
                               _atLeastOneDecodeTxFailed = true;
-                              // console.warn('getcurrentblock error =>');
+                              Config.log('getcurrentblock error =>');
                             }
                           });
                         }
@@ -1041,10 +1063,10 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                     }))
                     .then(promiseResult => {
                       if (!_atLeastOneDecodeTxFailed) {
-                        // console.warn(promiseResult);
+                        Config.log(promiseResult);
                         resolve(promiseResult);
                       } else {
-                        // console.warn('listunspent error, cant decode tx(s)');
+                        Config.log('listunspent error, cant decode tx(s)');
                         resolve('decode error');
                       }
                     });
@@ -1120,7 +1142,7 @@ export const shepherdElectrumBip39Keys = (seed, match, addressdepth, accounts) =
 
 // split utxo
 export const shepherdElectrumSplitUtxoPromise = (payload) => {
-  console.warn(payload);
+  Config.log(payload);
 
   return new Promise((resolve, reject) => {
     return fetch(`http://127.0.0.1:${Config.agamaPort}/shepherd/electrum/createrawtx-split`, {
