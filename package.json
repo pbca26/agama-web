@@ -1,6 +1,6 @@
 {
   "name": "AgamaWeb",
-  "version": "0.1.4",
+  "version": "0.1.6",
   "description": "Agama Wallet Web",
   "main": "src/index.js",
   "scripts": {
