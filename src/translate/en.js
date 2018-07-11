@@ -1,6 +1,6 @@
 // TODO: clean old placeholders
 
-export const LANG_EN = {
+const LANG_EN = {
   'WALLETS_INFO': {
     'ADDRESS': 'Address',
     'ADDRESS_LOCAL': 'Address local',
@@ -875,3 +875,5 @@ export const LANG_EN = {
     'DESC_P4': 'It is recommended that you treat Agama web as you would treat your actual wallet, and not store very large amounts in it. For long-term storage of @template@ and any other cryptocurrency you should create a cold wallet.',
   },
 };
+
+export default LANG_EN;

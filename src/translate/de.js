@@ -1,4 +1,4 @@
-export const LANG_DE = {
+const LANG_DE = {
   'WALLETS_INFO': {
     'ADDRESS': 'Adresse',
     'ADDRESS_LOCAL': 'Adresse lokal',
@@ -802,14 +802,6 @@ export const LANG_DE = {
     'SUPERNET': 'SUPERNET (SUPERNET)',
     'WLC': 'WIRELESS (WIRELESS)'
   },
-  'DEX': {
-    'GEN_NEW_PASSPHRASE': 'Neue Passphrase erstellen',
-    'LOGIN': 'Anmelden',
-    'BACKUP_PASSPHRASE_P1': 'Sichern Sie Ihre Passphrase',
-    'BACKUP_PASSPHRASE_P2': 'Sie kann nicht wiederhergestellt werden!',
-    'ESTIMATED_BALANCE': 'Geschätztes Guthaben',
-    'TRADE_HISTORY_SM': 'Handelsverlauf',
-    'ELECTRUM_MODE': 'Electrum-Modus',
-    'NATIVE_MODE': 'Nativer Modus'
-  }
 }
+
+export default LANG_DE;

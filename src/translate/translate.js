@@ -1,5 +1,5 @@
-import { LANG_EN } from './en';
-import { LANG_DE } from './de';
+import LANG_EN from './en';
+import LANG_DE from './de';
 import Config from '../config';
 
 const _lang = {
@@ -7,12 +7,12 @@ const _lang = {
   DE: LANG_DE,
 };
 
-export function translate(langID, interpolateStr) {
-  let defaultLang = Config.lang || 'EN';
+const translate = (langID, interpolateStr) => {
+  const defaultLang = Config.lang || 'EN';
 
   if (langID &&
       langID.indexOf('.') > -1) {
-    let langIDComponents = langID.split('.');
+    const langIDComponents = langID.split('.');
 
     if (_lang &&
         langIDComponents &&
