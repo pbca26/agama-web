@@ -1,11 +1,11 @@
 import {
   START_INTERVAL,
-  STOP_INTERVAL
+  STOP_INTERVAL,
 } from '../actions/storeType'
 
-export function Interval(state = {
+const Interval = (state = {
   interval: {},
-}, action) {
+}, action) => {
   let newIntervalState = Object.assign({}, state.interval);
 
   switch (action.type) {
