@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   toggleAddcoinModal,
-  iguanaWalletPassphrase
+  iguanaWalletPassphrase,
 } from '../../../actions/actionCreators';
 import Store from '../../../store';
 

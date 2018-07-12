@@ -1,9 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import DashboardRender from './dashboard.render';
-import {
-  triggerToaster,
-} from '../../../actions/actionCreators';
+import { triggerToaster } from '../../../actions/actionCreators';
 import Store from '../../../store';
 
 class Dashboard extends React.Component {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { translate } from '../../../translate/translate';
+import translate from '../../../translate/translate';
 import PanelSection from './settings.panelBody';
 import Panel from './settings.panel';
 
@@ -18,7 +18,7 @@ export const SettingsRender = function() {
               <PanelSection
                 title={ translate('INDEX.EXPORT_KEYS') }
                 icon="icon md-key"
-                openByDefault={true}>
+                openByDefault={ true }>
                 <ExportKeysPanel />
               </PanelSection>
               { this.props.Main.coins &&

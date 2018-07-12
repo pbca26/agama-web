@@ -41,3 +41,5 @@ const translate = (langID, interpolateStr) => {
     }
   }
 }
+
+export default translate;

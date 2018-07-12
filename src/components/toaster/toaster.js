@@ -39,7 +39,7 @@ class Toaster extends React.Component {
         return (
           <ToasterItem
             key={ toast.toastId }
-            {...toast} />
+            { ...toast } />
         );
       });
     } else {

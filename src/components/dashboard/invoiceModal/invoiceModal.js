@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import Store from '../../../store';
-import { translate } from '../../../translate/translate';
+import translate from '../../../translate/translate';
 import BodyEnd from '../bodyBottom/bodyBottom';
 import {
   InvoiceModalRender,

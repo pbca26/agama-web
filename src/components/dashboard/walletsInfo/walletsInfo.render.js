@@ -1,5 +1,5 @@
 import React from 'react';
-import { translate } from '../../../translate/translate';
+import translate from '../../../translate/translate';
 import { secondsToString } from 'agama-wallet-lib/src/time';
 import { formatBytes } from 'agama-wallet-lib/src/utils';
 import appData from '../../../actions/actions/appData';

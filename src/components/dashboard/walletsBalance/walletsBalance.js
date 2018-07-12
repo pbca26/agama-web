@@ -1,9 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { translate } from '../../../translate/translate';
-import {
-  shepherdElectrumBalance,
-} from '../../../actions/actionCreators';
+import translate from '../../../translate/translate';
+import { shepherdElectrumBalance } from '../../../actions/actionCreators';
 import Config from '../../../config';
 import { formatValue } from 'agama-wallet-lib/src/utils';
 import ReactTooltip from 'react-tooltip';

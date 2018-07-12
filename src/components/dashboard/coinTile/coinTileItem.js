@@ -21,7 +21,7 @@ import {
 } from '../../../actions/actionCreators';
 import Store from '../../../store';
 import Config from '../../../config';
-import { translate } from '../../../translate/translate';
+import translate from '../../../translate/translate';
 
 import CoinTileItemRender from './coinTileItem.render';
 

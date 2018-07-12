@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Config from '../../../config';
-import { translate } from '../../../translate/translate';
+import translate from '../../../translate/translate';
 import { secondsToString } from '../../../util/time';
 import {
   triggerToaster,

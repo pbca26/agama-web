@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { toggleWalletRisksModal } from '../../../actions/actionCreators';
 import Store from '../../../store';
-import { translate } from '../../../translate/translate';
+import translate from '../../../translate/translate';
 
 import WalletRisksModalRender from './walletRisksModal.render';
 

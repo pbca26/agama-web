@@ -20,7 +20,7 @@ import Config from '../../config';
 import Store from '../../store';
 import SwallModalRender from './swall-modal.render';
 import LoginRender from './login.render';
-import { translate } from '../../translate/translate';
+import translate from '../../translate/translate';
 import { crypto } from 'agama-wallet-lib/src/index-fe';
 
 const IGUNA_ACTIVE_HANDLE_TIMEOUT = 3000;

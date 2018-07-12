@@ -858,16 +858,6 @@ const LANG_EN = {
     'CHAIN': 'Chainmakers (CHAIN)',
     'ZILLA': 'Chainzilla (ZILLA)',
   },
-  'DEX': {
-    'GEN_NEW_PASSPHRASE': 'Generate a new passphrase',
-    'LOGIN': 'Login',
-    'BACKUP_PASSPHRASE_P1': 'Backup your passpharase',
-    'BACKUP_PASSPHRASE_P2': 'it can\'t be retrieved!',
-    'ESTIMATED_BALANCE': 'Estimated balance',
-    'TRADE_HISTORY_SM': 'trade history',
-    'ELECTRUM_MODE': 'Electrum mode',
-    'NATIVE_MODE': 'Native mode',
-  },
   'RISKS_MODAL': {
     'DESC_P1': 'This wallet is a web-based interface that allows you to use',
     'DESC_P2': 'and other Komodo chains',
