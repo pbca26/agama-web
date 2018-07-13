@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Config from '../../../config';
 import translate from '../../../translate/translate';
-import { secondsToString } from '../../../util/time';
+import { secondsToString } from 'agama-wallet-lib/src/time';
 import {
   triggerToaster,
   clearLastSendToResponseState,
@@ -18,20 +18,20 @@ import {
   SendFormRender,
   _SendFormRender,
 } from './sendCoin.render';
-import { isPositiveNumber } from 'agama-wallet-lib/src/utils';
-import { explorerList } from 'agama-wallet-lib/src/coin-helpers';
+import {
+  isPositiveNumber,
+  toSats,
+  fromSats,
+} from 'agama-wallet-lib/src/utils';
+import {
+  explorerList,
+  isKomodoCoin,
+} from 'agama-wallet-lib/src/coin-helpers';
 import Slider, { Range } from 'rc-slider';
 import ReactTooltip from 'react-tooltip';
-import {
-  eservers,
-  coin,
-  keys,
-  btcnetworks,
-} from 'agama-wallet-lib/src/index-fe';
-
-// TODO: - add links to explorers
-//       - render z address trim
-//       - handle click outside
+import electrumServers from 'agama-wallet-lib/src/electrum-servers';
+import btcNetworks from 'agama-wallet-lib/src/electrum-servers';
+import { addressVersionCheck } from 'agama-wallet-lib/src/keys';
 
 const _feeLookup = [
   'fastestFee',
@@ -86,12 +86,12 @@ class SendCoin extends React.Component {
 
   setSendAmountAll() {
     const _amount = this.state.amount;
-    const _amountSats = this.state.amount * 100000000;
+    const _amountSats = toSats(this.state.amount);
     const _balanceSats = this.props.ActiveCoin.balance.balanceSats;
-    const fee = this.props.ActiveCoin.coin !== 'btc' ? eservers[this.props.ActiveCoin.coin].txfee : 0;
+    const fee = this.props.ActiveCoin.coin !== 'btc' ? electrumServers[this.props.ActiveCoin.coin].txfee : 0;
 
     this.setState({
-      amount: Number((0.00000001 * (_balanceSats - fee)).toFixed(8)),
+      amount: Number((fromSats(_balanceSats - fee)).toFixed(8)),
     });
   }
 
@@ -468,11 +468,11 @@ class SendCoin extends React.Component {
 
         // spv pre tx push request
         if (this.props.ActiveCoin.mode === 'spv') {
-          const fee = this.props.ActiveCoin.coin !== 'btc' ? eservers[this.props.ActiveCoin.coin].txfee : 0;
+          const fee = this.props.ActiveCoin.coin !== 'btc' ? electrumServers[this.props.ActiveCoin.coin].txfee : 0;
 
           shepherdElectrumSendPromise(
             this.props.ActiveCoin.coin,
-            this.state.amount * 100000000,
+            toSats(this.state.amount),
             this.state.sendTo,
             this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub,
             this.props.ActiveCoin.coin.toUpperCase() === 'BTC' ? { perbyte: true, value: this.state.btcFeesSize } : fee
@@ -535,14 +535,14 @@ class SendCoin extends React.Component {
     } else if (this.props.ActiveCoin.mode === 'spv') {
       // no op
       if (this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub) {
-        const fee = this.props.ActiveCoin.coin !== 'btc' ? eservers[this.props.ActiveCoin.coin].txfee : 0;
+        const fee = this.props.ActiveCoin.coin !== 'btc' ? electrumServers[this.props.ActiveCoin.coin].txfee : 0;
 
         shepherdElectrumSendPromise(
           this.props.ActiveCoin.coin,
-          this.state.amount * 100000000,
+          toSats(this.state.amount),
           this.state.sendTo,
           this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub,
-          this.props.ActiveCoin.coin.toUpperCase() === 'BTC' ? { perbyte: true, value: this.state.btcFeesSize } : fee,
+          this.props.ActiveCoin.coin === 'btc' ? { perbyte: true, value: this.state.btcFeesSize } : fee,
           true
         );
       }
@@ -555,14 +555,14 @@ class SendCoin extends React.Component {
 
     if (this.props.ActiveCoin.mode === 'spv') {
       const _amount = this.state.amount;
-      const _amountSats = Math.floor(this.state.amount * 100000000);
+      const _amountSats = Math.floor(toSats(this.state.amount));
       const _balanceSats = this.props.ActiveCoin.balance.balanceSats;
-      const fee = this.props.ActiveCoin.coin !== 'btc' ? eservers[this.props.ActiveCoin.coin].txfee : 0;
+      const fee = this.props.ActiveCoin.coin !== 'btc' ? electrumServers[this.props.ActiveCoin.coin].txfee : 0;
 
       if ((Number(_amountSats) + fee) > _balanceSats) {
         Store.dispatch(
           triggerToaster(
-            `${translate('SEND.INSUFFICIENT_FUNDS')} ${translate('SEND.MAX_AVAIL_BALANCE')} ${Number((0.00000001 * (_balanceSats - fee)).toFixed(8))} ${this.props.ActiveCoin.coin.toUpperCase()}`,
+            `${translate('SEND.INSUFFICIENT_FUNDS')} ${translate('SEND.MAX_AVAIL_BALANCE')} ${Number(fromSats((_balanceSats - fee)).toFixed(8))} ${this.props.ActiveCoin.coin.toUpperCase()}`,
             translate('TOASTR.WALLET_NOTIFICATION'),
             'error'
           )
@@ -571,7 +571,7 @@ class SendCoin extends React.Component {
       } else if (Number(_amountSats) < fee) {
         Store.dispatch(
           triggerToaster(
-            `${translate('SEND.AMOUNT_IS_TOO_SMALL', this.state.amount)}, ${translate('SEND.MIN_AMOUNT_IS', this.props.ActiveCoin.coin.toUpperCase())} ${Number(fee * 0.00000001)}`,
+            `${translate('SEND.AMOUNT_IS_TOO_SMALL', this.state.amount)}, ${translate('SEND.MIN_AMOUNT_IS', this.props.ActiveCoin.coin.toUpperCase())} ${Number(fromSats(fee))}`,
             translate('TOASTR.WALLET_NOTIFICATION'),
             'error'
           )
@@ -584,10 +584,10 @@ class SendCoin extends React.Component {
       let _validateAddress;
       let _msg;
 
-      if (coin.isKomodoCoin(this.props.ActiveCoin.coin) || Config.whitelabel) {
-        _validateAddress = keys.addressVersionCheck(btcnetworks.kmd, this.state.sendTo);
+      if (isKomodoCoin(this.props.ActiveCoin.coin) || Config.whitelabel) {
+        _validateAddress = addressVersionCheck(btcNetworks.kmd, this.state.sendTo);
       } else {
-        _validateAddress = keys.addressVersionCheck(btcnetworks[this.props.ActiveCoin.coin], this.state.sendTo);
+        _validateAddress = addressVersionCheck(btcNetworks[this.props.ActiveCoin.coin], this.state.sendTo);
       }
 
       if (_validateAddress === 'Invalid pub address') {

@@ -1,20 +1,21 @@
-import { translate } from '../../translate/translate';
-import {
-  eservers,
-  coin,
-} from 'agama-wallet-lib/src/index-fe';
+import translate from '../../translate/translate';
+import electrumServers from 'agama-wallet-lib/src/electrum-servers';
+import { kmdAssetChains } from 'agama-wallet-lib/src/coin-helpers';
 
 const addCoinOptionsAC = () => {
   let _assetChains = [];
   let _items = [];
 
-  for (let i = 0; i < coin.kmdAssetChains.length; i++) {
-    const _ac = coin.kmdAssetChains[i].toLowerCase();
+  for (let i = 0; i < kmdAssetChains.length; i++) {
+    const _ac = kmdAssetChains[i];
 
-    if (eservers[_ac] &&
-        _ac !== 'chips' &&
-        _ac !== 'kmd' &&
-        _ac !== 'komodo') {
+    if (electrumServers[_ac.toLowerCase()] &&
+        _ac !== 'VRSC' &&
+        _ac !== 'DSEC' &&
+        _ac !== 'CEAL' &&
+        _ac !== 'MESH' &&
+        _ac !== 'AXO' &&
+        _ac !== 'ETOMIC') {
       _assetChains.push(_ac);
     }
   }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { translate } from '../../translate/translate';
+import translate from '../../translate/translate';
 
 const AddCoinRender = function() {
   return (
@@ -25,26 +25,6 @@ const AddCoinRender = function() {
               </h4>
             </div>
             <div className="modal-body">
-              {/*<button
-                className="btn btn-primary btn-add-coin-item"
-                onClick={ this.addNewItem }>+</button>
-              <button
-                className="btn btn-outline-primary btn-add-coin-item-options"
-                onClick={ this.toggleActionsMenu }>
-                <i className={ 'fa-chevron-' + (this.state.actionsMenu ? 'up' : 'down') }></i>
-              </button>
-              <span className={ !this.state.actionsMenu ? 'hide' : '' }>
-                <button
-                  className="btn btn-outline-primary btn-save-coin-selection"
-                  onClick={ this.saveCoinSelection }>
-                    { translate('ADD_COIN.SAVE_SELECTION') }
-                </button>
-                <button
-                  className="btn btn-outline-primary btn-load-coin-selection"
-                  onClick={ this.loadCoinSelection }>
-                    { translate('ADD_COIN.LOAD_SELECTION') }
-                </button>
-              </span>*/}
               { this.renderCoinSelectors() }
               <div className={ 'text-align-center vertical-margin-20 horizontal-margin-0 padding-bottom-20 ' + (this.hasMoreThanOneCoin() ? 'col-sm-12' : 'hide') }>
                 <button

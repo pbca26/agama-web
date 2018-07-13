@@ -3,9 +3,7 @@ import translate from '../../../translate/translate';
 import { secondsToString } from 'agama-wallet-lib/src/time';
 import { formatBytes } from 'agama-wallet-lib/src/utils';
 import appData from '../../../actions/actions/appData';
-import {
-  eservers,
-} from 'agama-wallet-lib/src/index-fe';
+import electrumServers from 'agama-wallet-lib/src/electrum-servers';
 
 const WalletsInfoRender = function() {
   const _balance = this.props.ActiveCoin.balance;

@@ -18,7 +18,7 @@ import {
   ClaimInterestModalRender,
   _ClaimInterestTableRender,
 } from './claimInterestModal.render';
-import { eservers } from 'agama-wallet-lib/src/index-fe';
+import electrumServers from 'agama-wallet-lib/src/electrum-servers';
 
 // TODO: promises
 
@@ -121,16 +121,14 @@ class ClaimInterestModal extends React.Component {
             txid: json[i].txid,
           });
           _totalInterest += Number(Number(json[i].interest).toFixed(8));
-
-          if (i === json.length - 1) {
-            this.setState({
-              transactionsList: _transactionsList,
-              isLoading: false,
-              totalInterest: _totalInterest,
-              displayShowZeroInterestToggle: _zeroInterestUtxo,
-            });
-          }
         }
+
+        this.setState({
+          transactionsList: _transactionsList,
+          isLoading: false,
+          totalInterest: _totalInterest,
+          displayShowZeroInterestToggle: _zeroInterestUtxo,
+        });
       } else {
         this.setState({
           transactionsList: [],
@@ -154,7 +152,7 @@ class ClaimInterestModal extends React.Component {
       this.props.ActiveCoin.balance.balanceSats,
       this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub,
       this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub,
-      eservers[this.props.ActiveCoin.coin].txfee,
+      electrumServers[this.props.ActiveCoin.coin].txfee,
       true
     )
     .then((res) => {
@@ -192,7 +190,7 @@ class ClaimInterestModal extends React.Component {
         this.props.ActiveCoin.balance.balanceSats,
         this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub,
         this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub,
-        eservers[this.props.ActiveCoin.coin].txfee
+        electrumServers[this.props.ActiveCoin.coin].txfee
       )
       .then((sendPreflight) => {
         if (sendPreflight &&

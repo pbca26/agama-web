@@ -1,7 +1,7 @@
 import 'whatwg-fetch';
 import 'bluebird';
 
-import { translate } from '../translate/translate';
+import translate from '../translate/translate';
 import {
   GET_ACTIVE_COINS,
   DASHBOARD_ACTIVE_ADDRESS,
@@ -18,19 +18,14 @@ import {
   DASHBOARD_SECTION_CHANGE,
   DASHBOARD_ACTIVE_COIN_CHANGE,
   ACTIVE_COIN_GET_ADDRESSES,
-  DASHBOARD_ACTIVE_COIN_NATIVE_TXHISTORY,
   DISPLAY_LOGIN_SETTINGS_MODAL,
-  DISPLAY_COIND_DOWN_MODAL,
   DISPLAY_CLAIM_INTEREST_MODAL,
   START_INTERVAL,
   STOP_INTERVAL,
   GET_PIN_LIST,
-  DASHBOARD_SYNC_ONLY_UPDATE,
   DISPLAY_IMPORT_KEY_MODAL,
   ELECTRUM_SERVER_CHANGED,
-  DISPLAY_ZCASH_PARAMS_FETCH,
   DASHBOARD_REMOVE_COIN,
-  DISPLAY_NOTARY_ELECTIONS_MODAL,
   DASHBOARD_ACTIVE_COIN_SENDTO,
   DISPLAY_WALLET_RISKS_MODAL,
 } from './storeType';
@@ -39,10 +34,9 @@ export * from './actions/coinList';
 export * from './actions/addCoin';
 export * from './actions/copyAddress';
 export * from './actions/dexCoins';
-export * from './actions/getTxDetails';
 export * from './actions/electrum';
-// export * from './actions/tools';
 export * from './actions/prices';
+// export * from './actions/tools';
 
 export const changeActiveAddress = (address) => {
   return {
@@ -63,14 +57,6 @@ export const toggleDashboardTxInfoModal = (display, txIndex) => {
     type: DASHBOARD_ACTIVE_TXINFO_MODAL,
     showTransactionInfo: display,
     showTransactionInfoTxIndex: txIndex,
-  }
-}
-
-export const syncingNativeModeState = (display, json) => {
-  return {
-    type: SYNCING_NATIVE_MODE,
-    syncingNativeMode: display,
-    progress: json,
   }
 }
 
@@ -229,13 +215,6 @@ export const stopInterval = (name, intervals) => {
   }
 }
 
-export const toggleCoindDownModal = (display) => {
-  return {
-    type: DISPLAY_COIND_DOWN_MODAL,
-    displayCoindDownModal: display,
-  }
-}
-
 export const toggleLoginSettingsModal = (display) => {
   return {
     type: DISPLAY_LOGIN_SETTINGS_MODAL,
@@ -257,13 +236,6 @@ export const getPinList = (pinList) => {
   }
 }
 
-export const skipFullDashboardUpdate = (skip) => {
-  return {
-    type: DASHBOARD_SYNC_ONLY_UPDATE,
-    skipFullDashboardUpdate: skip,
-  }
-}
-
 export const displayImportKeyModal = (display) => {
   return {
     type: DISPLAY_IMPORT_KEY_MODAL,
@@ -278,24 +250,10 @@ export const electrumServerChanged = (isChanged) => {
   }
 }
 
-export const toggleZcparamsFetchModal = (display) => {
-  return {
-    type: DISPLAY_ZCASH_PARAMS_FETCH,
-    displayZcparamsModal: display,
-  }
-}
-
 export const dashboardRemoveCoin = (coin) => {
   return {
     type: DASHBOARD_REMOVE_COIN,
     coin,
-  }
-}
-
-export const toggleNotaryElectionsModal = (display) => {
-  return {
-    type: DISPLAY_NOTARY_ELECTIONS_MODAL,
-    displayNotaryElectionsModal: display,
   }
 }
 

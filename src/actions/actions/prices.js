@@ -41,3 +41,29 @@ const pricesState = (json) => {
     prices: json,
   }
 }
+
+// src: atomicexplorer
+export const shepherdGetRemoteBTCFees = () => {
+  return new Promise((resolve, reject) => {
+    fetch(`https://www.atomicexplorer.com/api/btc/fees`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    .catch((error) => {
+      console.log(error);
+      Store.dispatch(
+        triggerToaster(
+          'shepherdGetRemoteBTCFees',
+          'Error',
+          'error'
+        )
+      );
+    })
+    .then(response => response.json())
+    .then(json => {
+      resolve(json);
+    });
+  });
+}

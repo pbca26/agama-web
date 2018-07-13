@@ -1,13 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { translate } from '../../translate/translate';
+import translate from '../../translate/translate';
 import Config from '../../config';
 import {
   addCoin,
   toggleAddcoinModal,
   triggerToaster,
-  shepherdGetCoinList,
-  shepherdPostCoinList,
 } from '../../actions/actionCreators';
 import Store from '../../store';
 
@@ -37,35 +35,6 @@ class AddCoin extends React.Component {
     this.addNewItem = this.addNewItem.bind(this);
     this.activateAllCoins = this.activateAllCoins.bind(this);
     this.toggleActionsMenu = this.toggleActionsMenu.bind(this);
-    this.saveCoinSelection = this.saveCoinSelection.bind(this);
-    this.loadCoinSelection = this.loadCoinSelection.bind(this);
-  }
-
-  saveCoinSelection() {
-    shepherdPostCoinList(this.state.coins)
-    .then((json) => {
-      this.toggleActionsMenu();
-    });
-  }
-
-  loadCoinSelection() {
-    shepherdGetCoinList()
-    .then((json) => {
-      if (json.msg !== 'error') {
-        this.setState(Object.assign({}, this.state, {
-          coins: json.result,
-          actionsMenu: false,
-        }));
-      } else {
-        Store.dispatch(
-          triggerToaster(
-            translate('TOASTR.SELECTION_NOT_FOUND'),
-            translate('TOASTR.COIN_SELECTION'),
-            'info'
-          )
-        );
-      }
-    });
   }
 
   toggleActionsMenu() {
@@ -107,7 +76,7 @@ class AddCoin extends React.Component {
           alt={ option.label }
           width="30px"
           height="30px" />
-          <span className="margin-left-10">{ option.label }</span>
+        <span className="margin-left-10">{ option.label }</span>
       </div>
     );
   }
@@ -287,33 +256,25 @@ class AddCoin extends React.Component {
   }
 
   isCoinAlreadyAdded(coin) {
-    const modes = [
-      'spv',
-      'native'
-    ];
+    if (this.existingCoins &&
+        this.existingCoins.spv &&
+        this.existingCoins.spv.indexOf(coin.toLowerCase()) !== -1) {
+      const message = `${coin} ${translate('ADD_COIN.ALREADY_ADDED')} ${translate('ADD_COIN.IN')} Lite ${translate('ADD_COIN.MODE')}`;
 
-    for (let mode of modes) {
-      if (this.existingCoins &&
-          this.existingCoins[mode] &&
-          this.existingCoins[mode].indexOf(coin) !== -1) {
-        const message = `${coin} ${translate('ADD_COIN.ALREADY_ADDED')} ${translate('ADD_COIN.IN')} ${mode} ${translate('ADD_COIN.MODE')}`;
+      Store.dispatch(
+        triggerToaster(
+          message,
+          translate('ADD_COIN.COIN_ALREADY_ADDED'),
+          'error'
+        )
+      );
 
-        Store.dispatch(
-          triggerToaster(
-            message,
-            translate('ADD_COIN.COIN_ALREADY_ADDED'),
-            'error'
-          )
-        );
-
-        return true;
-      }
+      return true;
     }
 
     return false;
   }
 }
-
 
 const mapStateToProps = (state) => {
   return {

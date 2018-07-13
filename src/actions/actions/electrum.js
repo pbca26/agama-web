@@ -5,7 +5,7 @@ import {
   DASHBOARD_ELECTRUM_TRANSACTIONS,
   DASHBOARD_ELECTRUM_COINS,
 } from '../storeType';
-import { translate } from '../../translate/translate';
+import translate from '../../translate/translate';
 import Config from '../../config';
 import appData from './appData';
 import {
@@ -13,17 +13,20 @@ import {
   sendToAddressState,
 } from '../actionCreators';
 import Store from '../../store';
+
+import btcNetworks from 'agama-wallet-lib/src/electrum-servers';
+import electrumServers from 'agama-wallet-lib/src/electrum-servers';
+import komodoInterest from 'agama-wallet-lib/src/komodo-interest';
+import transactionType from 'agama-wallet-lib/src/transaction-type';
+import transactionBuilder from 'agama-wallet-lib/src/transaction-type';
+import { stringToWif } from 'agama-wallet-lib/src/keys';
+import { isKomodoCoin } from 'agama-wallet-lib/src/coin-helpers';
+import transactionDecoder from 'agama-wallet-lib/src/transaction-decoder';
 import {
-  keys,
-  coin as _coin,
-  decoder,
-  utils,
-  eservers,
-  btcnetworks,
-  komodoInterest,
-  transactionType,
-  transactionBuilder,
-} from 'agama-wallet-lib/src/index-fe';
+  fromSats,
+  toSats,
+  getRandomIntInclusive,
+} from 'agama-wallet-lib/src/utils';
 import proxyServers from '../../util/proxyServers';
 
 let proxyConErr = false;
@@ -48,7 +51,7 @@ const getCache = (coin, type, key, data) => {
 
 export const shepherdSelectProxy = () => {
   // pick a random proxy server
-  const _randomServer = proxyServers[utils.getRandomIntInclusive(0, proxyServers.length - 1)];
+  const _randomServer = proxyServers[getRandomIntInclusive(0, proxyServers.length - 1)];
   appData.proxy = {
     ip: _randomServer.ip,
     port: _randomServer.port,
@@ -58,12 +61,12 @@ export const shepherdSelectProxy = () => {
 
 export const shepherdSelectRandomCoinServer = (coin) => {
   // pick a random proxy server
-  let _randomServer = eservers[coin].serverList[utils.getRandomIntInclusive(0, eservers[coin].serverList.length - 1)].split(':');
-  
+  let _randomServer = electrumServers[coin].serverList[getRandomIntInclusive(0, electrumServers[coin].serverList.length - 1)].split(':');
+
   if (Config.whitelabel) {
-    _randomServer = Config.wlConfig.serverList[utils.getRandomIntInclusive(0, Config.wlConfig.serverList.length - 1)].split(':');
+    _randomServer = Config.wlConfig.serverList[getRandomIntInclusive(0, Config.wlConfig.serverList.length - 1)].split(':');
   }
-  
+
   appData.servers[coin] = {
     ip: _randomServer[0],
     port: _randomServer[1],
@@ -90,32 +93,6 @@ export const shepherdElectrumLogout = () => {
     };
     appData.servers = {};
     resolve();
-  });
-}
-
-// src: atomicexplorer
-export const shepherdGetRemoteBTCFees = () => {
-  return new Promise((resolve, reject) => {
-    fetch(`https://www.atomicexplorer.com/api/btc/fees`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-    .catch((error) => {
-      console.log(error);
-      Store.dispatch(
-        triggerToaster(
-          'shepherdGetRemoteBTCFees',
-          'Error',
-          'error'
-        )
-      );
-    })
-    .then(response => response.json())
-    .then(json => {
-      resolve(json);
-    });
   });
 }
 
@@ -171,9 +148,9 @@ export const shepherdElectrumCheckServerConnection = (address, port) => {
 
 export const shepherdElectrumKeys = (seed) => {
   return new Promise((resolve, reject) => {
-    const _keys = keys.stringToWif(seed, btcnetworks[Object.keys(appData.keys)[0]], true);
+    const keys = stringToWif(seed, btcNetworks[Object.keys(appData.keys)[0]], true);
 
-    if (_keys.priv === appData.keys[Object.keys(appData.keys)[0]].priv) {
+    if (keys.priv === appData.keys[Object.keys(appData.keys)[0]].priv) {
       resolve({ result: appData.keys });
     } else {
       resolve('error');
@@ -221,7 +198,6 @@ export const shepherdElectrumBalance = (coin, address) => {
       if (json &&
           json.hasOwnProperty('confirmed') &&
           json.hasOwnProperty('unconfirmed')) {
-
         if (coin === 'kmd') {
           shepherdElectrumListunspent(coin, address)
           .then((_utxoList) => {
@@ -237,14 +213,14 @@ export const shepherdElectrumBalance = (coin, address) => {
             json = {
               msg: 'success',
               result: {
-                balance: Number(utils.fromSats(json.confirmed).toFixed(8)),
+                balance: Number(fromSats(json.confirmed).toFixed(8)),
                 balanceSats: json.confirmed,
-                unconfirmed: Number(utils.fromSats(json.unconfirmed).toFixed(8)),
+                unconfirmed: Number(fromSats(json.unconfirmed).toFixed(8)),
                 unconfirmedSats: json.unconfirmed,
                 interest: Number(_totalInterest.toFixed(8)),
-                interestSats: Math.floor(utils.toSats(_totalInterest)),
-                total: _totalInterest > 0 ? Number((utils.fromSats(json.confirmed) + _totalInterest).toFixed(8)) : 0,
-                totalSats: _totalInterest > 0 ? json.confirmed + Math.floor(utils.toSats(_totalInterest)) : 0,
+                interestSats: Math.floor(toSats(_totalInterest)),
+                total: _totalInterest > 0 ? Number((fromSats(json.confirmed) + _totalInterest).toFixed(8)) : 0,
+                totalSats: _totalInterest > 0 ? json.confirmed + Math.floor(toSats(_totalInterest)) : 0,
               },
             };
             dispatch(shepherdElectrumBalanceState(json));
@@ -254,9 +230,9 @@ export const shepherdElectrumBalance = (coin, address) => {
           json = {
             msg: 'success',
             result: {
-              balance: Number(utils.fromSats(json.confirmed).toFixed(8)),
+              balance: Number(fromSats(json.confirmed).toFixed(8)),
               balanceSats: json.confirmed,
-              unconfirmed: Number(utils.fromSats(json.unconfirmed).toFixed(8)),
+              unconfirmed: Number(fromSats(json.unconfirmed).toFixed(8)),
               unconfirmedSats: json.unconfirmed,
             },
           };
@@ -333,10 +309,9 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
           result = json;
 
           if (result.msg !== 'error') {
-            let _transactions = [];
-
             // parse listtransactions
             const json = result.result;
+            let _transactions = [];
 
             if (json &&
                 json.length) {
@@ -375,8 +350,8 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
                       Config.log(transaction.raw);
 
                       // decode tx
-                      const _network = _coin.isKomodoCoin(coin) || Config.whitelabel ? btcnetworks.kmd : btcnetworks[coin];
-                      const decodedTx = decoder(transaction.raw, _network);
+                      const _network = isKomodoCoin(coin) || Config.whitelabel ? btcNetworks.kmd : btcNetworks[coin];
+                      const decodedTx = transactionDecoder(transaction.raw, _network);
 
                       let txInputs = [];
 
@@ -392,7 +367,7 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
                               const _cachedTx = getCache(coin, 'txs', _decodedInput.txid);
 
                               if (_cachedTx) {
-                                const decodedVinVout = decoder(_cachedTx, _network);
+                                const decodedVinVout = transactionDecoder(_cachedTx, _network);
 
                                 Config.log('electrum raw input tx ==>');
 
@@ -428,7 +403,7 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
                                   Config.log(result);
 
                                   if (result.msg !== 'error') {
-                                    const decodedVinVout = decoder(result.result, _network);
+                                    const decodedVinVout = transactionDecoder(result.result, _network);
 
                                     getCache(coin, 'txs', _decodedInput.txid, result.result);
                                     Config.log('electrum raw input tx ==>');
@@ -615,10 +590,11 @@ export const shepherdElectrumSendPromise = (coin, value, sendToAddress, changeAd
     .then((utxoList) => {
       let _network;
 
-      if (_coin.isKomodoCoin(coin) || Config.whitelabel) {
-        _network = btcnetworks.kmd;
+      if (isKomodoCoin(coin) ||
+          Config.whitelabel) {
+        _network = btcNetworks.kmd;
       } else {
-        _network = btcnetworks[coin];
+        _network = btcNetworks[coin];
       }
 
       const _data = transactionBuilder.data(
@@ -843,8 +819,8 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
 
                         if (_cachedTx) {
                           // decode tx
-                          const _network = _coin.isKomodoCoin(coin) ? btcnetworks.kmd : btcnetworks[coin];
-                          const decodedTx = decoder(_cachedTx, _network);
+                          const _network = isKomodoCoin(coin) ? btcNetworks.kmd : btcNetworks[coin];
+                          const decodedTx = transactionDecoder(_cachedTx, _network);
 
                           Config.log('decoded tx =>');
                           Config.log(decodedTx);
@@ -856,7 +832,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                             if (coin === 'kmd') {
                               let interest = 0;
 
-                              if (Number(utils.fromSats(_utxoItem.value)) >= 10 &&
+                              if (Number(fromSats(_utxoItem.value)) >= 10 &&
                                   decodedTx.format.locktime > 0) {
                                 Config.log('interest', komodoInterest);
                                 interest = komodoInterest(decodedTx.format.locktime, _utxoItem.value, _utxoItem.height);
@@ -866,10 +842,10 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                                 txid: _utxoItem['tx_hash'],
                                 vout: _utxoItem['tx_pos'],
                                 address,
-                                amount: Number(utils.fromSats(_utxoItem.value)),
+                                amount: Number(fromSats(_utxoItem.value)),
                                 amountSats: _utxoItem.value,
                                 interest: interest,
-                                interestSats: Math.floor(utils.toSats(interest)),
+                                interestSats: Math.floor(toSats(interest)),
                                 confirmations: Number(_utxoItem.height) === 0 ? 0 : currentHeight - _utxoItem.height,
                                 spendable: true,
                                 verified: false,
@@ -901,7 +877,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                                 txid: _utxoItem['tx_hash'],
                                 vout: _utxoItem['tx_pos'],
                                 address,
-                                amount: Number(utils.fromSats(_utxoItem.value)),
+                                amount: Number(fromSats(_utxoItem.value)),
                                 amountSats: _utxoItem.value,
                                 confirmations: Number(_utxoItem.height) === 0 ? 0 : currentHeight - _utxoItem.height,
                                 spendable: true,
@@ -965,8 +941,8 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                               Config.log(_rawtxJSON);
 
                               // decode tx
-                              const _network = _coin.isKomodoCoin(coin) || Config.whitelabel ? btcnetworks.kmd : btcnetworks[coin];
-                              const decodedTx = decoder(_rawtxJSON, _network);
+                              const _network = isKomodoCoin(coin) || Config.whitelabel ? btcNetworks.kmd : btcNetworks[coin];
+                              const decodedTx = transactionDecoder(_rawtxJSON, _network);
 
                               Config.log('decoded tx =>');
                               Config.log(decodedTx);
@@ -978,7 +954,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                                 if (coin === 'kmd') {
                                   let interest = 0;
 
-                                  if (Number(utils.fromSats(_utxoItem.value)) >= 10 &&
+                                  if (Number(fromSats(_utxoItem.value)) >= 10 &&
                                       decodedTx.format.locktime > 0) {
                                     Config.log('interest', komodoInterest);
                                     interest = komodoInterest(decodedTx.format.locktime, _utxoItem.value, _utxoItem.height);
@@ -988,10 +964,10 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                                     txid: _utxoItem['tx_hash'],
                                     vout: _utxoItem['tx_pos'],
                                     address,
-                                    amount: Number(utils.fromSats(_utxoItem.value)),
+                                    amount: Number(fromSats(_utxoItem.value)),
                                     amountSats: _utxoItem.value,
                                     interest: interest,
-                                    interestSats: Math.floor(utils.toSats(interest)),
+                                    interestSats: Math.floor(toSats(interest)),
                                     confirmations: Number(_utxoItem.height) === 0 ? 0 : currentHeight - _utxoItem.height,
                                     spendable: true,
                                     verified: false,
@@ -1023,7 +999,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                                     txid: _utxoItem['tx_hash'],
                                     vout: _utxoItem['tx_pos'],
                                     address,
-                                    amount: Number(utils.fromSats(_utxoItem.value)),
+                                    amount: Number(fromSats(_utxoItem.value)),
                                     amountSats: _utxoItem.value,
                                     confirmations: Number(_utxoItem.height) === 0 ? 0 : currentHeight - _utxoItem.height,
                                     spendable: true,
