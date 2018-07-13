@@ -14,7 +14,7 @@ import {
 } from '../actionCreators';
 import Store from '../../store';
 
-import btcNetworks from 'agama-wallet-lib/src/electrum-servers';
+import btcNetworks from 'agama-wallet-lib/src/bitcoinjs-networks';
 import electrumServers from 'agama-wallet-lib/src/electrum-servers';
 import komodoInterest from 'agama-wallet-lib/src/komodo-interest';
 import transactionType from 'agama-wallet-lib/src/transaction-type';

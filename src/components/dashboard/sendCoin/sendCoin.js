@@ -30,7 +30,7 @@ import {
 import Slider, { Range } from 'rc-slider';
 import ReactTooltip from 'react-tooltip';
 import electrumServers from 'agama-wallet-lib/src/electrum-servers';
-import btcNetworks from 'agama-wallet-lib/src/electrum-servers';
+import btcNetworks from 'agama-wallet-lib/src/bitcoinjs-networks';
 import { addressVersionCheck } from 'agama-wallet-lib/src/keys';
 
 const _feeLookup = [
@@ -70,13 +70,10 @@ class SendCoin extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.openDropMenu = this.openDropMenu.bind(this);
     this.handleClickOutside = this.handleClickOutside.bind(this);
-    this.checkZAddressCount = this.checkZAddressCount.bind(this);
     this.setRecieverFromScan = this.setRecieverFromScan.bind(this);
-    this.renderOPIDListCheck = this.renderOPIDListCheck.bind(this);
     this.SendFormRender = _SendFormRender.bind(this);
     this.isTransparentTx = this.isTransparentTx.bind(this);
     this.toggleSubtractFee = this.toggleSubtractFee.bind(this);
-    this.isFullySynced = this.isFullySynced.bind(this);
     this.setSendAmountAll = this.setSendAmountAll.bind(this);
     this.setSendToSelf = this.setSendToSelf.bind(this);
     this.fetchBTCFees = this.fetchBTCFees.bind(this);
@@ -146,7 +143,6 @@ class SendCoin extends React.Component {
         this.props.ActiveCoin.lastSendToResponse) {
       Store.dispatch(clearLastSendToResponseState());
     }
-    this.checkZAddressCount(props);
 
     if (this.props.ActiveCoin.activeSection !== props.ActiveCoin.activeSection &&
         this.props.ActiveCoin.activeSection !== 'send') {
@@ -204,46 +200,6 @@ class SendCoin extends React.Component {
     }
   }
 
-  checkZAddressCount(props) {
-    const _addresses = this.props.ActiveCoin.addresses;
-    const _defaultState = {
-      currentStep: 0,
-      addressType: null,
-      sendFrom: null,
-      sendFromAmount: 0,
-      sendTo: '',
-      amount: 0,
-      fee: 0,
-      addressSelectorOpen: false,
-      renderAddressDropdown: true,
-      subtractFee: false,
-      lastSendToResponse: null,
-    };
-    let updatedState;
-
-    if (_addresses &&
-        (!_addresses.private ||
-        _addresses.private.length === 0)) {
-      updatedState = {
-        renderAddressDropdown: false,
-        lastSendToResponse: props.ActiveCoin.lastSendToResponse,
-        coin: props.ActiveCoin.coin,
-      };
-    } else {
-      updatedState = {
-        renderAddressDropdown: true,
-        lastSendToResponse: props.ActiveCoin.lastSendToResponse,
-        coin: props.ActiveCoin.coin,
-      };
-    }
-
-    if (this.state.coin !== props.ActiveCoin.coin) {
-      this.setState(Object.assign({}, _defaultState, updatedState));
-    } else {
-      this.setState(updatedState);
-    }
-  }
-
   renderAddressByType(type) {
     const _coinAddresses = this.props.ActiveCoin.addresses;
     let _items = [];
@@ -279,14 +235,6 @@ class SendCoin extends React.Component {
     }
   }
 
-  renderOPIDListCheck() {
-    if (this.state.renderAddressDropdown &&
-        this.props.ActiveCoin.opids &&
-        this.props.ActiveCoin.opids.length) {
-      return true;
-    }
-  }
-
   renderSelectorCurrentLabel() {
     if (this.state.sendFrom) {
       return (
@@ -311,90 +259,6 @@ class SendCoin extends React.Component {
     return AddressListRender.call(this);
   }
 
-  renderOPIDLabel(opid) {
-    const _satatusDef = {
-      queued: {
-        icon: 'warning',
-        label: 'QUEUED',
-      },
-      executing: {
-        icon: 'info',
-        label: 'EXECUTING',
-      },
-      failed: {
-        icon: 'danger',
-        label: 'FAILED',
-      },
-      success: {
-        icon: 'success',
-        label: 'SUCCESS',
-      },
-    };
-
-    return (
-      <span className={ `label label-${_satatusDef[opid.status].icon}` }>
-        <i className="icon fa-eye"></i>&nbsp;
-        <span>{ translate(`KMD_NATIVE.${_satatusDef[opid.status].label}`) }</span>
-      </span>
-    );
-  }
-
-  renderOPIDResult(opid) {
-    let isWaitingStatus = true;
-
-    if (opid.status === 'queued') {
-      isWaitingStatus = false;
-      return (
-        <i>{ translate('SEND.AWAITING') }...</i>
-      );
-    } else if (opid.status === 'executing') {
-      isWaitingStatus = false;
-      return (
-        <i>{ translate('SEND.PROCESSING') }...</i>
-      );
-    } else if (opid.status === 'failed') {
-      isWaitingStatus = false;
-      return (
-        <span>
-          <strong>{ translate('SEND.ERROR_CODE') }:</strong> <span>{ opid.error.code }</span>
-          <br />
-          <strong>{ translate('KMD_NATIVE.MESSAGE') }:</strong> <span>{ opid.error.message }</span>
-        </span>
-      );
-    } else if (opid.status === 'success') {
-      isWaitingStatus = false;
-      return (
-        <span>
-          <strong>{ translate('KMD_NATIVE.TXID') }:</strong> <span>{ opid.result.txid }</span>
-          <br />
-          <strong>{ translate('KMD_NATIVE.EXECUTION_SECONDS') }:</strong> <span>{ opid.execution_secs }</span>
-        </span>
-      );
-    }
-
-    if (isWaitingStatus) {
-      return (
-        <span>{ translate('SEND.WAITING') }...</span>
-      );
-    }
-  }
-
-  renderOPIDList() {
-    if (this.props.ActiveCoin.opids &&
-        this.props.ActiveCoin.opids.length) {
-      return this.props.ActiveCoin.opids.map((opid) =>
-        <tr key={ opid.id }>
-          <td>{ this.renderOPIDLabel(opid) }</td>
-          <td>{ opid.id }</td>
-          <td>{ secondsToString(opid.creation_time) }</td>
-          <td>{ this.renderOPIDResult(opid) }</td>
-        </tr>
-      );
-    } else {
-      return null;
-    }
-  }
-
   openDropMenu() {
     this.setState(Object.assign({}, this.state, {
       addressSelectorOpen: !this.state.addressSelectorOpen,
@@ -417,8 +281,7 @@ class SendCoin extends React.Component {
   }
 
   fetchBTCFees() {
-    if (this.props.ActiveCoin.mode === 'spv' &&
-        this.props.ActiveCoin.coin.toUpperCase() === 'BTC') {
+    if (his.props.ActiveCoin.coin.toUpperCase() === 'BTC') {
       shepherdGetRemoteBTCFees()
       .then((res) => {
         if (res.msg === 'success') {
@@ -467,37 +330,34 @@ class SendCoin extends React.Component {
         }));
 
         // spv pre tx push request
-        if (this.props.ActiveCoin.mode === 'spv') {
-          const fee = this.props.ActiveCoin.coin !== 'btc' ? electrumServers[this.props.ActiveCoin.coin].txfee : 0;
+        const fee = this.props.ActiveCoin.coin !== 'btc' ? electrumServers[this.props.ActiveCoin.coin].txfee : 0;
 
-          shepherdElectrumSendPromise(
-            this.props.ActiveCoin.coin,
-            toSats(this.state.amount),
-            this.state.sendTo,
-            this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub,
-            this.props.ActiveCoin.coin.toUpperCase() === 'BTC' ? { perbyte: true, value: this.state.btcFeesSize } : fee
-          )
-          .then((sendPreflight) => {
-            console.warn(sendPreflight);
-            if (sendPreflight &&
-                sendPreflight.msg === 'success') {
-              this.setState(Object.assign({}, this.state, {
-                spvVerificationWarning: !sendPreflight.result.utxoVerified,
-                spvPreflightSendInProgress: false,
-                spvPreflightRes: {
-                  fee: sendPreflight.result.fee,
-                  value: sendPreflight.result.value,
-                  change: sendPreflight.result.change,
-                  estimatedFee: sendPreflight.result.estimatedFee,
-                },
-              }));
-            } else {
-              this.setState(Object.assign({}, this.state, {
-                spvPreflightSendInProgress: false,
-              }));
-            }
-          });
-        }
+        shepherdElectrumSendPromise(
+          this.props.ActiveCoin.coin,
+          toSats(this.state.amount),
+          this.state.sendTo,
+          this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub,
+          this.props.ActiveCoin.coin.toUpperCase() === 'BTC' ? { perbyte: true, value: this.state.btcFeesSize } : fee
+        )
+        .then((sendPreflight) => {
+          if (sendPreflight &&
+              sendPreflight.msg === 'success') {
+            this.setState(Object.assign({}, this.state, {
+              spvVerificationWarning: !sendPreflight.result.utxoVerified,
+              spvPreflightSendInProgress: false,
+              spvPreflightRes: {
+                fee: sendPreflight.result.fee,
+                value: sendPreflight.result.value,
+                change: sendPreflight.result.change,
+                estimatedFee: sendPreflight.result.estimatedFee,
+              },
+            }));
+          } else {
+            this.setState(Object.assign({}, this.state, {
+              spvPreflightSendInProgress: false,
+            }));
+          }
+        });
       }
     }
 
@@ -514,38 +374,18 @@ class SendCoin extends React.Component {
       return;
     }
 
-    if (this.props.ActiveCoin.mode === 'native') {
-      Store.dispatch(
-        sendNativeTx(
-          this.props.ActiveCoin.coin,
-          this.state
-        )
+    // no op
+    if (this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub) {
+      const fee = this.props.ActiveCoin.coin !== 'btc' ? electrumServers[this.props.ActiveCoin.coin].txfee : 0;
+
+      shepherdElectrumSendPromise(
+        this.props.ActiveCoin.coin,
+        toSats(this.state.amount),
+        this.state.sendTo,
+        this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub,
+        this.props.ActiveCoin.coin === 'btc' ? { perbyte: true, value: this.state.btcFeesSize } : fee,
+        true
       );
-
-      if (this.state.addressType === 'private') {
-        setTimeout(() => {
-          Store.dispatch(
-            getKMDOPID(
-              null,
-              this.props.ActiveCoin.coin
-            )
-          );
-        }, 1000);
-      }
-    } else if (this.props.ActiveCoin.mode === 'spv') {
-      // no op
-      if (this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub) {
-        const fee = this.props.ActiveCoin.coin !== 'btc' ? electrumServers[this.props.ActiveCoin.coin].txfee : 0;
-
-        shepherdElectrumSendPromise(
-          this.props.ActiveCoin.coin,
-          toSats(this.state.amount),
-          this.state.sendTo,
-          this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub,
-          this.props.ActiveCoin.coin === 'btc' ? { perbyte: true, value: this.state.btcFeesSize } : fee,
-          true
-        );
-      }
     }
   }
 
@@ -553,31 +393,29 @@ class SendCoin extends React.Component {
   validateSendFormData() {
     let valid = true;
 
-    if (this.props.ActiveCoin.mode === 'spv') {
-      const _amount = this.state.amount;
-      const _amountSats = Math.floor(toSats(this.state.amount));
-      const _balanceSats = this.props.ActiveCoin.balance.balanceSats;
-      const fee = this.props.ActiveCoin.coin !== 'btc' ? electrumServers[this.props.ActiveCoin.coin].txfee : 0;
+    const _amount = this.state.amount;
+    const _amountSats = Math.floor(toSats(this.state.amount));
+    const _balanceSats = this.props.ActiveCoin.balance.balanceSats;
+    const fee = this.props.ActiveCoin.coin !== 'btc' ? electrumServers[this.props.ActiveCoin.coin].txfee : 0;
 
-      if ((Number(_amountSats) + fee) > _balanceSats) {
-        Store.dispatch(
-          triggerToaster(
-            `${translate('SEND.INSUFFICIENT_FUNDS')} ${translate('SEND.MAX_AVAIL_BALANCE')} ${Number(fromSats((_balanceSats - fee)).toFixed(8))} ${this.props.ActiveCoin.coin.toUpperCase()}`,
-            translate('TOASTR.WALLET_NOTIFICATION'),
-            'error'
-          )
-        );
-        valid = false;
-      } else if (Number(_amountSats) < fee) {
-        Store.dispatch(
-          triggerToaster(
-            `${translate('SEND.AMOUNT_IS_TOO_SMALL', this.state.amount)}, ${translate('SEND.MIN_AMOUNT_IS', this.props.ActiveCoin.coin.toUpperCase())} ${Number(fromSats(fee))}`,
-            translate('TOASTR.WALLET_NOTIFICATION'),
-            'error'
-          )
-        );
-        valid = false;
-      }
+    if ((Number(_amountSats) + fee) > _balanceSats) {
+      Store.dispatch(
+        triggerToaster(
+          `${translate('SEND.INSUFFICIENT_FUNDS')} ${translate('SEND.MAX_AVAIL_BALANCE')} ${Number(fromSats((_balanceSats - fee)).toFixed(8))} ${this.props.ActiveCoin.coin.toUpperCase()}`,
+          translate('TOASTR.WALLET_NOTIFICATION'),
+          'error'
+        )
+      );
+      valid = false;
+    } else if (Number(_amountSats) < fee) {
+      Store.dispatch(
+        triggerToaster(
+          `${translate('SEND.AMOUNT_IS_TOO_SMALL', this.state.amount)}, ${translate('SEND.MIN_AMOUNT_IS', this.props.ActiveCoin.coin.toUpperCase())} ${Number(fromSats(fee))}`,
+          translate('TOASTR.WALLET_NOTIFICATION'),
+          'error'
+        )
+      );
+      valid = false;
     }
 
     if (!this.state.sendTo) {
@@ -619,29 +457,6 @@ class SendCoin extends React.Component {
       valid = false;
     }
 
-    if (this.props.ActiveCoin.mode === 'native') {
-      if (((!this.state.sendFrom || this.state.addressType === 'public') &&
-          this.state.sendTo &&
-          this.state.sendTo.length === 34 &&
-          this.props.ActiveCoin.balance &&
-          this.props.ActiveCoin.balance.transparent &&
-          Number(Number(this.state.amount) + (this.state.subtractFee ? 0 : 0.0001)) > Number(this.props.ActiveCoin.balance.transparent)) ||
-          (this.state.addressType === 'public' &&
-          this.state.sendTo &&
-          this.state.sendTo.length > 34 &&
-          this.state.sendFrom &&
-          Number(Number(this.state.amount) + 0.0001) > Number(this.state.sendFromAmount))) {
-        Store.dispatch(
-          triggerToaster(
-            `${translate('SEND.INSUFFICIENT_FUNDS')} ${translate('SEND.MAX_AVAIL_BALANCE')} ${Number(this.state.sendFromAmount || this.props.ActiveCoin.balance.transparent)} ${this.props.ActiveCoin.coin.toUpperCase()}`,
-            translate('TOASTR.WALLET_NOTIFICATION'),
-            'error'
-          )
-        );
-        valid = false;
-      }
-    }
-
     return valid;
   }
 
@@ -652,17 +467,6 @@ class SendCoin extends React.Component {
     }
 
     return false;
-  }
-
-  isFullySynced() {
-    if (this.props.ActiveCoin.progress &&
-        this.props.ActiveCoin.progress.longestchain &&
-        this.props.ActiveCoin.progress.blocks &&
-        this.props.ActiveCoin.progress.longestchain > 0 &&
-        this.props.ActiveCoin.progress.blocks > 0 &&
-        Number(this.props.ActiveCoin.progress.blocks) * 100 / Number(this.props.ActiveCoin.progress.longestchain) === 100) {
-      return true;
-    }
   }
 
   onSliderChange(value) {
@@ -681,8 +485,7 @@ class SendCoin extends React.Component {
   }
 
   renderBTCFees() {
-    if (this.props.ActiveCoin.mode === 'spv' &&
-        this.props.ActiveCoin.coin.toUpperCase() === 'BTC' &&
+    if (this.props.ActiveCoin.coin.toUpperCase() === 'BTC' &&
         !this.state.btcFees.lastUpdated) {
       return (<div className="col-lg-6 form-group form-material">Fetching BTC fees...</div>);
     } else if (

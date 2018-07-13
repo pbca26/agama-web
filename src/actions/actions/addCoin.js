@@ -14,7 +14,7 @@ import {
   checkAC,
 } from '../../components/addcoin/payload';
 import { isKomodoCoin } from 'agama-wallet-lib/src/coin-helpers';
-import btcNetworks from 'agama-wallet-lib/src/electrum-servers';
+import btcNetworks from 'agama-wallet-lib/src/bitcoinjs-networks';
 import { stringToWif } from 'agama-wallet-lib/src/keys';
 
 const iguanaActiveHandleState = (json) => {
