@@ -40,7 +40,7 @@ const WalletsInfoRender = function() {
                 <tr>
                   <td>{ translate('INDEX.PAY_TX_FEE') }</td>
                   <td>
-                    { eservers[this.props.ActiveCoin.coin].txfee }
+                    { electrumServers[this.props.ActiveCoin.coin].txfee }
                   </td>
                 </tr>
                 <tr>
@@ -59,18 +59,6 @@ const WalletsInfoRender = function() {
             </table>
           </div>
         </div>
-        { this.props.ActiveCoin.coin === 'KMD' &&
-          this.props.ActiveCoin.mode !== 'spv' &&
-          <div>
-            <button
-              type="button"
-              className="btn btn-success waves-effect waves-light margin-top-20 btn-next"
-              onClick={ () => this.openClaimInterestModal() }>
-              { translate('CLAIM_INTEREST.CLAIM_INTEREST', ' ') }
-            </button>
-            <ClaimInterestModal />
-          </div>
-        }
       </div>
     </div>
   );

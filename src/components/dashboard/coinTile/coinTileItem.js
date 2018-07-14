@@ -86,20 +86,6 @@ class CoinTileItem extends React.Component {
     Store.dispatch(toggleCoindDownModal(true));
   }
 
-  renderCoinConError(item) {
-    if (this.props.ActiveCoin.getinfoFetchFailures >= COIND_DOWN_MODAL_FETCH_FAILURES_THRESHOLD &&
-        (this.props.ActiveCoin.mode === 'native' &&
-        this.props.ActiveCoin.coin === this.state.activeCoin &&
-        this.props.ActiveCoin.coin === item.coin &&
-        this.state.activeCoin === item.coin &&
-        this.state.activeCoinMode === 'native' &&
-        this.props.ActiveCoin.mode === this.state.activeCoinMode &&
-        this.state.propsUpdatedCounter > 1) ||
-        (this.props.ActiveCoin.coins && this.props.ActiveCoin.coins[item.coin]) && this.props.ActiveCoin.coins[item.coin].getinfoFetchFailures >= COIND_DOWN_MODAL_FETCH_FAILURES_THRESHOLD) {
-      return true;
-    }
-  }
-
   renderStopCoinButton(item) {
     if (this.props.Main &&
         this.props.Main.coins &&
@@ -141,11 +127,8 @@ class CoinTileItem extends React.Component {
         });
 
         if (_coinMode.kmd &&
-            _coinMode.kmd === 'native' &&
+            _coinMode.kmd === 'spv' &&
             skipCoin !== 'kmd') {
-          _coin = 'kmd';
-          _mode = 'native';
-        } else if (_coinMode.kmd && _coinMode.kmd === 'spv' && skipCoin !== 'kmd') {
           _coin = 'kmd';
           _mode = 'spv';
         }
@@ -217,48 +200,7 @@ class CoinTileItem extends React.Component {
   dispatchCoinActions(coin, mode) {
     if (this.props.Dashboard &&
         this.props.Dashboard.activeSection === 'wallets') {
-      if (mode === 'native') {
-        const _propsDashboard = this.props.ActiveCoin;
-        const syncPercentage = _propsDashboard && _propsDashboard.progress && (parseFloat(parseInt(_propsDashboard.progress.blocks, 10) * 100 / parseInt(_propsDashboard.progress.longestchain, 10)).toFixed(2)).replace('NaN', 0);
-
-        if ((syncPercentage < 100 &&
-            (!this.props.Dashboard.displayCoindDownModal || this.props.ActiveCoin.getinfoFetchFailures < COIND_DOWN_MODAL_FETCH_FAILURES_THRESHOLD)) ||
-            this.props.ActiveCoin.rescanInProgress) {
-          if (coin === 'KMD') {
-            Store.dispatch(getDebugLog('komodo', 50));
-          } else {
-            Store.dispatch(getDebugLog('komodo', 50, coin));
-          }
-        }
-
-        if ((!this.props.Dashboard.displayCoindDownModal || this.props.ActiveCoin.getinfoFetchFailures < COIND_DOWN_MODAL_FETCH_FAILURES_THRESHOLD) &&
-            _propsDashboard.progress &&
-            _propsDashboard.progress.blocks &&
-            _propsDashboard.progress.longestchain &&
-            syncPercentage) {
-          Store.dispatch(
-            getSyncInfoNative(
-              coin,
-              true,
-              this.props.Dashboard.skipFullDashboardUpdate,
-              this.props.ActiveCoin.rescanInProgress
-            )
-          );
-
-          if (!this.props.Dashboard.skipFullDashboardUpdate) {
-            Store.dispatch(getDashboardUpdate(coin, _propsDashboard));
-          }
-        } else {
-          Store.dispatch(
-            getSyncInfoNative(
-              coin,
-              null,
-              this.props.Dashboard.skipFullDashboardUpdate,
-              this.props.ActiveCoin.rescanInProgress
-            )
-          );
-        }
-      } else if (mode === 'spv' && this.props.Dashboard.electrumCoins && this.props.Dashboard.electrumCoins[coin] && this.props.Dashboard.electrumCoins[coin].pub) {
+      if (this.props.Dashboard.electrumCoins && this.props.Dashboard.electrumCoins[coin] && this.props.Dashboard.electrumCoins[coin].pub) {
         Store.dispatch(shepherdElectrumBalance(coin, this.props.Dashboard.electrumCoins[coin].pub));
         shepherdElectrumListunspent(coin, this.props.Dashboard.electrumCoins[coin].pub);
 
@@ -276,8 +218,7 @@ class CoinTileItem extends React.Component {
         this.dispatchCoinActions(coin, mode);
       }, 100);
 
-      if (mode === 'native' ||
-          mode === 'spv') { // faster coin data load if fully synced
+      if (mode === 'spv') { // faster coin data load if fully synced
         setTimeout(() => {
           this.dispatchCoinActions(coin, mode);
         }, 1000);
@@ -292,19 +233,12 @@ class CoinTileItem extends React.Component {
         );
       }
 
-      if (mode === 'native') {
-        const _iguanaActiveHandle = setInterval(() => {
-          this.dispatchCoinActions(coin, mode);
-        }, Config.rpc2cli ? ACTIVE_HANDLE_TIMEOUT_COIND_NATIVE_RCP2CLI : ACTIVE_HANDLE_TIMEOUT_COIND_NATIVE);
 
-        Store.dispatch(startInterval('sync', _iguanaActiveHandle));
-      } else if (mode === 'spv') {
-        const _iguanaActiveHandle = setInterval(() => {
-          this.dispatchCoinActions(coin, mode);
-        }, SPV_DASHBOARD_UPDATE_TIMEOUT);
+      const _iguanaActiveHandle = setInterval(() => {
+        this.dispatchCoinActions(coin, mode);
+      }, SPV_DASHBOARD_UPDATE_TIMEOUT);
 
-        Store.dispatch(startInterval('sync', _iguanaActiveHandle));
-      }
+      Store.dispatch(startInterval('sync', _iguanaActiveHandle));
     }
   }
 
@@ -312,7 +246,6 @@ class CoinTileItem extends React.Component {
     if (this.props &&
         this.props.Dashboard &&
         this.props.Dashboard.eletrumServerChanged &&
-        this.props.ActiveCoin.mode === 'spv' &&
         this.props.Dashboard &&
         this.props.Dashboard.activeSection === 'wallets') {
       Store.dispatch(shepherdElectrumBalance(this.props.ActiveCoin.coin, this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub));

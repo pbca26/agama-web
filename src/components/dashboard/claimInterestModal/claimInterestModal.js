@@ -47,19 +47,7 @@ class ClaimInterestModal extends React.Component {
     this.openDropMenu = this.openDropMenu.bind(this);
     this.closeDropMenu = this.closeDropMenu.bind(this);
     this.closeModal = this.closeModal.bind(this);
-    this.isFullySynced = this.isFullySynced.bind(this);
     this.confirmClaimInterest = this.confirmClaimInterest.bind(this);
-  }
-
-  isFullySynced() {
-    if (this.props.ActiveCoin.progress &&
-        this.props.ActiveCoin.progress.longestchain &&
-        this.props.ActiveCoin.progress.blocks &&
-        this.props.ActiveCoin.progress.longestchain > 0 &&
-        this.props.ActiveCoin.progress.blocks > 0 &&
-        Number(this.props.ActiveCoin.progress.blocks) * 100 / Number(this.props.ActiveCoin.progress.longestchain) === 100) {
-      return true;
-    }
   }
 
   openDropMenu() {
@@ -223,7 +211,10 @@ class ClaimInterestModal extends React.Component {
     if (this.state.transactionsList &&
         this.state.transactionsList.length) {
       return true;
-    } else if (!this.state.transactionsList || !this.state.transactionsList.length) {
+    } else if (
+      !this.state.transactionsList ||
+      !this.state.transactionsList.length
+    ) {
       return false;
     }
   }
@@ -264,7 +255,7 @@ class ClaimInterestModal extends React.Component {
       <div className={ `btn-group bootstrap-select form-control form-material showkmdwalletaddrs show-tick ${(this.state.addressSelectorOpen ? 'open' : '')}` }>
         <button
           type="button"
-          className={ 'btn dropdown-toggle btn-info' + (this.props.ActiveCoin.mode === 'spv' ? ' disabled' : '') }
+          className="btn dropdown-toggle btn-info disabled"
           onClick={ this.openDropMenu }>
           <span className="filter-option pull-left">{ this.state.selectedAddress }</span>
           <span className="bs-caret inline">

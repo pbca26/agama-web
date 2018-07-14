@@ -114,21 +114,6 @@ export const _ClaimInterestTableRender = function() {
               </div>
             </div>
           }
-          { this.props.ActiveCoin.mode === 'native' &&
-            this.state.addressses &&
-            Object.keys(this.state.addressses).length > 0 &&
-            <div className="margin-top-40 margin-bottom-20">
-              <div className="margin-bottom-5">Send my balance to</div>
-              { this.addressDropdownRender() }
-            </div>
-          }
-          { (!this.isFullySynced() || !navigator.onLine) &&
-            this.props.ActiveCoin &&
-            this.props.ActiveCoin.mode === 'native' &&
-            <div className="col-lg-12 padding-top-5 padding-bottom-35 send-coin-sync-warning">
-              <i className="icon fa-warning color-warning margin-right-5"></i> <span className="desc">{ translate('SEND.SEND_NATIVE_SYNC_WARNING') }</span>
-            </div>
-          }
         </div>
       }
       <div className="table-scroll">

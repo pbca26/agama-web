@@ -62,13 +62,6 @@ const CoinTileItemRender = function() {
           data-tip={ translate('SETTINGS.SPV_SINGLE_SERVER_NOTICE') }
           className="icon fa-info-circle icon-spv-connection-warning"></i>
       }
-      { this.renderCoinConError(item) &&
-        !this.props.ActiveCoin.rescanInProgress &&
-        <i
-          onClick={ this.openCoindDownModal }
-          data-tip={ `${translate('DASHBOARD.RPC_CONN_FAILURE')}: ${this.props.ActiveCoin.getinfoFetchFailures}.` }
-          className="icon fa-warning icon-native-connection-warning"></i>
-      }
       <ReactTooltip
         effect="solid"
         className="text-left" />

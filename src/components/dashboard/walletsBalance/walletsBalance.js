@@ -38,16 +38,12 @@ class WalletsBalance extends React.Component {
       });
     }, 1000);
 
-    if (this.props.ActiveCoin.mode === 'native') {
-      Store.dispatch(getDashboardUpdate(this.props.ActiveCoin.coin));
-    } else if (this.props.ActiveCoin.mode === 'spv') {
-      Store.dispatch(
-        shepherdElectrumBalance(
-          this.props.ActiveCoin.coin,
-          this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub
-        )
-      );
-    }
+    Store.dispatch(
+      shepherdElectrumBalance(
+        this.props.ActiveCoin.coin,
+        this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub
+      )
+    );
   }
 
   renderBalance(type, returnFiatPrice) {
@@ -58,15 +54,7 @@ class WalletsBalance extends React.Component {
       _balance = '-777';
     }
 
-    if (_mode === 'native') {
-      if (this.props.ActiveCoin.balance &&
-          this.props.ActiveCoin.balance[type]) {
-        _balance = this.props.ActiveCoin.balance[type];
-      }
-    } else if (
-      _mode === 'spv' &&
-      this.props.ActiveCoin.balance.balance
-    ) {
+    if (this.props.ActiveCoin.balance.balance) {
       if (this.props.ActiveCoin.coin.toUpperCase() === 'KMD') {
         if (type === 'total' &&
             this.props.ActiveCoin.balance &&

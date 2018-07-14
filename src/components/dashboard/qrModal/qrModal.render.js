@@ -38,8 +38,8 @@ export const QRModalRender = function() {
                       id={ 'saveModalImage' + this.props.content }
                       className="btn btn-success waves-effect waves-light save-image-btn margin-right-10"
                       onClick={ this.saveAsImage }>
-                        <i className="icon fa-picture-o"></i>&nbsp;
-                        { translate('INDEX.SAVE_AS_IMAGE') }
+                      <i className="icon fa-picture-o"></i>&nbsp;
+                      { translate('INDEX.SAVE_AS_IMAGE') }
                     </a>
                   </p>
                 </div>

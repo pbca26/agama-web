@@ -89,7 +89,6 @@ class AddCoin extends React.Component {
       const defaultMode = coin[1];
       const modeToValue = { // TODO: move to utils
         spv: 0,
-        native: -1,
       };
       const _value = e.value;
       let _coins = this.state.coins;
@@ -99,10 +98,6 @@ class AddCoin extends React.Component {
         spvMode: {
           disabled: _value.indexOf('spv') > -1 ? false : true,
           checked: defaultMode === 'spv' ? true : false,
-        },
-        nativeMode: {
-          disabled: _value.indexOf('native') > -1 ? false : true,
-          checked: defaultMode === 'native' ? true : false,
         },
         mode: modeToValue[defaultMode] !== undefined ? modeToValue[defaultMode] : -2,
       }
@@ -123,10 +118,6 @@ class AddCoin extends React.Component {
       spvMode: {
         disabled: _selectedCoin.indexOf('spv') > -1 ? false : true,
         checked: _value === '0' ? true : false,
-      },
-      nativeMode: {
-        disabled: _selectedCoin.indexOf('native') > -1 ? false : true,
-        checked: _value === '-1' ? true : false,
       },
       mode: _value,
     };

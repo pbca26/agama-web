@@ -30,7 +30,7 @@ const CoinSelectorsRender = function(item, coin, i) {
           className="btn btn-primary"
           onClick={ () => this.activateCoin(i) }
           disabled={ item.mode === -2 }>
-            { translate('INDEX.ACTIVATE_COIN') }
+          { translate('INDEX.ACTIVATE_COIN') }
         </button>
       </div>
       <div className="col-sm-11 text-center add-coin-modes">

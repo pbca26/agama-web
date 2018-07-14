@@ -34,18 +34,11 @@ class WalletsTxInfo extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.ActiveCoin.mode === 'spv' &&
-        nextProps.ActiveCoin) {
+    if (nextProps.ActiveCoin) {
       this.setState(Object.assign({}, this.state, {
         txDetails: nextProps.ActiveCoin.showTransactionInfoTxIndex,
         rawTxDetails: nextProps.ActiveCoin.showTransactionInfoTxIndex,
       }));
-    } else {
-      if (nextProps.ActiveCoin &&
-          nextProps.ActiveCoin.txhistory &&
-          nextProps.ActiveCoin.showTransactionInfoTxIndex) {
-        const txInfo = nextProps.ActiveCoin.txhistory[nextProps.ActiveCoin.showTransactionInfoTxIndex];
-      }
     }
   }
 
@@ -76,18 +69,7 @@ class WalletsTxInfo extends React.Component {
         this.props.ActiveCoin &&
         this.props.ActiveCoin.showTransactionInfo &&
         this.props.ActiveCoin.activeSection === 'default') {
-      if (this.props.ActiveCoin.mode === 'native') {
-        if (this.props.ActiveCoin.txhistory &&
-            this.props.ActiveCoin.showTransactionInfoTxIndex) {
-          const txInfo = this.props.ActiveCoin.txhistory[this.props.ActiveCoin.showTransactionInfoTxIndex];
-
-          return WalletsTxInfoRender.call(this, txInfo);
-        } else {
-          return null;
-        }
-      } else {
-        return WalletsTxInfoRender.call(this);
-      }
+      return WalletsTxInfoRender.call(this);
     }
 
     return null;

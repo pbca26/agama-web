@@ -21,12 +21,10 @@ const addCoinOptionsAC = () => {
   }
 
   for (let i = 0; i < _assetChains.length; i++) {
-    let availableModes = 'spv';
-
     _items.push({
       label: translate(`ASSETCHAINS.${_assetChains[i].toUpperCase()}`),
       icon: _assetChains[i],
-      value: `${_assetChains[i].toUpperCase()}|${availableModes}`,
+      value: `${_assetChains[i].toUpperCase()}|spv`,
     });
   }
 

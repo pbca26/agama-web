@@ -249,7 +249,7 @@ class SendCoin extends React.Component {
     } else {
       return (
         <span>
-          { this.props.ActiveCoin.mode === 'spv' ? `[ ${this.props.ActiveCoin.balance.balance} ${this.props.ActiveCoin.coin.toUpperCase()} ] ${this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub}` : translate('INDEX.T_FUNDS') }
+          { `[ ${this.props.ActiveCoin.balance.balance} ${this.props.ActiveCoin.coin.toUpperCase()} ] ${this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub}` }
         </span>
       );
     }
@@ -281,7 +281,7 @@ class SendCoin extends React.Component {
   }
 
   fetchBTCFees() {
-    if (his.props.ActiveCoin.coin.toUpperCase() === 'BTC') {
+    if (this.props.ActiveCoin.coin.toUpperCase() === 'BTC') {
       shepherdGetRemoteBTCFees()
       .then((res) => {
         if (res.msg === 'success') {
@@ -325,7 +325,7 @@ class SendCoin extends React.Component {
         return;
       } else {
         this.setState(Object.assign({}, this.state, {
-          spvPreflightSendInProgress: this.props.ActiveCoin.mode === 'spv' ? true : false,
+          spvPreflightSendInProgress: true,
           currentStep: step,
         }));
 
@@ -489,7 +489,6 @@ class SendCoin extends React.Component {
         !this.state.btcFees.lastUpdated) {
       return (<div className="col-lg-6 form-group form-material">Fetching BTC fees...</div>);
     } else if (
-      this.props.ActiveCoin.mode === 'spv' &&
       this.props.ActiveCoin.coin.toUpperCase() === 'BTC' &&
       this.state.btcFees.lastUpdated
     ) {

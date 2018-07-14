@@ -31,7 +31,6 @@ class ReceiveCoin extends React.Component {
     this.checkTotalBalance = this.checkTotalBalance.bind(this);
     this.ReceiveCoinTableRender = _ReceiveCoinTableRender.bind(this);
     this.toggleAddressMenu = this.toggleAddressMenu.bind(this);
-    this.toggleIsMine = this.toggleIsMine.bind(this);
     this.validateCoinAddress = this.validateCoinAddress.bind(this);
   }
 
@@ -199,7 +198,8 @@ class ReceiveCoin extends React.Component {
 
       return items;
     } else {
-      if (this.props.electrumCoins && this.props.mode === 'spv' &&
+      if (this.props.electrumCoins &&
+          this.props.mode === 'spv' &&
           type === 'public') {
         let items = [];
 

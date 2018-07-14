@@ -86,7 +86,7 @@ class ExportKeysPanel extends React.Component {
                 className="btn btn-default btn-xs clipboard-edexaddr margin-left-10"
                 title={ translate('INDEX.COPY_TO_CLIPBOARD') }
                 onClick={ () => this._copyCoinAddress(_wifKeys[_key].pub) }>
-                  <i className="icon wb-copy"></i> { translate('INDEX.COPY') }
+                <i className="icon wb-copy"></i> { translate('INDEX.COPY') }
               </button>
             </td>
               <td className="padding-bottom-30 padding-left-15">
@@ -95,7 +95,7 @@ class ExportKeysPanel extends React.Component {
                 className="btn btn-default btn-xs clipboard-edexaddr margin-left-10"
                 title={ translate('INDEX.COPY_TO_CLIPBOARD') }
                 onClick={ () => this._copyCoinAddress(_wifKeys[_key].priv) }>
-                  <i className="icon wb-copy"></i> { translate('INDEX.COPY') }
+                <i className="icon wb-copy"></i> { translate('INDEX.COPY') }
               </button>
             </td>
           </tr>
