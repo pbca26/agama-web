@@ -183,7 +183,10 @@ const LoginRender = function() {
 
             <button
               type="button"
-              disabled={ !this.state.loginPassphrase || !this.state.loginPassphrase.length }
+              disabled={
+                !this.state.loginPassphrase ||
+                !this.state.loginPassphrase.length
+              }
               className="btn btn-primary btn-block margin-top-20"
               onClick={ this.loginSeed }>
               { translate('INDEX.SIGN_IN') }
@@ -214,7 +217,7 @@ const LoginRender = function() {
             </div>
           </div>
 
-          <div className={ this.state.activeLoginSection === 'activateCoin' && !Config.whitelabel ? 'show' : 'hide' }>
+          <div className={ this.state.activeLoginSection === 'activateCoin' ? 'show' : 'hide' }>
             <h4 className="color-white">
               { translate('INDEX.WELCOME_PLEASE_ADD') }
             </h4>
@@ -234,7 +237,7 @@ const LoginRender = function() {
                   { translate('INDEX.SPV_MODE') }
                   <i
                     className="icon fa-question-circle login-help"
-                    data-tip="If you need a quick and easy access to your funds try <u>Lite (SPV) mode</u> which doesn't require any blockchain to be loaded locally.<br/>All data is requested on demand from Electrum servers."
+                    data-tip={ `${ translate('LOGIN.SPV_MODE_DESC_P1') } <u>${ translate('LOGIN.SPV_MODE_DESC_P2') }</u> ${ translate('LOGIN.SPV_MODE_DESC_P3') }<br/>${ translate('LOGIN.SPV_MODE_DESC_P4') }` }
                     data-html={ true }></i>
                   <ReactTooltip
                     effect="solid"
@@ -380,7 +383,7 @@ const LoginRender = function() {
                   <QRModal
                     qrSize="256"
                     modalSize="md"
-                    title="Seed QR recovery"
+                    title={ translate('LOGIN.SEED_QR_RECOVERY') }
                     fileName="agama-seed"
                     content={ this.state.randomSeed } />
                 </button>
