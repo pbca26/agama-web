@@ -4,7 +4,7 @@ import Config from '../../../config';
 
 const CoinTileRender = function() {
   return (
-    <div className={ 'page-aside padding-top-80' + (this.state.toggledSidebar ? ' open' : '') }>
+    <div className={ 'page-aside padding-top-80' + (this.state.toggledSidebar && this.renderSidebarToggle() ? ' open' : '') }>
       { this.renderSidebarToggle() &&
         <div
           onClick={ this.toggleSidebar }
