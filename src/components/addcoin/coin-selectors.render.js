@@ -52,7 +52,7 @@ const CoinSelectorsRender = function(item, coin, i) {
             <span
               className="labelauty-unchecked"
               style={{ display: item.spvMode.checked ? 'none' : 'inline-block' }}>
-                { translate('INDEX.SPV_MODE') }
+              { translate('INDEX.SPV_MODE') }
             </span>
             <span
               className="labelauty-checked-image"
@@ -60,7 +60,7 @@ const CoinSelectorsRender = function(item, coin, i) {
             <span
               className="labelauty-checked"
               style={{ display: item.spvMode.checked ? 'inline-block' : 'none' }}>
-                { translate('INDEX.SPV_MODE') }
+              { translate('INDEX.SPV_MODE') }
             </span>
           </label>
         </div>
@@ -70,7 +70,7 @@ const CoinSelectorsRender = function(item, coin, i) {
           type="button"
           className="btn btn-primary"
           onClick={ () => this.removeCoin(i) }>
-            <i className="fa fa-trash-o"></i>
+          <i className="fa fa-trash-o"></i>
         </button>
       </div>
     </div>

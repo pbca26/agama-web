@@ -293,8 +293,8 @@ class SendCoin extends React.Component {
         } else {
           Store.dispatch(
             triggerToaster(
-              'Unable to get BTC fee rates',
-              'BTC fees fetch',
+              translate('SEND.UNABLE_TO_GET_BTC_FEE_RATES'),
+              translate('SEND.BTC_FEES_FETCH'),
               'error'
             )
           );
@@ -487,7 +487,7 @@ class SendCoin extends React.Component {
   renderBTCFees() {
     if (this.props.ActiveCoin.coin.toUpperCase() === 'BTC' &&
         !this.state.btcFees.lastUpdated) {
-      return (<div className="col-lg-6 form-group form-material">Fetching BTC fees...</div>);
+      return (<div className="col-lg-6 form-group form-material">{ translate('SEND.FETCHING_BTC_FEES') }...</div>);
     } else if (
       this.props.ActiveCoin.coin.toUpperCase() === 'BTC' &&
       this.state.btcFees.lastUpdated
@@ -515,7 +515,7 @@ class SendCoin extends React.Component {
                 <i
                   className="icon fa-question-circle settings-help"
                   data-html={ true }
-                  data-tip={ this.state.btcFeesType === 'advanced' ? 'Electrum based fee estimates may not be as accurate as bitcoinfees.earn.com.<br />It is advised to use fast/average/slow options if you want your transaction to be confirmed within 60 min time frame.' : 'Estimates are based on bitcoinfees.earn.com data.<br />Around 90% probability for a transaction to be confirmed within desired time frame.' }></i>
+                  data-tip={ this.state.btcFeesType === 'advanced' ? translate('SEND.BTC_FEES_DESC_P1') + '.<br />' + translate('SEND.BTC_FEES_DESC_P2') : translate('SEND.BTC_FEES_DESC_P3') + '<br />' + translate('SEND.BTC_FEES_DESC_P4') }></i>
                 <ReactTooltip
                   effect="solid"
                   className="text-left" />
@@ -523,10 +523,10 @@ class SendCoin extends React.Component {
             </div>
             <div className="send-target-block">
               { this.state.btcFeesType !== 'advanced' &&
-                <span>Confirmation time <strong>{ _confTime[this.state.btcFeesTimeBasedStep] }</strong></span>
+                <span>{ translate('SEND.CONF_TIME') } <strong>{ _confTime[this.state.btcFeesTimeBasedStep] }</strong></span>
               }
               { this.state.btcFeesType === 'advanced' &&
-                <span>Advanced selection</span>
+                <span>{ translate('SEND.ADVANCED_SELECTION') }</span>
               }
             </div>
             <Slider
@@ -544,7 +544,7 @@ class SendCoin extends React.Component {
               }} />
             { this.state.btcFeesType === 'advanced' &&
               <div className="margin-bottom-20">
-                <div className="send-target-block">Estimated to be included within the next <strong>{ this.state.btcFeesAdvancedStep + 1 } { (this.state.btcFeesAdvancedStep + 1) > 1 ? 'blocks' : 'block' }</strong></div>
+                <div className="send-target-block">{ translate('SEND.BTC_EST_PREDICTION') } <strong>{ this.state.btcFeesAdvancedStep + 1 } { (this.state.btcFeesAdvancedStep + 1) > 1 ? 'blocks' : 'block' }</strong></div>
                 <Slider
                   onChange={ this.onSliderChange }
                   defaultValue={ this.state.btcFeesAdvancedStep }
@@ -553,7 +553,7 @@ class SendCoin extends React.Component {
               </div>
             }
             { this.state.btcFeesSize > 0 &&
-              <div className="margin-top-10">Fee per byte { this.state.btcFeesSize }, per KB { this.state.btcFeesSize * 1024 }</div>
+              <div className="margin-top-10">{ translate('SEND.FEE_PER_BYTE') } { this.state.btcFeesSize }, { translate('SEND.FEE_PER_KB') } { this.state.btcFeesSize * 1024 }</div>
             }
           </div>
         </div>

@@ -17,7 +17,7 @@ export const _ClaimInterestTableRender = function() {
               className="btn btn-default btn-xs clipboard-edexaddr copy-string-btn"
               title={ translate('INDEX.COPY_TO_CLIPBOARD') }
               onClick={ () => this.copyTxId(_transactionsList[i].txid) }>
-                <i className="icon wb-copy"></i> { translate('INDEX.COPY') + ' TXID' }
+              <i className="icon wb-copy"></i> { translate('INDEX.COPY') + ' TXID' }
             </button>
           </td>
           <td>{ _transactionsList[i].address }</td>
@@ -103,13 +103,13 @@ export const _ClaimInterestTableRender = function() {
                   type="button"
                   className="btn btn-primary"
                   onClick={ this.confirmClaimInterest }>
-                    { translate('INDEX.CONFIRM') }
+                  { translate('INDEX.CONFIRM') }
                 </button>
                 <button
                   type="button"
                   className="btn btn-primary margin-left-15"
                   onClick={ this.cancelClaimInterest }>
-                    Cancel
+                  { translate('INDEX.CANCEL') }
                 </button>
               </div>
             </div>

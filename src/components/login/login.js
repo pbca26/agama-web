@@ -91,8 +91,8 @@ class Login extends React.Component {
     } else {
       Store.dispatch(
         triggerToaster(
-          'Unable to recognize QR code',
-          'QR scan Error',
+          translate('LOGIN.QR_SCAN_ERR_DESC'),
+          translate('LOGIN.QR_SCAN_ERR'),
           'error'
         )
       );
@@ -537,9 +537,9 @@ class Login extends React.Component {
               alt={ _comps[i].toUpperCase() }
               width="30px"
               height="30px" />
-              { i !== _comps.length - 1 &&
-                <span className="margin-left-10 margin-right-10">+</span>
-              }
+            { i !== _comps.length - 1 &&
+              <span className="margin-left-10 margin-right-10">+</span>
+            }
           </span>
         );
       }

@@ -165,8 +165,8 @@ export const shepherdElectrumBalance = (coin, address) => {
     if (proxyConErr) {
       Store.dispatch(
         triggerToaster(
-          'Proxy connection error',
-          'Error',
+          translate('INDEX.PROXY_CON_ERR'),
+          translate('INDEX.ERROR'),
           'error',
           false
         )
@@ -651,7 +651,7 @@ export const shepherdElectrumSendPromise = (coin, value, sendToAddress, changeAd
           if (result.msg === 'error') {
             const _err = {
               msg: 'error',
-              result: 'pushtx failed',
+              result: translate('API.PUSH_ERR'),
             };
             Store.dispatch(sendToAddressState(_err));
           } else {
@@ -674,7 +674,7 @@ export const shepherdElectrumSendPromise = (coin, value, sendToAddress, changeAd
                 txid.indexOf('bad-txns-inputs-spent') > -1) {
               const successObj = {
                 msg: 'error',
-                result: 'Bad transaction inputs spent',
+                result: translate('API.BAD_TX_INPUTS_SPENT'),
                 raw: _rawObj,
               };
 
@@ -685,7 +685,7 @@ export const shepherdElectrumSendPromise = (coin, value, sendToAddress, changeAd
                 if (txid.indexOf('bad-txns-in-belowout') > -1) {
                   const successObj = {
                     msg: 'error',
-                    result: 'Bad transaction inputs spent',
+                    result: translate('API.BAD_TX_INPUTS_SPENT'),
                     raw: _rawObj,
                   };
 
@@ -703,7 +703,7 @@ export const shepherdElectrumSendPromise = (coin, value, sendToAddress, changeAd
                     txid.indexOf('bad-txns-in-belowout') > -1) {
                   const successObj = {
                     msg: 'error',
-                    result: 'Bad transaction inputs spent',
+                    result: translate('API.BAD_TX_INPUTS_SPENT'),
                     raw: _rawObj,
                   };
 
@@ -711,7 +711,7 @@ export const shepherdElectrumSendPromise = (coin, value, sendToAddress, changeAd
                 } else {
                   const successObj = {
                     msg: 'error',
-                    result: 'Can\'t broadcast transaction',
+                    result: translate('API.CANT_BROADCAST_TX'),
                     raw: _rawObj,
                   };
 

@@ -27,11 +27,9 @@ class ReceiveCoin extends React.Component {
     };
     this.openDropMenu = this.openDropMenu.bind(this);
     this.handleClickOutside = this.handleClickOutside.bind(this);
-    this.toggleVisibleAddress = this.toggleVisibleAddress.bind(this);
     this.checkTotalBalance = this.checkTotalBalance.bind(this);
     this.ReceiveCoinTableRender = _ReceiveCoinTableRender.bind(this);
     this.toggleAddressMenu = this.toggleAddressMenu.bind(this);
-    this.validateCoinAddress = this.validateCoinAddress.bind(this);
   }
 
   toggleAddressMenu(address) {
@@ -58,39 +56,6 @@ class ReceiveCoin extends React.Component {
       this.handleClickOutside,
       false
     );
-  }
-
-  validateCoinAddress(address, isZaddr) {
-    this.toggleAddressMenu(address);
-    validateAddress(this.props.coin, address, isZaddr)
-    .then((json) => {
-      let _items = [];
-
-      for (let key in json) {
-        _items.push(`${key}: ${json[key]}`);
-      }
-
-      Store.dispatch(
-        triggerToaster(
-          _items,
-          translate('TOASTR.COIN_NOTIFICATION'),
-          json && json.ismine ? 'info' : 'warning',
-          false,
-          'toastr--validate-address'
-        )
-      );
-    });
-  }
-
-  dumpPrivKey(address, isZaddr) {
-    this.toggleAddressMenu(address);
-    dumpPrivKey(this.props.coin, address, isZaddr)
-    .then((json) => {
-      if (json.length &&
-          json.length > 10) {
-        Store.dispatch(copyString(json, 'WIF ' + translate('DASHBOARD.RECEIVE_ADDR_COPIED')));
-      }
-    });
   }
 
   handleClickOutside(e) {
@@ -133,22 +98,6 @@ class ReceiveCoin extends React.Component {
     return address.interest === 'N/A' || address.interest === 0 || !address.interest;
   }
 
-  getNewAddress(type) {
-    Store.dispatch(getNewKMDAddresses(this.props.coin, type, this.props.mode));
-  }
-
-  toggleVisibleAddress() {
-    this.setState(Object.assign({}, this.state, {
-      hideZeroAddresses: !this.state.hideZeroAddresses,
-    }));
-  }
-
-  toggleIsMine() {
-    this.setState(Object.assign({}, this.state, {
-      toggleIsMine: !this.state.toggleIsMine,
-    }));
-  }
-
   checkTotalBalance() {
     let _balance = '0';
 
@@ -177,29 +126,16 @@ class ReceiveCoin extends React.Component {
               AddressItemRender.call(this, address, type)
             );
           }
-
-          if (!this.state.toggleIsMine &&
-            !address.canspend &&
-            address.address.substring(0, 2) !== 'zc') {
-            items.pop();
-          }
         } else {
           items.push(
             AddressItemRender.call(this, address, type)
           );
-
-          if (!this.state.toggleIsMine &&
-            !address.canspend &&
-            address.address.substring(0, 2) !== 'zc') {
-            items.pop();
-          }
         }
       }
 
       return items;
     } else {
       if (this.props.electrumCoins &&
-          this.props.mode === 'spv' &&
           type === 'public') {
         let items = [];
 

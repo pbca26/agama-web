@@ -107,7 +107,7 @@ class WalletsBalance extends React.Component {
           { _fiatPriceTotal > 0 &&
             _fiatPricePerCoin > 0 &&
             <div
-              data-tip={ `Price per 1 ${this.props.ActiveCoin.coin.toUpperCase()} ~ $${formatValue(_fiatPricePerCoin)}` }
+              data-tip={ `${translate('INDEX.PRICE_PER')} ${this.props.ActiveCoin.coin.toUpperCase()} ~ $${formatValue(_fiatPricePerCoin)}` }
               className="text-right">${ formatValue(_fiatPriceTotal) }</div>
           }
         </div>

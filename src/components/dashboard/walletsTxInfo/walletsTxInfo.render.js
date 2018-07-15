@@ -23,22 +23,17 @@ const WalletsTxInfoRender = function(txInfo) {
                 <ul className="nav nav-tabs nav-tabs-line">
                   <li className={ this.state.activeTab === 0 ? 'active' : '' }>
                     <a onClick={ () => this.openTab(0) }>
-                      <i className="icon md-balance-wallet"></i>TxID Info
-                    </a>
-                  </li>
-                  <li className={ this.state.activeTab === 1 ? 'hide active' : 'hide' }>
-                    <a onClick={ () => this.openTab(1) }>
-                      <i className="icon md-plus-square"></i>Vjointsplits, Details
+                      <i className="icon md-balance-wallet"></i>{ translate('TX_INFO.TXID_INFO') }
                     </a>
                   </li>
                   <li className={ this.state.activeTab === 2 ? 'active' : '' }>
                     <a onClick={ () => this.openTab(2) }>
-                      <i className="icon wb-briefcase"></i>Hex
+                      <i className="icon wb-briefcase"></i>{ translate('TX_INFO.HEX') }
                     </a>
                   </li>
                   <li className={ this.state.activeTab === 3 ? 'active' : '' }>
                     <a onClick={ () => this.openTab(3) }>
-                      <i className="icon wb-file"></i>Raw info
+                      <i className="icon wb-file"></i>{ translate('TX_INFO.RAW_INFO') }
                     </a>
                   </li>
                 </ul>
@@ -52,19 +47,19 @@ const WalletsTxInfoRender = function(txInfo) {
                               <tr>
                                 <td>{ this.capitalizeFirstLetter(translate('TX_INFO.ADDRESS')) }</td>
                                 <td>
-                                  { this.props.ActiveCoin.mode === 'spv' ? this.state.txDetails.address : this.state.txDetails.details[0].address }
+                                  { this.state.txDetails.address }
                                 </td>
                               </tr>
                               <tr>
                                 <td>{ this.capitalizeFirstLetter(translate('TX_INFO.AMOUNT')) }</td>
                                 <td>
-                                  { this.props.ActiveCoin.mode === 'spv' ? this.state.txDetails.amount : txInfo.amount }
+                                  { this.state.txDetails.amount }
                                 </td>
                               </tr>
                               <tr>
                                 <td>{ this.capitalizeFirstLetter(translate('TX_INFO.CATEGORY')) }</td>
                                 <td>
-                                  { this.props.ActiveCoin.mode === 'spv' ? this.state.txDetails.type : this.state.txDetails.details[0].category || txInfo.type }
+                                  { this.state.txDetails.type }
                                 </td>
                               </tr>
                               <tr>
@@ -83,9 +78,9 @@ const WalletsTxInfoRender = function(txInfo) {
                               }
                               { this.state.txDetails.blockhash &&
                                 <tr>
-                                  <td>{ this.props.ActiveCoin.mode === 'spv' ? this.capitalizeFirstLetter('blockheight') : this.capitalizeFirstLetter('blockhash') }</td>
+                                  <td>{ this.capitalizeFirstLetter('blockheight') }</td>
                                   <td>
-                                    { this.props.ActiveCoin.mode === 'spv' ? this.state.txDetails.height : this.state.txDetails.blockhash }
+                                    { this.state.txDetails.height }
                                   </td>
                                 </tr>
                               }
@@ -114,48 +109,15 @@ const WalletsTxInfoRender = function(txInfo) {
                               <tr>
                                 <td>{ this.capitalizeFirstLetter('time') }</td>
                                 <td>
-                                  { secondsToString(this.props.ActiveCoin.mode === 'spv' ? this.state.txDetails.blocktime : this.state.txDetails.time) }
+                                  { secondsToString(this.state.txDetails.blocktime) }
                                 </td>
                               </tr>
                               <tr>
                                 <td>{ this.capitalizeFirstLetter('timereceived') }</td>
                                 <td>
-                                  { secondsToString(this.props.ActiveCoin.mode === 'spv' ? this.state.txDetails.blocktime : this.state.txDetails.timereceived) }
+                                  { secondsToString(this.state.txDetails.blocktime) }
                                 </td>
                               </tr>
-                            </tbody>
-                          </table>
-                        </div>
-                      }
-                      { this.state.activeTab === 1 &&
-                        <div className="tab-pane active">
-                          <table className="table table-striped">
-                            <tbody>
-                            }
-                            <tr>
-                              <td>{ this.capitalizeFirstLetter('txid') }</td>
-                              <td>
-                                { txInfo.txid }
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>{ this.capitalizeFirstLetter('walletconflicts') }</td>
-                              <td>
-                                { txInfo.walletconflicts ? txInfo.walletconflicts.length : '' }
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>{ this.capitalizeFirstLetter('vjoinsplit') }</td>
-                              <td>
-                                { txInfo.vjoinsplit }
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>{ this.capitalizeFirstLetter('details') }</td>
-                              <td>
-                                { txInfo.details }
-                              </td>
-                            </tr>
                             </tbody>
                           </table>
                         </div>

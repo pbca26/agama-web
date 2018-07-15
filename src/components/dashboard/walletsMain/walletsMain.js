@@ -37,8 +37,8 @@ class WalletsMain extends React.Component {
         !mainWindow.createSeed.secondaryLoginPH) {
       Store.dispatch(
         triggerToaster(
-          'Please write down your public address, logout and login into Agama again to verify that your seed is correct.',
-          'First time seed use',
+          translate('INDEX.PLEASE_WRITE_DOWN_YOUR_PUB'),
+          translate('INDEX.FIRST_TIME_SEED_USE'),
           'info',
           false
         )
@@ -47,8 +47,8 @@ class WalletsMain extends React.Component {
       if (mainWindow.createSeed.secondaryLoginPH === mainWindow.createSeed.firstLoginPH) {
         Store.dispatch(
           triggerToaster(
-            'Your seed appears to be correct. As a final check up please double check that the public address you wrote down earlier is matching the one you see right now.',
-            'Congrats, you are all set!',
+            translate('INDEX.YOUR_SEED_IS_CORRECT'),
+            translate('INDEX.CONGRATS_YOURE_ALL_SET'),
             'success',
             false
           )
@@ -61,8 +61,8 @@ class WalletsMain extends React.Component {
       } else {
         Store.dispatch(
           triggerToaster(
-            'Your seed doesn\'t seem to be correct. Please logout and repeat wallet creation procedure again.',
-            'Seed verification error!',
+            translate('INDEX.YOUR_SEED_IS_INCORRECT'),
+            translate('INDEX.SEED_VERIFICATION_ERROR'),
             'error',
             false
           )

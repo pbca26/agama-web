@@ -250,7 +250,7 @@ class AddCoin extends React.Component {
     if (this.existingCoins &&
         this.existingCoins.spv &&
         this.existingCoins.spv.indexOf(coin.toLowerCase()) !== -1) {
-      const message = `${coin} ${translate('ADD_COIN.ALREADY_ADDED')} ${translate('ADD_COIN.IN')} Lite ${translate('ADD_COIN.MODE')}`;
+      const message = `${coin} ${translate('ADD_COIN.ALREADY_ADDED')} ${translate('ADD_COIN.IN')} ${translate('INDEX.LITE')} ${translate('ADD_COIN.MODE')}`;
 
       Store.dispatch(
         triggerToaster(

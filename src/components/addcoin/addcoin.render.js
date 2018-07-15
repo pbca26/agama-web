@@ -31,7 +31,7 @@ const AddCoinRender = function() {
                   type="button"
                   className="btn btn-primary col-sm-4 float-none"
                   onClick={ this.activateAllCoins }>
-                    { translate('ADD_COIN.ACTIVATE_ALL') }
+                  { translate('ADD_COIN.ACTIVATE_ALL') }
                 </button>
               </div>
               <div className="col-sm-12">

@@ -2,9 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import translate from '../../../translate/translate';
 import { sortByDate } from 'agama-wallet-lib/src/utils';
-import {
-  toggleDashboardTxInfoModal,
-} from '../../../actions/actionCreators';
+import { toggleDashboardTxInfoModal } from '../../../actions/actionCreators';
 import Store from '../../../store';
 import WalletsTxInfoRender from './walletsTxInfo.render';
 import { explorerList } from 'agama-wallet-lib/src/coin-helpers';

@@ -36,7 +36,6 @@ class CoinTileItem extends React.Component {
     this.state = {
       activeCoin: null,
       activeCoinMode: null,
-      propsUpdatedCounter: 0,
       toggledCoinMenu: null,
     };
     this.autoSetActiveCoin = this.autoSetActiveCoin.bind(this);
@@ -84,24 +83,6 @@ class CoinTileItem extends React.Component {
 
   openCoindDownModal() {
     Store.dispatch(toggleCoindDownModal(true));
-  }
-
-  renderStopCoinButton(item) {
-    if (this.props.Main &&
-        this.props.Main.coins &&
-        this.props.Main.coins.native &&
-        this.props.Main.coins.native.length) {
-      return true;
-    }
-  }
-
-  renderRemoveCoinButton() {
-    if (this.props.Main &&
-        this.props.Main.coins &&
-        this.props.Main.coins.spv &&
-        this.props.Main.coins.spv.length) {
-      return true;
-    }
   }
 
   autoSetActiveCoin(skipCoin) {
@@ -164,39 +145,6 @@ class CoinTileItem extends React.Component {
     });
   }
 
-  stopCoind(coin) {
-    this.setState({
-      toggledCoinMenu: null,
-    });
-
-    shepherdStopCoind(coin)
-    .then((res) => {
-      if (res.msg === 'error') {
-        Store.dispatch(
-          triggerToaster(
-            translate('TOASTR.COIN_UNABLE_TO_STOP', coin),
-            translate('TOASTR.ERROR'),
-            'error'
-          )
-        );
-      } else {
-        Store.dispatch(
-          triggerToaster(
-            `${coin} ${translate('TOASTR.COIN_IS_STOPPED')}`,
-            translate('TOASTR.COIN_NOTIFICATION'),
-            'success'
-          )
-        );
-
-        this.autoSetActiveCoin(coin);
-        setTimeout(() => {
-          Store.dispatch(getDexCoins());
-          Store.dispatch(activeHandle());
-        }, 500);
-      }
-    });
-  }
-
   dispatchCoinActions(coin, mode) {
     if (this.props.Dashboard &&
         this.props.Dashboard.activeSection === 'wallets') {
@@ -218,11 +166,9 @@ class CoinTileItem extends React.Component {
         this.dispatchCoinActions(coin, mode);
       }, 100);
 
-      if (mode === 'spv') { // faster coin data load if fully synced
-        setTimeout(() => {
-          this.dispatchCoinActions(coin, mode);
-        }, 1000);
-      }
+      setTimeout(() => {
+        this.dispatchCoinActions(coin, mode);
+      }, 1000);
 
       if (this.props.Interval.interval.sync) {
         Store.dispatch(
@@ -232,7 +178,6 @@ class CoinTileItem extends React.Component {
           )
         );
       }
-
 
       const _iguanaActiveHandle = setInterval(() => {
         this.dispatchCoinActions(coin, mode);
@@ -259,8 +204,6 @@ class CoinTileItem extends React.Component {
     this.setState({
       activeCoin: props.ActiveCoin.coin,
       activeCoinMode: props.ActiveCoin.mode,
-      // prevent native con error icon flashing on coin switch
-      propsUpdatedCounter: this.state.activeCoin === props.ActiveCoin.coin && this.state.activeCoinMode === props.ActiveCoin.mode ? this.state.propsUpdatedCounter + 1 : 0,
     });
   }
 

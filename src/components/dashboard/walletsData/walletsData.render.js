@@ -77,48 +77,6 @@ export const AddressItemRender = function(address, type, amount, coin) {
   );
 };
 
-export const AddressListRender = function() {
-  const isMultiPublicAddress = this.props.ActiveCoin.addresses && this.props.ActiveCoin.addresses.public && this.props.ActiveCoin.addresses.public.length > 1;
-  const isMultiPrivateAddress = this.props.ActiveCoin.addresses && this.props.ActiveCoin.addresses.private && this.props.ActiveCoin.addresses.private.length > 1;
-
-  if (isMultiPublicAddress ||
-      isMultiPrivateAddress) {
-    return (
-      <div className={ `btn-group bootstrap-select form-control form-material showkmdwalletaddrs show-tick margin-bottom-10${(this.state.addressSelectorOpen ? ' open ' : '')}` }>
-        <button
-          type="button"
-          className="btn dropdown-toggle btn-info"
-          data-tip={ `${translate('KMD_NATIVE.SELECT_ADDRESS')}` }
-          onClick={ this.openDropMenu }>
-          <span className="filter-option pull-left">{ this.renderSelectorCurrentLabel() } </span>&nbsp;
-          <span className="bs-caret">
-            <span className="caret"></span>
-          </span>
-        </button>
-        <ReactTooltip
-          effect="solid"
-          className="text-left" />
-        <div className="dropdown-menu open">
-          <ul className="dropdown-menu inner">
-            <li className="no--hover">
-              <a><span className="text">{ translate('KMD_NATIVE.SELECT_ADDRESS') }</span></a>
-            </li>
-            <li className={ !this.state.currentAddress ? 'selected' : '' }>
-              <a onClick={ () => this.updateAddressSelection('') }>
-                <span className="text">{ translate('INDEX.ALL') }</span>
-                <span className="glyphicon glyphicon-ok check-mark"></span>
-              </a>
-            </li>
-            { this.renderAddressByType('public') }
-          </ul>
-        </div>
-      </div>
-    );
-  } else {
-    return null;
-  }
-};
-
 export const TxTypeRender = function(category) {
   if (category === 'send' ||
       category === 'sent') {

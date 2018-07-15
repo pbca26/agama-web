@@ -39,17 +39,9 @@ const CoinTileItemRender = function() {
         this.state.toggledCoinMenu === item.coin &&
         <div className="coin-tile-context-menu">
           <ul>
-            { this.renderStopCoinButton() &&
-              item.mode === 'native' &&
-              <li onClick={ () => this.stopCoind(item.coin, item.mode) }>
-                <i className="icon fa-stop-circle margin-right-5"></i> { translate('DASHBOARD.STOP') }
-              </li>
-            }
-            { this.renderRemoveCoinButton() &&
-              <li onClick={ () => this.removeCoin(item.coin, item.mode) }>
-                <i className="icon fa-trash-o margin-right-5"></i> { translate('DASHBOARD.REMOVE') }
-              </li>
-            }
+            <li onClick={ () => this.removeCoin(item.coin, item.mode) }>
+              <i className="icon fa-trash-o margin-right-5"></i> { translate('DASHBOARD.REMOVE') }
+            </li>
           </ul>
         </div>
       }

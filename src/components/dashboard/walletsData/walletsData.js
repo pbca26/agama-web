@@ -27,7 +27,6 @@ import {
   TxAmountRender,
   TxHistoryListRender,
   TxConfsRender,
-  AddressListRender,
   WalletsDataRender,
 } from  './walletsData.render';
 import { secondsToString } from 'agama-wallet-lib/src/time';
@@ -297,11 +296,15 @@ class WalletsData extends React.Component {
     shepherdElectrumCheckServerConnection(_randomServer.ip, _randomServer.port)
     .then((res) => {
       if (res.result) {
-        shepherdElectrumSetServer(this.props.ActiveCoin.coin, _randomServer.ip, _randomServer.port)
+        shepherdElectrumSetServer(
+          this.props.ActiveCoin.coin,
+          _randomServer.ip,
+          _randomServer.port
+        )
         .then((serverSetRes) => {
           Store.dispatch(
             triggerToaster(
-              `${this.props.ActiveCoin.coin} SPV ${translate('DASHBOARD.SERVER_SET_TO')} ${_randomServer.ip}:${_randomServer.port}`,
+              `${this.props.ActiveCoin.coin} ${translate('INDEX.LITE')} ${translate('DASHBOARD.SERVER_SET_TO')} ${_randomServer.ip}:${_randomServer.port}`,
               translate('TOASTR.WALLET_NOTIFICATION'),
               'success'
             )
@@ -311,7 +314,7 @@ class WalletsData extends React.Component {
       } else {
         Store.dispatch(
           triggerToaster(
-            `${this.props.ActiveCoin.coin} SPV ${translate('DASHBOARD.SERVER_SM')} ${_randomServer.ip}:${_randomServer.port} ${translate('DASHBOARD.IS_UNREACHABLE')}!`,
+            `${this.props.ActiveCoin.coin} ${translate('INDEX.LITE')} ${translate('DASHBOARD.SERVER_SM')} ${_randomServer.ip}:${_randomServer.port} ${translate('DASHBOARD.IS_UNREACHABLE')}!`,
             translate('TOASTR.WALLET_NOTIFICATION'),
             'error'
           )
