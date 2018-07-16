@@ -7,9 +7,6 @@ const CoinTileItemRender = function() {
 
   return (
     <div className="list-group-item col-xlg-6 col-lg-12 wallet-widgets-info pointer">
-      <span className={ `badge up badge-${item.modecolor}` }>
-        { item.modecode }
-      </span>
       <div className={ 'widget widget-shadow' + (this.props.ActiveCoin.coin === item.coin ? ' active' : '') }>
         <div
           className="widget-content text-center bg-white padding-20"
@@ -21,7 +18,7 @@ const CoinTileItemRender = function() {
               alt={ item.coinname }/>
           </a>
           <div className="coin-name">
-            { item.coinname } ({ item.coinlogo.toUpperCase() })
+            { item.coinname } { item.coinlogo !== 'BEER' && item.coinlogo !== 'PIZZA' && item.coinlogo !== 'VOTE2018' && <span>({ item.coinlogo.toUpperCase() })</span> }
           </div>
         </div>
       </div>

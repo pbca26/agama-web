@@ -1,10 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import {
-  getCoinTitle,
-  getModeInfo,
-} from '../../../util/coinHelper';
+import { getCoinTitle } from '../../../util/coinHelper';
+import translate from '../../../translate/translate';
 import CoinTileItem from './coinTileItem';
+import { isKomodoCoin } from 'agama-wallet-lib/src/coin-helpers';
 
 import CoinTileRender from './coinTile.render';
 
@@ -41,23 +40,15 @@ class CoinTile extends React.Component {
 
     if (allCoins) {
       allCoins.spv.map((coin) => {
-        const _coinMode = getModeInfo('spv');
-        const modecode = _coinMode.code;
-        const modetip = _coinMode.tip;
-        const modecolor = _coinMode.color;
-
         const _coinTitle = getCoinTitle(coin.toUpperCase());
-        const coinlogo = _coinTitle.logo;
-        const coinname = _coinTitle.name;
+        const coinlogo = coin.toUpperCase();
+        const coinname = translate((isKomodoCoin(coin) && coin !== 'kmd' && coin !== 'chips' ? 'ASSETCHAINS.' : 'CRYPTO.') + coin.toUpperCase());
 
         items.push({
           coinlogo,
           coinname,
           coin,
           mode: 'spv',
-          modecolor,
-          modetip,
-          modecode,
         });
       });
     }
