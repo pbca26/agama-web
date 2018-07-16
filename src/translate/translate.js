@@ -1,10 +1,8 @@
 import LANG_EN from './en';
-import LANG_DE from './de';
 import Config from '../config';
 
 const _lang = {
   EN: LANG_EN,
-  DE: LANG_DE,
 };
 
 const translate = (langID, interpolateStr) => {

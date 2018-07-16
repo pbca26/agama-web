@@ -1,22 +1,6 @@
 import React from 'react';
 import translate from '../../../translate/translate';
 
-export const WalletsNavNoWalletRender = function() {
-  return (
-    <div>
-      <div className="col-xs-12 padding-top-20">
-        <div className="alert alert-info alert-dismissible">
-          <span className="font-size-24 text-align-center">
-            <i className="icon fa-paw"></i> { translate('INDEX.NO_WALLET_CAPS') }
-          </span>
-          <br/>
-          { translate('INDEX.PLEASE_SELECT_A_WALLET') }.
-        </div>
-      </div>
-    </div>
-  );
-};
-
 export const WalletsNavWithWalletRender = function() {
   return (
     <div>
