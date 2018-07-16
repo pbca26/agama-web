@@ -341,7 +341,7 @@ const LANG_EN = {
     'PROGRESS': 'Progress',
     'SUPPORT': 'Support',
     'SUPPORT_TICKETS': 'Support tickets',
-    'GET_SLACK_INVITE': 'Get Slack invite',
+    'GET_DISCORD_INVITE': 'Get Discord invite',
     'ADDRESS_LIST': 'Address',
     'PASSPHRASE_REQ': 'Passphrase is required.',
     'SAVE_APP_CONFIG': 'Save app config',
