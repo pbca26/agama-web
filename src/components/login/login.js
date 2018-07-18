@@ -22,11 +22,16 @@ import SwallModalRender from './swall-modal.render';
 import LoginRender from './login.render';
 import translate from '../../translate/translate';
 import passphraseGenerator from 'agama-wallet-lib/src/crypto/passphrasegenerator';
+import md5 from 'agama-wallet-lib/src/crypto/md5';
 
 const IGUNA_ACTIVE_HANDLE_TIMEOUT = 3000;
 const IGUNA_ACTIVE_COINS_TIMEOUT = 10000;
 
-// TODO: remove duplicate activehandle and activecoins calls
+window.createSeed = {
+  triggered: false,
+  firstLoginPH: null,
+  secondaryLoginPH: null,
+};
 
 class Login extends React.Component {
   constructor() {
@@ -317,8 +322,8 @@ class Login extends React.Component {
   }
 
   loginSeed() {
-    // TODO: audo's method
-    // mainWindow.createSeed.secondaryLoginPH = md5(this.state.loginPassphrase);
+    window.createSeed.secondaryLoginPH = md5(this.state.loginPassphrase);
+
     // reset the login pass phrase values so that when the user logs out, the values are clear
     this.setState({
       loginPassphrase: '',
@@ -406,8 +411,8 @@ class Login extends React.Component {
   }
 
   execWalletCreate() {
-    // mainWindow.createSeed.triggered = true;
-    // mainWindow.createSeed.firstLoginPH = md5(this.state.randomSeed);
+    window.createSeed.triggered = true;
+    window.createSeed.firstLoginPH = md5(this.state.randomSeed);
 
     Store.dispatch(
       shepherdElectrumAuth(this.state.randomSeedConfirm)

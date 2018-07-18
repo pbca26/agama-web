@@ -33,8 +33,8 @@ class WalletsMain extends React.Component {
       }, PRICES_UPDATE_INTERVAL);
     }
 
-    /*if (mainWindow.createSeed.triggered &&
-        !mainWindow.createSeed.secondaryLoginPH) {
+    if (window.createSeed.triggered &&
+        !window.createSeed.secondaryLoginPH) {
       Store.dispatch(
         triggerToaster(
           translate('INDEX.PLEASE_WRITE_DOWN_YOUR_PUB'),
@@ -43,8 +43,8 @@ class WalletsMain extends React.Component {
           false
         )
       );
-    } else if (mainWindow.createSeed.triggered && mainWindow.createSeed.secondaryLoginPH) {
-      if (mainWindow.createSeed.secondaryLoginPH === mainWindow.createSeed.firstLoginPH) {
+    } else if (window.createSeed.triggered && window.createSeed.secondaryLoginPH) {
+      if (window.createSeed.secondaryLoginPH === window.createSeed.firstLoginPH) {
         Store.dispatch(
           triggerToaster(
             translate('INDEX.YOUR_SEED_IS_CORRECT'),
@@ -53,7 +53,7 @@ class WalletsMain extends React.Component {
             false
           )
         );
-        mainWindow.createSeed = {
+        window.createSeed = {
           triggered: false,
           firstLoginPH: null,
           secondaryLoginPH: null,
@@ -67,13 +67,19 @@ class WalletsMain extends React.Component {
             false
           )
         );
-        mainWindow.createSeed = {
+        window.createSeed = {
           triggered: false,
           firstLoginPH: null,
           secondaryLoginPH: null,
         };
       }
-    }*/
+    } else {
+      window.createSeed = {
+        triggered: false,
+        firstLoginPH: null,
+        secondaryLoginPH: null,
+      };
+    }
   }
 
   getCoinStyle(type) {
