@@ -12,6 +12,7 @@ import {
   shepherdElectrumListunspent,
   shepherdElectrumSendPromise,
   validateAddressPromise,
+  shepherdGetRemoteTimestamp,
 } from '../../../actions/actionCreators';
 import translate from '../../../translate/translate';
 import {
@@ -19,6 +20,12 @@ import {
   _ClaimInterestTableRender,
 } from './claimInterestModal.render';
 import electrumServers from 'agama-wallet-lib/src/electrum-servers';
+import {
+  secondsToString,
+  checkTimestamp,
+} from 'agama-wallet-lib/src/time';
+
+const SPV_MAX_LOCAL_TIMESTAMP_DEVIATION = 60; // seconds    if (this.props.ActiveCoin.mode === 'spv') {
 
 // TODO: promises
 
@@ -281,6 +288,22 @@ class ClaimInterestModal extends React.Component {
     if (!this.state.open &&
         props.Dashboard.displayClaimInterestModal) {
       this.loadListUnspent();
+
+      shepherdGetRemoteTimestamp()
+      .then((res) => {
+        if (res.msg === 'success') {
+          if (Math.abs(checkTimestamp(res.result)) > SPV_MAX_LOCAL_TIMESTAMP_DEVIATION) {
+            Store.dispatch(
+              triggerToaster(
+                translate('SEND.CLOCK_OUT_OF_SYNC'),
+                translate('TOASTR.WALLET_NOTIFICATION'),
+                'warning',
+                false
+              )
+            );
+          }
+        }
+      });
     }
   }
 

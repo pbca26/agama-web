@@ -1,5 +1,7 @@
 const LANG_EN = {
   'CLAIM_INTEREST': {
+    'LOCKTIME_IS_UNSET': 'Locktime is unset! Your UTXO is not accruing interest.',
+    'LOCKTIME_IS_SET_TO': 'Locktime is set to',
     'SHOW_ZERO_INTEREST': 'Show zero rewards',
     'REQ_P1': 'Requirements to accrue rewards',
     'REQ_P2': 'spend transaction was made at least 1 hour ago, locktime field is set and amount is greater than',

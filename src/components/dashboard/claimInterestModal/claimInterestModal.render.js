@@ -26,12 +26,12 @@ export const _ClaimInterestTableRender = function() {
           <td className="locktime center">
             { _transactionsList[i].locktime &&
               <i
-                data-tip={ `Locktime is set to ${_transactionsList[i].locktime}` }
+                data-tip={ `${translate('CLAIM_INTEREST.LOCKTIME_IS_SET_TO')} ${_transactionsList[i].locktime}` }
                 className="fa-check-circle green"></i>
             }
             { !_transactionsList[i].locktime &&
               <i
-                data-tip={ `Locktime is unset! Your UTXO is not accruing interest.` }
+                data-tip={ translate('CLAIM_INTEREST.LOCKTIME_IS_UNSET') }
                 className="fa-exclamation-circle red"></i>
             }
             <ReactTooltip
@@ -52,12 +52,6 @@ export const _ClaimInterestTableRender = function() {
         <p>
           <strong>{ translate('CLAIM_INTEREST.TIP') }:</strong> { translate('CLAIM_INTEREST.TIP_DESC') }
         </p>
-        { this.props.ActiveCoin &&
-          this.props.ActiveCoin.mode === 'native' &&
-          <p>
-            <strong>{ translate('CLAIM_INTEREST.NOTICE') }:</strong> { translate('CLAIM_INTEREST.NATIVE_INTEREST_CHANGE_DESC') }
-          </p>
-        }
       </div>
       { this.state.totalInterest > 0 &&
         <div className={ 'text-left padding-bottom-20' + (this.state.displayShowZeroInterestToggle ? ' padding-top-40' : '') }>
