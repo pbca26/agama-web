@@ -67,3 +67,30 @@ export const shepherdGetRemoteBTCFees = () => {
     });
   });
 }
+
+// src: atomicexplorer
+export const shepherdGetRemoteTimestamp = () => {
+  return new Promise((resolve, reject) => {
+    fetch(`https://www.atomicexplorer.com/api/timestamp/now`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    .catch((error) => {
+      console.log(error);
+      /*Store.dispatch(
+        triggerToaster(
+          'shepherdGetRemoteBTCFees',
+          'Error',
+          'error'
+        )
+      );*/
+      resolve({ msg: 'error' });
+    })
+    .then(response => response.json())
+    .then(json => {
+      resolve(json);
+    });
+  });
+}

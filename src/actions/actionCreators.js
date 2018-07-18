@@ -34,7 +34,7 @@ export * from './actions/addCoin';
 export * from './actions/copyAddress';
 export * from './actions/dexCoins';
 export * from './actions/electrum';
-export * from './actions/prices';
+export * from './actions/atomicexplorer';
 // export * from './actions/tools';
 
 export const changeActiveAddress = (address) => {

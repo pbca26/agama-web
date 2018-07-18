@@ -37,6 +37,7 @@ const LANG_EN = {
     'COULDNT_COPY_ADDRESS': 'Couldn\'t copy address to clipboard',
   },
   'INDEX': {
+    'STANDALONE': 'Standalone',
     'SYNC_IN_PROGRESS': 'Synchronization is in progress',
     'ERROR': 'Error',
     'PROXY_CON_ERR': 'Proxy connection error',
@@ -358,6 +359,7 @@ const LANG_EN = {
     'RAW_INFO': 'Raw info',
   },
   'SEND': {
+    'CLOCK_OUT_OF_SYNC': 'Your local clock is not set properly. This will prevent sending a KMD transaction.',
     'SEND_ERR_ZTX_P1': 'Your history contains shielded transactions(z).',
     'SEND_ERR_ZTX_P2': 'Please move funds to another transparent address in order to use Lite mode.',
     'TO_SM': 'to',

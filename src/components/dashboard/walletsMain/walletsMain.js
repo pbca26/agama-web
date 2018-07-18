@@ -78,16 +78,16 @@ class WalletsMain extends React.Component {
 
   getCoinStyle(type) {
     if (type === 'transparent') {
-      if (getCoinTitle(this.props.ActiveCoin.coin).transparentBG &&
+      if (getCoinTitle(this.props.ActiveCoin.coin.toUpperCase()).transparentBG &&
           getCoinTitle().logo) {
         return { 'backgroundImage': `url("assets/images/bg/${getCoinTitle().logo.toLowerCase()}_transparent_header_bg.png")` };
       }
     } else if (type === 'title') {
       let _iconPath;
 
-      if (getCoinTitle(this.props.ActiveCoin.coin).titleBG) {
-        _iconPath = `assets/images/native/${getCoinTitle(this.props.ActiveCoin.coin).logo.toLowerCase()}_header_title_logo.png`;
-      } else if (!getCoinTitle(this.props.ActiveCoin.coin).titleBG) {
+      if (getCoinTitle(this.props.ActiveCoin.coin.toUpperCase()).titleBG) {
+        _iconPath = `assets/images/native/${getCoinTitle(this.props.ActiveCoin.coin.toUpperCase()).logo.toLowerCase()}_header_title_logo.png`;
+      } else if (!getCoinTitle(this.props.ActiveCoin.coin.toUpperCase()).titleBG) {
         _iconPath = `assets/images/cryptologo/${this.props.ActiveCoin.coin.toLowerCase()}.png`;
       }
 

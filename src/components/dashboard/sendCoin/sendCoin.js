@@ -2,13 +2,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Config from '../../../config';
 import translate from '../../../translate/translate';
-import { secondsToString } from 'agama-wallet-lib/src/time';
 import {
   triggerToaster,
   clearLastSendToResponseState,
   shepherdElectrumSendPromise,
   shepherdElectrumSend,
   shepherdGetRemoteBTCFees,
+  shepherdGetRemoteTimestamp,
   copyString,
 } from '../../../actions/actionCreators';
 import Store from '../../../store';
@@ -27,11 +27,17 @@ import {
   explorerList,
   isKomodoCoin,
 } from 'agama-wallet-lib/src/coin-helpers';
+import {
+  secondsToString,
+  checkTimestamp,
+} from 'agama-wallet-lib/src/time';
 import Slider, { Range } from 'rc-slider';
 import ReactTooltip from 'react-tooltip';
 import electrumServers from 'agama-wallet-lib/src/electrum-servers';
 import btcNetworks from 'agama-wallet-lib/src/bitcoinjs-networks';
 import { addressVersionCheck } from 'agama-wallet-lib/src/keys';
+
+const SPV_MAX_LOCAL_TIMESTAMP_DEVIATION = 60; // seconds
 
 const _feeLookup = [
   'fastestFee',
@@ -147,6 +153,24 @@ class SendCoin extends React.Component {
     if (this.props.ActiveCoin.activeSection !== props.ActiveCoin.activeSection &&
         this.props.ActiveCoin.activeSection !== 'send') {
       this.fetchBTCFees();
+
+      if (this.props.ActiveCoin.coin === 'kmd') {
+        shepherdGetRemoteTimestamp()
+        .then((res) => {
+          if (res.msg === 'success') {
+            if (Math.abs(checkTimestamp(res.result)) > SPV_MAX_LOCAL_TIMESTAMP_DEVIATION) {
+              Store.dispatch(
+                triggerToaster(
+                  translate('SEND.CLOCK_OUT_OF_SYNC'),
+                  translate('TOASTR.WALLET_NOTIFICATION'),
+                  'warning',
+                  false
+                )
+              );
+            }
+          }
+        });
+      }
     }
   }
 
@@ -304,6 +328,24 @@ class SendCoin extends React.Component {
   }
 
   changeSendCoinStep(step, back) {
+    if (this.props.ActiveCoin.coin === 'kmd') {
+      shepherdGetRemoteTimestamp()
+      .then((res) => {
+        if (res.msg === 'success') {
+          if (Math.abs(checkTimestamp(res.result)) > SPV_MAX_LOCAL_TIMESTAMP_DEVIATION) {
+            Store.dispatch(
+              triggerToaster(
+                translate('SEND.CLOCK_OUT_OF_SYNC'),
+                translate('TOASTR.WALLET_NOTIFICATION'),
+                'warning',
+                false
+              )
+            );
+          }
+        }
+      });
+    }
+
     if (step === 0) {
       this.fetchBTCFees();
 
