@@ -39,6 +39,8 @@ const LANG_EN = {
     'COULDNT_COPY_ADDRESS': 'Couldn\'t copy address to clipboard',
   },
   'INDEX': {
+    'FOR_GUIDES_AND_FAQ': 'For guides & FAQ please go to',
+    'TO_SEND_FEEDBACK': 'To send feedback please open a ticket at',
     'STANDALONE': 'Standalone',
     'SYNC_IN_PROGRESS': 'Synchronization is in progress',
     'ERROR': 'Error',

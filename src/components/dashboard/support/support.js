@@ -67,10 +67,10 @@ class Support extends React.Component {
           <div className="row margin-top-30">
             <div className="col-sm-12">
               <p>
-                For guides & FAQ please go to <a className="pointer" target="_blank" href={ Config.whitelabel ? Config.wlConfig.support.ticketsLink.url : 'https://support.komodoplatform.com/support/home' }>{ Config.whitelabel ? Config.wlConfig.support.ticketsLink.url : 'https://support.komodoplatform.com/support/home' }</a>
+                { translate('INDEX.FOR_GUIDES_AND_FAQ') } <a className="pointer" target="_blank" href={ Config.whitelabel ? Config.wlConfig.support.ticketsLink.url : 'https://support.komodoplatform.com/support/home' }>{ Config.whitelabel ? Config.wlConfig.support.ticketsLink.url : 'https://support.komodoplatform.com/support/home' }</a>
               </p>
               <p>
-                To send feedback please open a ticket at <a className="pointer" target="_blank" href={ Config.whitelabel ? Config.wlConfig.support.ticketsLink.urlNewTicket : 'https://support.komodoplatform.com/support/tickets/new' }>{ Config.whitelabel ? Config.wlConfig.support.ticketsLink.urlNewTicket : 'https://support.komodoplatform.com/support/tickets/new' }</a>
+                { translate('INDEX.TO_SEND_FEEDBACK') } <a className="pointer" target="_blank" href={ Config.whitelabel ? Config.wlConfig.support.ticketsLink.urlNewTicket : 'https://support.komodoplatform.com/support/tickets/new' }>{ Config.whitelabel ? Config.wlConfig.support.ticketsLink.urlNewTicket : 'https://support.komodoplatform.com/support/tickets/new' }</a>
               </p>
             </div>
           </div>
