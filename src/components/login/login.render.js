@@ -38,6 +38,15 @@ const LoginRender = function() {
               </span>
             </div>
           }
+          { this.renderResetSPVCoinsOption() &&
+            <div className="margin-top-30 margin-bottom-40">
+              <span
+                onClick={ this.resetSPVCoins }
+                className="pointer fs-16">
+                <i className="icon fa-trash margin-right-5"></i> { translate('LOGIN.QMENU_REMOVE_SPV') }
+              </span>
+            </div>
+          }
           <div className={ this.state.activeLoginSection === 'login' ? 'show' : 'hide' }>
             <h4 className="color-white">
               { translate('INDEX.WELCOME_LOGIN') }

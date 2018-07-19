@@ -13,6 +13,8 @@ import {
   toggleZcparamsFetchModal,
   toggleNotaryElectionsModal,
   toggleWalletRisksModal,
+  shepherdElectrumLogout,
+  dashboardRemoveCoin,
   activeHandle,
   addCoin,
 } from '../../actions/actionCreators';
@@ -79,6 +81,7 @@ class Login extends React.Component {
     this.setRecieverFromScan = this.setRecieverFromScan.bind(this);
     this.setLoginState = this.setLoginState.bind(this);
     this.toggleRisksWarningModal = this.toggleRisksWarningModal.bind(this);
+    this.resetSPVCoins = this.resetSPVCoins.bind(this);
   }
 
   // the setInterval handler for 'activeCoins'
@@ -525,6 +528,33 @@ class Login extends React.Component {
 
     Store.dispatch(activeHandle());
     Store.dispatch(getDexCoins());
+  }
+
+  renderResetSPVCoinsOption() {
+    if (this.props.Main &&
+        this.props.Main.coins &&
+        this.props.Main.coins.spv &&
+        this.props.Main.coins.spv.length) {
+      return true;
+    }
+  }
+
+  resetSPVCoins() {
+    shepherdElectrumLogout()
+    .then((res) => {
+      const _spvCoins = this.props.Main.coins.spv;
+
+      for (let i = 0; i < _spvCoins.length; i++) {
+        Store.dispatch(dashboardRemoveCoin(_spvCoins[i]));
+      }
+
+      this.setState({
+        selectedShortcutSPV: null,
+      });
+
+      Store.dispatch(getDexCoins());
+      Store.dispatch(activeHandle());
+    });
   }
 
   renderSwallModal() {
