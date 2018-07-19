@@ -32,6 +32,17 @@ const LANG_EN = {
     'GET_AN_INVITE_P2': 'to our Discord if you\'re not registered yet'
   },
   'API': {
+    // fetch errors
+    'shepherdGetRemoteBTCFees': 'Unable to get BTC fees',
+    'shepherdElectrumSetServer': 'Unable to set Electrum server',
+    'shepherdElectrumCheckServerConnection': 'Unable to test Electrum server connection',
+    'shepherdElectrumBalance': 'Unable to get balance',
+    'shepherdElectrumTransactions+getcurrentblock-remote': 'Transactions history unable to get current height',
+    'shepherdElectrumTransactions+listtransactions': 'Unable to get transactions history',
+    'shepherdElectrumTransactions+getblockinfo': 'Transactions history unable to get block info',
+    'shepherdElectrumTransactions+gettransaction-remote': 'Transactions history unable to get transaction data',
+    'shepherdElectrumSend': 'Unable to push transaction data',
+    'shepherdElectrumListunspent+listunspent-remote': 'Unable to get unspent outputs',
     'CANT_BROADCAST_TX': 'Can\'t broadcast transaction',
     'BAD_TX_INPUTS_SPENT': 'Bad transaction inputs spent',
     'PUSH_ERR': 'Failed to push transaction',

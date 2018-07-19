@@ -108,6 +108,7 @@ export const shepherdElectrumSetServer = (coin, address, port) => {
       console.log(error);
       Store.dispatch(
         triggerToaster(
+          translate('API.shepherdElectrumSetServer'),
           'shepherdElectrumSetServer',
           'Error',
           'error'
@@ -133,7 +134,7 @@ export const shepherdElectrumCheckServerConnection = (address, port) => {
       console.log(error);
       Store.dispatch(
         triggerToaster(
-          'shepherdElectrumCheckServerConnection',
+          translate('API.shepherdElectrumCheckServerConnection'),
           'Error',
           'error'
         )
@@ -185,7 +186,7 @@ export const shepherdElectrumBalance = (coin, address) => {
       console.log(error);
       dispatch(
         triggerToaster(
-          'shepherdElectrumBalance',
+          translate('API.shepherdElectrumBalance'),
           'Error',
           'error'
         )
@@ -270,7 +271,7 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
       console.log(error);
       Store.dispatch(
         triggerToaster(
-          'shepherdElectrumTransactions+getcurrentblock remote',
+          translate('API.shepherdElectrumTransactions+getcurrentblock-remote'),
           'Error',
           'error'
         )
@@ -298,7 +299,7 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
           console.log(error);
           Store.dispatch(
             triggerToaster(
-              'shepherdElectrumTransactions+listtransactions remote',
+              translate('API.shepherdElectrumTransactions+listtransactions'),
               'Error',
               'error'
             )
@@ -329,7 +330,7 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
                     console.log(error);
                     Store.dispatch(
                       triggerToaster(
-                        'shepherdElectrumTransactions+getblockinfo remote',
+                        translate('API.shepherdElectrumTransactions+getblockinfo'),
                         'Error',
                         'error'
                       )
@@ -389,7 +390,7 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
                                   console.log(error);
                                   Store.dispatch(
                                     triggerToaster(
-                                      'shepherdElectrumTransactions+gettransaction remote',
+                                      translate('API.shepherdElectrumTransactions+getblockinfo'),
                                       'Error',
                                       'error'
                                     )
@@ -569,7 +570,7 @@ export const shepherdElectrumSend = (coin, value, sendToAddress, changeAddress, 
       console.log(error);
       dispatch(
         triggerToaster(
-          'shepherdElectrumSend',
+          translate('API.shepherdElectrumSend'),
           'Error',
           'error'
         )
@@ -638,7 +639,7 @@ export const shepherdElectrumSendPromise = (coin, value, sendToAddress, changeAd
           console.log(error);
           Store.dispatch(
             triggerToaster(
-              'shepherdElectrumSetServer',
+              translate('API.shepherdElectrumSend'),
               'Error',
               'error'
             )
@@ -753,7 +754,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
         console.log(error);
         Store.dispatch(
           triggerToaster(
-            'shepherdElectrumListunspent+listunspent remote',
+            translate('API.shepherdElectrumListunspent+listunspent-remote'),
             'Error',
             'error'
           )
@@ -785,7 +786,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
               console.log(error);
               Store.dispatch(
                 triggerToaster(
-                  'shepherdElectrumTransactions+getcurrentblock remote',
+                  translate('API.shepherdElectrumTransactions+getcurrentblock-remote'),
                   'Error',
                   'error'
                 )
@@ -917,7 +918,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                             console.log(error);
                             Store.dispatch(
                               triggerToaster(
-                                'shepherdElectrumTransactions+gettransaction remote',
+                                translate('API.shepherdElectrumTransactions+gettransaction-remote'),
                                 'Error',
                                 'error'
                               )
@@ -1070,7 +1071,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
         console.log(error);
         Store.dispatch(
           triggerToaster(
-            'shepherdElectrumListunspent+listunspent remote',
+            translate('API.shepherdElectrumListunspent+listunspent-remote'),
             'Error',
             'error'
           )
@@ -1103,7 +1104,7 @@ export const shepherdElectrumBip39Keys = (seed, match, addressdepth, accounts) =
       console.log(error);
       Store.dispatch(
         triggerToaster(
-          'shepherdElectrumSetServer',
+          'shepherdElectrumBip39Keys',
           'Error',
           'error'
         )

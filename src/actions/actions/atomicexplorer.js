@@ -55,7 +55,7 @@ export const shepherdGetRemoteBTCFees = () => {
       console.log(error);
       Store.dispatch(
         triggerToaster(
-          'shepherdGetRemoteBTCFees',
+          translate('API.shepherdGetRemoteBTCFees'),
           'Error',
           'error'
         )
@@ -79,13 +79,6 @@ export const shepherdGetRemoteTimestamp = () => {
     })
     .catch((error) => {
       console.log(error);
-      /*Store.dispatch(
-        triggerToaster(
-          'shepherdGetRemoteBTCFees',
-          'Error',
-          'error'
-        )
-      );*/
       resolve({ msg: 'error' });
     })
     .then(response => response.json())
