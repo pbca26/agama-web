@@ -32,8 +32,8 @@ class Support extends React.Component {
                   className="support-box"
                   href={ 'https://discordapp.com/channels/412898016371015680/453204571393622027' }>
                   <img
-                    src="assets/images/support/discord-icon.png"
-                    alt={ Config.whitelabel ? Config.wlConfig.support.chatApp.name : 'Slack' } />
+                    src={ 'assets/images/support/discord-icon.png'.replace('discord', Config.whitelabel ? Config.wlConfig.support.chatApp.name.toLowerCase() : 'discord') }
+                    alt={ Config.whitelabel ? Config.wlConfig.support.chatApp.name : 'Discord' } />
                   <div className="support-box-title">{ Config.whitelabel ? Config.wlConfig.support.chatApp.name : 'Discord' }</div>
                   <div className="support-box-link">{ Config.whitelabel ? Config.wlConfig.support.chatApp.channel : '#agama-wallet' }</div>
                 </a>
@@ -44,7 +44,7 @@ class Support extends React.Component {
                   className="support-box"
                   href={ Config.whitelabel ? Config.wlConfig.support.chatApp.inviteUrl : 'https://komodoplatform.com/discord' }>
                   <img
-                    src="assets/images/support/discord-invite-icon.png"
+                    src={ 'assets/images/support/discord-invite-icon.png'.replace('discord', Config.whitelabel ? Config.wlConfig.support.chatApp.name.toLowerCase() : 'discord') }
                     alt={ translate('SETTINGS.GET_DISCORD_INVITE').replace('Discord', Config.whitelabel ? Config.wlConfig.support.chatApp.name : 'Discord') } />
                   <div className="support-box-title">{ translate('SETTINGS.GET_DISCORD_INVITE').replace('Discord', Config.whitelabel ? Config.wlConfig.support.chatApp.name : 'Discord') }</div>
                   <div className="support-box-link">{ Config.whitelabel ? Config.wlConfig.support.chatApp.inviteUrl : 'https://komodoplatform.com/discord' }</div>

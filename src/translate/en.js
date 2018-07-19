@@ -13,11 +13,12 @@ const LANG_EN = {
     'TIP_DESC': 'don\'t attempt to claim rewards smaller than 0.01 KMD. A fee you have to pay for transaction will be more or equal to the rewards amount.',
   },
   'ABOUT': {
+    'ABOUT': 'About',
     'AGAMA_WALLET': 'Agama Wallet',
     'ABOUT_AGAMA': 'About Agama',
     'ABOUT_AGAMA_ALT': 'About Agama Web Wallet',
     'AGAMA_MODES': 'Agama Wallet is a web app that you can use to manage multiple cryptocurrency wallets. ' +
-                   'It\'s based on SPV method which relies on a centralized entity called Electrum server to retrieve blockchain data. In addition to that Agama Web wallet also requires Electrum proxy service to connect to Electrum servers.',
+                   'It\'s based on SPV method which relies on a centralized service called Electrum server to retrieve blockchain data. In addition to that Agama Web wallet also requires Electrum proxy service to connect to Electrum servers.',
     'AGAMA_NOTE': 'Note: Agama Web Wallet is still in development. ' +
                   'It is safe to use, but you should make proper backups. ' +
                   'We do not recommend using it as the primarily wallet for your cryptocurrencies.',

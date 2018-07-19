@@ -92,6 +92,14 @@ export const shepherdElectrumLogout = () => {
       total: 0,
     };
     appData.servers = {};
+
+    if (Config.whitelabel) {
+      appData.allcoins = {
+        spv: [Config.wlConfig.coin.ticker.toLowerCase()],
+        total: 1,
+      };
+    }
+
     resolve();
   });
 }
