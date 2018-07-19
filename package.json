@@ -1,6 +1,6 @@
 {
   "name": "AgamaWeb",
-  "version": "0.1.5",
+  "version": "0.1.7",
   "description": "Agama Wallet Web",
   "main": "src/index.js",
   "scripts": {
@@ -18,14 +18,15 @@
     "e2e-live": "protractor --elementExplorer"
   },
   "repository": "https://github.com/pbca26/agama-web",
-  "homepage": "http://supernet.org",
+  "homepage": "http://komodoplatform.com",
   "keywords": [
     "agama",
     "SuperNET",
     "komodo",
     "multicoin",
     "wallet",
-    "spv"
+    "spv",
+    "web wallet"
   ],
   "author": "SuperNET Team",
   "license": "MIT",

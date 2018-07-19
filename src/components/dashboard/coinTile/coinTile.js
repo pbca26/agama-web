@@ -1,10 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import {
-  getCoinTitle,
-  getModeInfo,
-} from '../../../util/coinHelper';
+import { getCoinTitle } from '../../../util/coinHelper';
+import translate from '../../../translate/translate';
 import CoinTileItem from './coinTileItem';
+import { isKomodoCoin } from 'agama-wallet-lib/src/coin-helpers';
 
 import CoinTileRender from './coinTile.render';
 
@@ -17,6 +16,7 @@ class CoinTile extends React.Component {
     this.renderTiles = this.renderTiles.bind(this);
     this.repeatRenderInterval = null;
     this.toggleSidebar = this.toggleSidebar.bind(this);
+    this.renderSidebarToggle = this.renderSidebarToggle.bind(this);
   }
 
   toggleSidebar() {
@@ -25,34 +25,30 @@ class CoinTile extends React.Component {
     });
   }
 
+  renderSidebarToggle() {
+    if (this.props.allCoins.spv &&
+        this.props.allCoins.spv.length > 1) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   renderTiles() {
-    const modes = [
-      'spv',
-    ];
     const allCoins = this.props.allCoins;
     let items = [];
 
     if (allCoins) {
-      modes.map((mode) => {
-        allCoins[mode].map((coin) => {
-          const _coinMode = getModeInfo(mode);
-          const modecode = _coinMode.code;
-          const modetip = _coinMode.tip;
-          const modecolor = _coinMode.color;
+      allCoins.spv.map((coin) => {
+        const _coinTitle = getCoinTitle(coin.toUpperCase());
+        const coinlogo = coin.toUpperCase();
+        const coinname = translate((isKomodoCoin(coin) && coin !== 'kmd' && coin !== 'chips' ? 'ASSETCHAINS.' : 'CRYPTO.') + coin.toUpperCase());
 
-          const _coinTitle = getCoinTitle(coin.toUpperCase());
-          const coinlogo = _coinTitle.logo;
-          const coinname = _coinTitle.name;
-
-          items.push({
-            coinlogo,
-            coinname,
-            coin,
-            mode,
-            modecolor,
-            modetip,
-            modecode,
-          });
+        items.push({
+          coinlogo,
+          coinname,
+          coin,
+          mode: 'spv',
         });
       });
     }
@@ -92,4 +88,3 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps)(CoinTile);
-

@@ -3,8 +3,7 @@ import WalletsHeaderRender from './walletsHeader.render';
 
 class WalletsHeader extends React.Component {
   hasActiveSection() {
-    return this.props &&
-      this.props.activeSection;
+    return this.props && this.props.activeSection;
   }
 
   isActiveSectionJumblr() {

@@ -1,5 +1,5 @@
 import { ACTIVE_HANDLE } from '../storeType';
-import { translate } from '../../translate/translate';
+import translate from '../../translate/translate';
 import Config from '../../config';
 import appData from './appData';
 import {
@@ -13,11 +13,9 @@ import {
   checkCoinType,
   checkAC,
 } from '../../components/addcoin/payload';
-import {
-  keys,
-  coin as _coin,
-  btcnetworks,
-} from 'agama-wallet-lib/src/index-fe';
+import { isKomodoCoin } from 'agama-wallet-lib/src/coin-helpers';
+import btcNetworks from 'agama-wallet-lib/src/bitcoinjs-networks';
+import { stringToWif } from 'agama-wallet-lib/src/keys';
 
 const iguanaActiveHandleState = (json) => {
   return {
@@ -36,13 +34,12 @@ export const activeHandle = () => {
 }
 
 export const shepherdElectrumAuth = (seed) => {
-  let _pubKeys = {};
-
   for (let i = 0; i < appData.coins.length; i++) {
-    if (_coin.isKomodoCoin(appData.coins[i]) || Config.whitelabel) {
-      appData.keys[appData.coins[i]] = keys.stringToWif(seed, btcnetworks.kmd, true);
+    if (isKomodoCoin(appData.coins[i]) ||
+        Config.whitelabel) {
+      appData.keys[appData.coins[i]] = stringToWif(seed, btcNetworks.kmd, true);
     } else {
-      appData.keys[appData.coins[i]] = keys.stringToWif(seed, btcnetworks[appData.coins[i]], true);
+      appData.keys[appData.coins[i]] = stringToWif(seed, btcNetworks[appData.coins[i]], true);
     }
   }
 
@@ -69,20 +66,17 @@ export const addCoin = (coin, mode, startupParams) => {
 }
 
 export const addCoinResult = (coin, mode) => {
-  const modeToValue = {
-    '0': 'spv',
-  };
-
   if (!appData.coins[coin]) {
     appData.coins.push(coin);
     appData.allcoins.spv.push(coin);
     appData.allcoins.total++;
 
     if (Object.keys(appData.keys).length) {
-      if (_coin.isKomodoCoin(coin) || Config.whitelabel) {
-        appData.keys[coin] = keys.stringToWif(appData.keys[Object.keys(appData.keys)[0]].priv, btcnetworks.kmd, true);
+      if (isKomodoCoin(coin) ||
+          Config.whitelabel) {
+        appData.keys[coin] = stringToWif(appData.keys[Object.keys(appData.keys)[0]].priv, btcNetworks.kmd, true);
       } else {
-        appData.keys[coin] = keys.stringToWif(appData.keys[Object.keys(appData.keys)[0]].priv, btcnetworks[coin], true);
+        appData.keys[coin] = stringToWif(appData.keys[Object.keys(appData.keys)[0]].priv, btcNetworks[coin], true);
       }
     }
   }
@@ -91,7 +85,7 @@ export const addCoinResult = (coin, mode) => {
     if (!Config.whitelabel) {
       dispatch(
         triggerToaster(
-          `${coin.toUpperCase()} ${translate('TOASTR.STARTED_IN')} ${modeToValue[mode].toUpperCase()} ${translate('TOASTR.MODE')}`,
+          `${coin.toUpperCase()} ${translate('TOASTR.STARTED_IN')} ${translate('INDEX.LITE')} ${translate('TOASTR.MODE')}`,
           translate('TOASTR.COIN_NOTIFICATION'),
           'success'
         )

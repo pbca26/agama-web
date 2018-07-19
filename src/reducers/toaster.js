@@ -1,24 +1,24 @@
 import {
   ADD_TOASTER_MESSAGE,
-  REMOVE_TOASTER_MESSAGE
+  REMOVE_TOASTER_MESSAGE,
 } from '../actions/storeType';
 
-export function toaster(state = {
+const arrayToString = (arr) => {
+  if (typeof arr === 'object') {
+    return arr.join().toString();
+  } else {
+    return arr;
+  }
+}
+
+const toaster = (state = {
   toasts: [],
-}, action) {
+}, action) => {
   if (state === null) state = { toasts: [] };
 
   switch (action.type) {
     case ADD_TOASTER_MESSAGE:
       let _isSameToastTwice = false;
-
-      function arrayToString(arr) {
-        if (typeof arr === 'object') {
-          return arr.join().toString();
-        } else {
-          return arr;
-        }
-      }
 
       for (let i = 0; i < state.toasts.length; i++) {
         if (state.toasts[i].title === action.title &&

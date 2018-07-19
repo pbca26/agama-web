@@ -1,17 +1,21 @@
 import React from 'react';
-import { translate } from '../../../translate/translate';
+import translate from '../../../translate/translate';
 import QRModal from '../qrModal/qrModal';
 import { formatValue } from 'agama-wallet-lib/src/utils';
 import { explorerList } from 'agama-wallet-lib/src/coin-helpers';
 import ReactTooltip from 'react-tooltip';
 import Config from '../../../config';
+import {
+  toSats,
+  fromSats,
+} from 'agama-wallet-lib/src/utils';
 
 export const AddressListRender = function() {
   return (
     <div className={ `btn-group bootstrap-select form-control form-material showkmdwalletaddrs show-tick ${(this.state.addressSelectorOpen ? 'open' : '')}` }>
       <button
         type="button"
-        className={ 'btn dropdown-toggle btn-info' + (this.props.ActiveCoin.mode === 'spv' ? ' disabled' : '') }
+        className={ 'btn dropdown-toggle btn-info disabled' }
         onClick={ this.openDropMenu }>
         <span className="filter-option pull-left">{ this.renderSelectorCurrentLabel() }&nbsp;</span>
         <span className="bs-caret">
@@ -25,7 +29,7 @@ export const AddressListRender = function() {
             onClick={ () => this.updateAddressSelection(null, 'public', null) }>
             <a>
               <span className="text">
-                { this.props.ActiveCoin.mode === 'spv' ? `[ ${this.props.ActiveCoin.balance.balance} ${this.props.ActiveCoin.coin.toUpperCase()} ] ${this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub}` : translate('INDEX.T_FUNDS') }
+                { `[ ${this.props.ActiveCoin.balance.balance} ${this.props.ActiveCoin.coin.toUpperCase()} ] ${this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub}` }
               </span>
               <span
                 className="glyphicon glyphicon-ok check-mark pull-right"
@@ -33,7 +37,6 @@ export const AddressListRender = function() {
             </a>
           </li>
           { this.renderAddressByType('public') }
-          { this.renderAddressByType('private') }
         </ul>
       </div>
     </div>
@@ -55,14 +58,12 @@ export const _SendFormRender = function() {
       }
       <div className="row">
         <div className="col-xlg-12 form-group form-material">
-          { this.props.ActiveCoin.mode === 'spv' &&
-            <button
-              type="button"
-              className="btn btn-default btn-send-self"
-              onClick={ this.setSendToSelf }>
-              { translate('SEND.SELF') }
-            </button>
-          }
+          <button
+            type="button"
+            className="btn btn-default btn-send-self"
+            onClick={ this.setSendToSelf }>
+            { translate('SEND.SELF') }
+          </button>
           <label
             className="control-label"
             htmlFor="kmdWalletSendTo">{ translate('INDEX.SEND_TO') }</label>
@@ -73,19 +74,17 @@ export const _SendFormRender = function() {
             onChange={ this.updateInput }
             value={ this.state.sendTo }
             id="kmdWalletSendTo"
-            placeholder={ this.props.ActiveCoin.mode === 'spv' ? translate('SEND.ENTER_ADDRESS') : translate('SEND.ENTER_T_OR_Z_ADDR') }
+            placeholder={ translate('SEND.ENTER_ADDRESS') }
             autoComplete="off"
             required />
         </div>
         <div className="col-lg-12 form-group form-material">
-          { this.props.ActiveCoin.mode === 'spv' &&
-            <button
-              type="button"
-              className="btn btn-default btn-send-self"
-              onClick={ this.setSendAmountAll }>
-              { translate('SEND.ALL') }
-            </button>
-          }
+          <button
+            type="button"
+            className="btn btn-default btn-send-self"
+            onClick={ this.setSendAmountAll }>
+            { translate('SEND.ALL') }
+          </button>
           <label
             className="control-label"
             htmlFor="kmdWalletAmount">
@@ -101,7 +100,7 @@ export const _SendFormRender = function() {
             placeholder="0.000"
             autoComplete="off" />
         </div>
-        <div className={ 'col-lg-6 form-group form-material' + (this.isTransparentTx() && this.props.ActiveCoin.mode === 'native' ? '' : ' hide') }>
+        <div className={ 'col-lg-6 form-group form-material hide' }>
           { this.state.sendTo.length <= 34 &&
             <span className="pointer">
               <label className="switch">
@@ -144,14 +143,6 @@ export const _SendFormRender = function() {
             { this.props.ActiveCoin.coin.toUpperCase() }
           </span>
         </div>
-        { (!this.isFullySynced() || !navigator.onLine) &&
-          this.props.ActiveCoin &&
-          this.props.ActiveCoin.mode === 'native' &&
-          <div className="col-lg-12 padding-top-20 padding-bottom-20 send-coin-sync-warning">
-            <i className="icon fa-warning color-warning margin-right-5"></i>&nbsp;
-            <span className="desc">{ translate('SEND.SEND_NATIVE_SYNC_WARNING') }</span>
-          </div>
-        }
         <div className="col-lg-12">
           <button
             type="button"
@@ -248,37 +239,37 @@ export const SendRender = function() {
               { this.state.spvPreflightRes &&
                 <div className="row padding-top-20">
                   <div className="col-xs-12">
-                    <strong>Fee</strong>
+                    <strong>{ translate('SEND.FEE') }</strong>
                   </div>
-                  <div className="col-lg-12 col-sm-12 col-xs-12">{ formatValue(this.state.spvPreflightRes.fee * 0.00000001) } ({ this.state.spvPreflightRes.fee } sats)</div>
+                  <div className="col-lg-12 col-sm-12 col-xs-12">{ formatValue(fromSats(this.state.spvPreflightRes.fee)) } ({ this.state.spvPreflightRes.fee } { translate('SEND.SATS_SM') })</div>
                 </div>
               }
               { this.state.spvPreflightRes &&
                 <div className="row padding-top-20">
                   { this.state.spvPreflightRes.change === 0 &&
                     <div className="col-lg-12 col-sm-12 col-xs-12">
-                      <strong>Adjusted amount</strong>
+                      <strong>{ translate('SEND.ADJUSTED_AMOUNT') }</strong>
                       <span>
                         <i
                           className="icon fa-question-circle settings-help send-btc"
-                          data-tip="Max. available amount to spend - transaction fee"></i>
+                          data-tip={ translate('SEND.TOTAL_DESC') }></i>
                         <ReactTooltip
                           effect="solid"
                           className="text-left" />
                       </span>
-                      &nbsp;{ formatValue((this.state.spvPreflightRes.value * 0.00000001) - (this.state.spvPreflightRes.fee * 0.00000001)) }
+                      &nbsp;{ formatValue(fromSats(this.state.spvPreflightRes.value) - fromSats(this.state.spvPreflightRes.fee)) }
                     </div>
                   }
                   { this.state.spvPreflightRes.estimatedFee < 0 &&
                     <div className="col-lg-12 col-sm-12 col-xs-12 padding-bottom-20">
-                      <strong>KMD interest</strong>&nbsp;
-                      { Math.abs(formatValue(this.state.spvPreflightRes.estimatedFee * 0.00000001)) } to { this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub }
+                      <strong>KMD { translate('SEND.REWARDS_SM') }</strong>&nbsp;
+                      { Math.abs(formatValue(fromSats(this.state.spvPreflightRes.estimatedFee))) } { translate('SEND.TO_S,') } { this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub }
                     </div>
                   }
                   { this.state.spvPreflightRes.change > 0 &&
                     <div className="col-lg-12 col-sm-12 col-xs-12">
-                      <strong>Total (amount + transaction fee)</strong>&nbsp;
-                      { formatValue((this.state.spvPreflightRes.value * 0.00000001) + (this.state.spvPreflightRes.fee * 0.00000001)) }
+                      <strong>{ translate('SEND.TOTAL') }</strong>&nbsp;
+                      { formatValue(fromSats(this.state.spvPreflightRes.value) + fromSats(this.state.spvPreflightRes.fee)) }
                     </div>
                   }
                 </div>
@@ -302,7 +293,7 @@ export const SendRender = function() {
                     type="button"
                     className="btn btn-primary"
                     onClick={ () => this.changeSendCoinStep(2) }>
-                      { translate('INDEX.CONFIRM') }
+                    { translate('INDEX.CONFIRM') }
                   </button>
                 </div>
               </div>
@@ -335,16 +326,14 @@ export const SendRender = function() {
                           <span className="label label-success">{ translate('SEND.SUCCESS_SM') }</span>
                         </td>
                       </tr>
-                      { ((this.state.sendFrom && this.props.ActiveCoin.mode === 'native') || this.props.ActiveCoin.mode === 'spv') &&
-                        <tr>
-                          <td className="padding-left-30">
-                          { translate('INDEX.SEND_FROM') }
-                          </td>
-                          <td className="padding-left-30">
-                            { this.props.ActiveCoin.mode === 'spv' ? this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub : this.state.sendFrom }
-                          </td>
-                        </tr>
-                      }
+                      <tr>
+                        <td className="padding-left-30">
+                        { translate('INDEX.SEND_FROM') }
+                        </td>
+                        <td className="padding-left-30">
+                          { this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub }
+                        </td>
+                      </tr>
                       <tr>
                         <td className="padding-left-30">
                         { translate('INDEX.SEND_TO') }
@@ -364,24 +353,22 @@ export const SendRender = function() {
                       <tr>
                         <td className="padding-left-30">{ translate('SEND.TRANSACTION_ID') }</td>
                         <td className="padding-left-30">
-                          { this.props.ActiveCoin.mode === 'spv' ? (this.state.lastSendToResponse && this.state.lastSendToResponse.txid ? this.state.lastSendToResponse.txid : '') : this.state.lastSendToResponse }
-                          { this.props.ActiveCoin.mode === 'spv' &&
-                            this.state.lastSendToResponse &&
+                          { this.state.lastSendToResponse && this.state.lastSendToResponse.txid ? this.state.lastSendToResponse.txid : '' }
+                          { this.state.lastSendToResponse &&
                             this.state.lastSendToResponse.txid &&
                             <button
                               className="btn btn-default btn-xs clipboard-edexaddr margin-left-10"
                               title={ translate('INDEX.COPY_TO_CLIPBOARD') }
-                              onClick={ () => this.copyTXID(this.props.ActiveCoin.mode === 'spv' ? (this.state.lastSendToResponse && this.state.lastSendToResponse.txid ? this.state.lastSendToResponse.txid : '') : this.state.lastSendToResponse) }>
-                                <i className="icon wb-copy"></i> { translate('INDEX.COPY') }
+                              onClick={ () => this.copyTXID(this.state.lastSendToResponse && this.state.lastSendToResponse.txid ? this.state.lastSendToResponse.txid : '') }>
+                              <i className="icon wb-copy"></i> { translate('INDEX.COPY') }
                             </button>
                           }
-                          { this.props.ActiveCoin.mode === 'spv' &&
-                            this.state.lastSendToResponse &&
+                          { this.state.lastSendToResponse &&
                             this.state.lastSendToResponse.txid &&
                             (explorerList[this.props.ActiveCoin.coin.toUpperCase()] || Config.whitelabel) &&
                             <div className="margin-top-10">
                               <a
-                                href={ this.openExplorerWindow(this.props.ActiveCoin.mode === 'spv' ? (this.state.lastSendToResponse && this.state.lastSendToResponse.txid ? this.state.lastSendToResponse.txid : '') : this.state.lastSendToResponse) }
+                                href={ this.openExplorerWindow(this.state.lastSendToResponse && this.state.lastSendToResponse.txid ? this.state.lastSendToResponse.txid : '') }
                                 target="_blank">
                                 <button
                                   type="button"
@@ -408,15 +395,14 @@ export const SendRender = function() {
                     </div>
                     { (this.state.lastSendToResponse.result.toLowerCase().indexOf('decode error') > -1) &&
                       <div>
-                        Your history contains shielded transactions(z).<br />
-                        Please move funds to another transparent address in order to use Lite mode.
+                        { translate('SEND.SEND_ERR_ZTX_P1') }<br />
+                        { translate('SEND.SEND_ERR_ZTX_P2') }
                       </div>
                     }
                     { this.state.lastSendToResponse.result.toLowerCase().indexOf('decode error') === -1 &&
                       <div>{ this.state.lastSendToResponse.result }</div>
                     }
-                    { this.props.ActiveCoin.mode === 'spv' &&
-                      this.state.lastSendToResponse.raw &&
+                    { this.state.lastSendToResponse.raw &&
                       this.state.lastSendToResponse.raw.txid &&
                       <div>{ this.state.lastSendToResponse.raw.txid.replace(/\[.*\]/, '') }</div>
                     }
@@ -441,58 +427,13 @@ export const SendRender = function() {
                     type="button"
                     className="btn btn-primary"
                     onClick={ () => this.changeSendCoinStep(0) }>
-                      { translate('INDEX.MAKE_ANOTHER_TX') }
+                    { translate('INDEX.MAKE_ANOTHER_TX') }
                   </button>
                 </div>
               </div>
             </div>
           </div>
         </div>
-
-        { this.renderOPIDListCheck() &&
-          <div className="col-xs-12">
-            <div className="row">
-              <div className="panel nav-tabs-horizontal">
-                <div>
-                  <div className="col-xlg-12 col-lg-12 col-sm-12 col-xs-12">
-                    <div className="panel">
-                      <header className="panel-heading">
-                        <h3 className="panel-title">
-                          { translate('INDEX.OPERATIONS_STATUSES') }
-                        </h3>
-                      </header>
-                      <div className="panel-body">
-                        <table
-                          className="table table-hover dataTable table-striped"
-                          width="100%">
-                          <thead>
-                            <tr>
-                              <th>{ translate('INDEX.STATUS') }</th>
-                              <th>ID</th>
-                              <th>{ translate('INDEX.TIME') }</th>
-                              <th>{ translate('INDEX.RESULT') }</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            { this.renderOPIDList() }
-                          </tbody>
-                          <tfoot>
-                            <tr>
-                              <th>{ translate('INDEX.STATUS') }</th>
-                              <th>ID</th>
-                              <th>{ translate('INDEX.TIME') }</th>
-                              <th>{ translate('INDEX.RESULT') }</th>
-                            </tr>
-                          </tfoot>
-                        </table>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        }
       </div>
     );
   }

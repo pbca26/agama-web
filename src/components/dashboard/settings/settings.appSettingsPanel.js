@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import ReactTooltip from 'react-tooltip';
-import { translate } from '../../../translate/translate';
+import translate from '../../../translate/translate';
 import Config from '../../../config';
 import {
   getAppConfig,
@@ -278,34 +278,6 @@ class AppSettingsPanel extends React.Component {
         }
       }
     }
-
-    items.push(
-      <tr key={ `kmd-main-sync-only` }>
-        <td className="padding-15">
-          { translate('SETTINGS.KMD_MAIN_SYNC_ONLY') }
-          <i
-            className="icon fa-question-circle settings-help"
-            data-tip={ translate('SETTINGS.RPC_FETCH_ONLY_DESC') }></i>
-          <ReactTooltip
-            effect="solid"
-            className="text-left" />
-        </td>
-        <td className="padding-15">
-          <span className="pointer toggle">
-            <label className="switch">
-              <input
-                type="checkbox"
-                name={ `kmd-main-sync-only` }
-                value={ this.props.Dashboard.skipFullDashboardUpdate }
-                checked={ this.props.Dashboard.skipFullDashboardUpdate } />
-              <div
-                className="slider"
-                onClick={ this._skipFullDashboardUpdate }></div>
-            </label>
-          </span>
-        </td>
-      </tr>
-    );
 
     return items;
   }

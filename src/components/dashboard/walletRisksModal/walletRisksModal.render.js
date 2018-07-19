@@ -1,5 +1,5 @@
 import React from 'react';
-import { translate } from '../../../translate/translate';
+import translate from '../../../translate/translate';
 import Config from '../../../config';
 
 const WalletRisksModalRender = function() {

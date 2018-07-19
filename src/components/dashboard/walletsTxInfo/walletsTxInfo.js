@@ -1,11 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { translate } from '../../../translate/translate';
+import translate from '../../../translate/translate';
 import { sortByDate } from 'agama-wallet-lib/src/utils';
-import {
-  toggleDashboardTxInfoModal,
-  getTxDetails,
-} from '../../../actions/actionCreators';
+import { toggleDashboardTxInfoModal } from '../../../actions/actionCreators';
 import Store from '../../../store';
 import WalletsTxInfoRender from './walletsTxInfo.render';
 import { explorerList } from 'agama-wallet-lib/src/coin-helpers';
@@ -20,8 +17,6 @@ class WalletsTxInfo extends React.Component {
       rawTxDetails: null,
     };
     this.toggleTxInfoModal = this.toggleTxInfoModal.bind(this);
-    this.loadTxDetails = this.loadTxDetails.bind(this);
-    this.loadRawTxDetails = this.loadRawTxDetails.bind(this);
   }
 
   toggleTxInfoModal() {
@@ -37,47 +32,12 @@ class WalletsTxInfo extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.ActiveCoin.mode === 'spv' &&
-        nextProps.ActiveCoin) {
+    if (nextProps.ActiveCoin) {
       this.setState(Object.assign({}, this.state, {
         txDetails: nextProps.ActiveCoin.showTransactionInfoTxIndex,
         rawTxDetails: nextProps.ActiveCoin.showTransactionInfoTxIndex,
       }));
-    } else {
-      if (nextProps.ActiveCoin &&
-          nextProps.ActiveCoin.txhistory &&
-          nextProps.ActiveCoin.showTransactionInfoTxIndex) {
-        const txInfo = nextProps.ActiveCoin.txhistory[nextProps.ActiveCoin.showTransactionInfoTxIndex];
-
-        if (txInfo &&
-            this.props.ActiveCoin.showTransactionInfoTxIndex !== nextProps.ActiveCoin.showTransactionInfoTxIndex) {
-          this.loadTxDetails(nextProps.ActiveCoin.coin, txInfo.txid);
-          this.loadRawTxDetails(nextProps.ActiveCoin.coin, txInfo.txid);
-        }
-      }
     }
-  }
-
-  loadTxDetails(coin, txid) {
-    this.setState(Object.assign({}, this.state, {
-      txDetails: null,
-    }));
-
-    getTxDetails(coin, txid)
-    .then((json) => {
-      this.setState(Object.assign({}, this.state, {
-        txDetails: json,
-      }));
-    });
-  }
-
-  loadRawTxDetails(coin, txid) {
-    getTxDetails(coin, txid, 'raw')
-    .then((json) => {
-      this.setState(Object.assign({}, this.state, {
-        rawTxDetails: json,
-      }));
-    });
   }
 
   openTab(tab) {
@@ -94,7 +54,7 @@ class WalletsTxInfo extends React.Component {
 
   openExplorerWindow(txid) {
     let url = explorerList[this.props.ActiveCoin.coin.toUpperCase()].split('/').length - 1 > 2 ? `${explorerList[this.props.ActiveCoin.coin.toUpperCase()]}${txid}` : `${explorerList[this.props.ActiveCoin.coin.toUpperCase()]}/tx/${txid}`;
-    
+
     if (Config.whitelabel) {
       url = `${Config.wlConfig.explorer}/tx/${txid}`;
     }
@@ -107,18 +67,7 @@ class WalletsTxInfo extends React.Component {
         this.props.ActiveCoin &&
         this.props.ActiveCoin.showTransactionInfo &&
         this.props.ActiveCoin.activeSection === 'default') {
-      if (this.props.ActiveCoin.mode === 'native') {
-        if (this.props.ActiveCoin.txhistory &&
-            this.props.ActiveCoin.showTransactionInfoTxIndex) {
-          const txInfo = this.props.ActiveCoin.txhistory[this.props.ActiveCoin.showTransactionInfoTxIndex];
-
-          return WalletsTxInfoRender.call(this, txInfo);
-        } else {
-          return null;
-        }
-      } else {
-        return WalletsTxInfoRender.call(this);
-      }
+      return WalletsTxInfoRender.call(this);
     }
 
     return null;

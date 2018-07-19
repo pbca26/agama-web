@@ -14,9 +14,11 @@ import App from './components/app/app';
 import './styles/index.scss';
 
 const router = (
-  <Provider store={store}>
-    <Router history={hashHistory}>
-      <Route path="/" component={App} />
+  <Provider store={ store }>
+    <Router history={ hashHistory }>
+      <Route
+        path="/"
+        component={ App } />
     </Router>
   </Provider>
 );

@@ -1,5 +1,5 @@
 import { copyToClipboard } from '../../util/copyToClipboard';
-import { translate } from '../../translate/translate';
+import translate from '../../translate/translate';
 import { triggerToaster } from '../actionCreators';
 
 export const copyCoinAddress = (address) => {

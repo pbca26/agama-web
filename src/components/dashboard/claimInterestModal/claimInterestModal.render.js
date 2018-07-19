@@ -1,5 +1,5 @@
 import React from 'react';
-import { translate } from '../../../translate/translate';
+import translate from '../../../translate/translate';
 import Spinner from '../spinner/spinner';
 import ReactTooltip from 'react-tooltip';
 
@@ -17,7 +17,7 @@ export const _ClaimInterestTableRender = function() {
               className="btn btn-default btn-xs clipboard-edexaddr copy-string-btn"
               title={ translate('INDEX.COPY_TO_CLIPBOARD') }
               onClick={ () => this.copyTxId(_transactionsList[i].txid) }>
-                <i className="icon wb-copy"></i> { translate('INDEX.COPY') + ' TXID' }
+              <i className="icon wb-copy"></i> { translate('INDEX.COPY') + ' TXID' }
             </button>
           </td>
           <td>{ _transactionsList[i].address }</td>
@@ -26,12 +26,12 @@ export const _ClaimInterestTableRender = function() {
           <td className="locktime center">
             { _transactionsList[i].locktime &&
               <i
-                data-tip={ `Locktime is set to ${_transactionsList[i].locktime}` }
+                data-tip={ `${translate('CLAIM_INTEREST.LOCKTIME_IS_SET_TO')} ${_transactionsList[i].locktime}` }
                 className="fa-check-circle green"></i>
             }
             { !_transactionsList[i].locktime &&
               <i
-                data-tip={ `Locktime is unset! Your UTXO is not accruing interest.` }
+                data-tip={ translate('CLAIM_INTEREST.LOCKTIME_IS_UNSET') }
                 className="fa-exclamation-circle red"></i>
             }
             <ReactTooltip
@@ -52,12 +52,6 @@ export const _ClaimInterestTableRender = function() {
         <p>
           <strong>{ translate('CLAIM_INTEREST.TIP') }:</strong> { translate('CLAIM_INTEREST.TIP_DESC') }
         </p>
-        { this.props.ActiveCoin &&
-          this.props.ActiveCoin.mode === 'native' &&
-          <p>
-            <strong>{ translate('CLAIM_INTEREST.NOTICE') }:</strong> { translate('CLAIM_INTEREST.NATIVE_INTEREST_CHANGE_DESC') }
-          </p>
-        }
       </div>
       { this.state.totalInterest > 0 &&
         <div className={ 'text-left padding-bottom-20' + (this.state.displayShowZeroInterestToggle ? ' padding-top-40' : '') }>
@@ -103,30 +97,15 @@ export const _ClaimInterestTableRender = function() {
                   type="button"
                   className="btn btn-primary"
                   onClick={ this.confirmClaimInterest }>
-                    { translate('INDEX.CONFIRM') }
+                  { translate('INDEX.CONFIRM') }
                 </button>
                 <button
                   type="button"
                   className="btn btn-primary margin-left-15"
                   onClick={ this.cancelClaimInterest }>
-                    Cancel
+                  { translate('INDEX.CANCEL') }
                 </button>
               </div>
-            </div>
-          }
-          { this.props.ActiveCoin.mode === 'native' &&
-            this.state.addressses &&
-            Object.keys(this.state.addressses).length > 0 &&
-            <div className="margin-top-40 margin-bottom-20">
-              <div className="margin-bottom-5">Send my balance to</div>
-              { this.addressDropdownRender() }
-            </div>
-          }
-          { (!this.isFullySynced() || !navigator.onLine) &&
-            this.props.ActiveCoin &&
-            this.props.ActiveCoin.mode === 'native' &&
-            <div className="col-lg-12 padding-top-5 padding-bottom-35 send-coin-sync-warning">
-              <i className="icon fa-warning color-warning margin-right-5"></i> <span className="desc">{ translate('SEND.SEND_NATIVE_SYNC_WARNING') }</span>
             </div>
           }
         </div>

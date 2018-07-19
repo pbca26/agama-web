@@ -268,4 +268,17 @@ option.login-option {
   .Select--single > .Select-control .Select-value {
     overflow: visible;
   }
+  #loginPassphrase,
+  #wifkeysPassphraseTextarea,
+  input[type="password"] {
+    width: 100%;
+  }
+}
+
+.seed-extra-spaces-warning {
+  position: absolute;
+  right: -8px;
+  margin-top: 28px;
+  font-size: 20px;
+  color: rgb(255, 75, 0);
 }

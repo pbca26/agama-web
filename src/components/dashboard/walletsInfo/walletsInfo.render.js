@@ -1,11 +1,9 @@
 import React from 'react';
-import { translate } from '../../../translate/translate';
+import translate from '../../../translate/translate';
 import { secondsToString } from 'agama-wallet-lib/src/time';
 import { formatBytes } from 'agama-wallet-lib/src/utils';
 import appData from '../../../actions/actions/appData';
-import {
-  eservers,
-} from 'agama-wallet-lib/src/index-fe';
+import electrumServers from 'agama-wallet-lib/src/electrum-servers';
 
 const WalletsInfoRender = function() {
   const _balance = this.props.ActiveCoin.balance;
@@ -42,7 +40,7 @@ const WalletsInfoRender = function() {
                 <tr>
                   <td>{ translate('INDEX.PAY_TX_FEE') }</td>
                   <td>
-                    { eservers[this.props.ActiveCoin.coin].txfee }
+                    { electrumServers[this.props.ActiveCoin.coin].txfee }
                   </td>
                 </tr>
                 <tr>
@@ -61,18 +59,6 @@ const WalletsInfoRender = function() {
             </table>
           </div>
         </div>
-        { this.props.ActiveCoin.coin === 'KMD' &&
-          this.props.ActiveCoin.mode !== 'spv' &&
-          <div>
-            <button
-              type="button"
-              className="btn btn-success waves-effect waves-light margin-top-20 btn-next"
-              onClick={ () => this.openClaimInterestModal() }>
-              { translate('CLAIM_INTEREST.CLAIM_INTEREST', ' ') }
-            </button>
-            <ClaimInterestModal />
-          </div>
-        }
       </div>
     </div>
   );

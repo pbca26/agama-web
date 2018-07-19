@@ -13,6 +13,8 @@ import {
   toggleZcparamsFetchModal,
   toggleNotaryElectionsModal,
   toggleWalletRisksModal,
+  shepherdElectrumLogout,
+  dashboardRemoveCoin,
   activeHandle,
   addCoin,
 } from '../../actions/actionCreators';
@@ -20,13 +22,17 @@ import Config from '../../config';
 import Store from '../../store';
 import SwallModalRender from './swall-modal.render';
 import LoginRender from './login.render';
-import { translate } from '../../translate/translate';
-import { crypto } from 'agama-wallet-lib/src/index-fe';
+import translate from '../../translate/translate';
+import passphraseGenerator from 'agama-wallet-lib/src/crypto/passphrasegenerator';
+import md5 from 'agama-wallet-lib/src/crypto/md5';
 
-const IGUNA_ACTIVE_HANDLE_TIMEOUT = 3000;
-const IGUNA_ACTIVE_COINS_TIMEOUT = 10000;
+const SEED_TRIM_TIMEOUT = 5000;
 
-// TODO: remove duplicate activehandle and activecoins calls
+window.createSeed = {
+  triggered: false,
+  firstLoginPH: null,
+  secondaryLoginPH: null,
+};
 
 class Login extends React.Component {
   constructor() {
@@ -38,7 +44,7 @@ class Login extends React.Component {
       seedInputVisibility: false,
       loginPassPhraseSeedType: null,
       bitsOption: 256,
-      randomSeed: crypto.passphraseGenerator.generatePassPhrase(256),
+      randomSeed: passphraseGenerator.generatePassPhrase(256),
       randomSeedConfirm: '',
       isSeedConfirmError: false,
       isSeedBlank: false,
@@ -52,9 +58,9 @@ class Login extends React.Component {
       decryptKey: '',
       selectedPin: '',
       enableEncryptSeed: false,
-      selectedShortcutNative: '',
       selectedShortcutSPV: '',
       risksWarningRead: false,
+      seedExtraSpaces: false,
     };
     this.defaultState = JSON.parse(JSON.stringify(this.state));
     this.toggleActivateCoinForm = this.toggleActivateCoinForm.bind(this);
@@ -75,6 +81,7 @@ class Login extends React.Component {
     this.setRecieverFromScan = this.setRecieverFromScan.bind(this);
     this.setLoginState = this.setLoginState.bind(this);
     this.toggleRisksWarningModal = this.toggleRisksWarningModal.bind(this);
+    this.resetSPVCoins = this.resetSPVCoins.bind(this);
   }
 
   // the setInterval handler for 'activeCoins'
@@ -92,8 +99,8 @@ class Login extends React.Component {
     } else {
       Store.dispatch(
         triggerToaster(
-          'Unable to recognize QR code',
-          'QR scan Error',
+          translate('LOGIN.QR_SCAN_ERR_DESC'),
+          translate('LOGIN.QR_SCAN_ERR'),
           'error'
         )
       );
@@ -111,7 +118,7 @@ class Login extends React.Component {
       // if customWalletSeed is set to false, regenerate the seed
       if (!this.state.customWalletSeed) {
         this.setState({
-          randomSeed: crypto.passphraseGenerator.generatePassPhrase(this.state.bitsOption),
+          randomSeed: passphraseGenerator.generatePassPhrase(this.state.bitsOption),
           isSeedConfirmError: false,
           isSeedBlank: false,
           isCustomSeedWeak: false,
@@ -168,7 +175,7 @@ class Login extends React.Component {
 
   generateNewSeed(bits) {
     this.setState(Object.assign({}, this.state, {
-      randomSeed: crypto.passphraseGenerator.generatePassPhrase(bits),
+      randomSeed: passphraseGenerator.generatePassPhrase(bits),
       bitsOption: bits,
       isSeedBlank: false,
     }));
@@ -280,22 +287,28 @@ class Login extends React.Component {
   }
 
   updateLoginPassPhraseInput(e) {
-    // remove any empty chars from the start/end of the string
     const newValue = e.target.value;
 
-    /*clearTimeout(this.state.trimPassphraseTimer);
+    clearTimeout(this.state.trimPassphraseTimer);
 
     const _trimPassphraseTimer = setTimeout(() => {
-      this.setState({
-        loginPassphrase: newValue ? newValue.trim() : '', // hardcoded field name
-        loginPassPhraseSeedType: this.getLoginPassPhraseSeedType(newValue),
-      });
-    }, 2000);*/
+      if (newValue[0] === ' ' ||
+          newValue[newValue.length - 1] === ' ') {
+        this.setState({
+          seedExtraSpaces: true,
+        });
+      } else {
+        this.setState({
+          seedExtraSpaces: false,
+        });
+      }
+    }, SEED_TRIM_TIMEOUT);
 
     this.resizeLoginTextarea();
 
     this.setState({
-      //trimPassphraseTimer: _trimPassphraseTimer,
+      seedExtraSpaces: false,
+      trimPassphraseTimer: _trimPassphraseTimer,
       [e.target.name === 'loginPassphraseTextarea' ? 'loginPassphrase' : e.target.name]: newValue,
       loginPassPhraseSeedType: this.getLoginPassPhraseSeedType(newValue),
     });
@@ -318,8 +331,8 @@ class Login extends React.Component {
   }
 
   loginSeed() {
-    // TODO: audo's method
-    // mainWindow.createSeed.secondaryLoginPH = md5(this.state.loginPassphrase);
+    window.createSeed.secondaryLoginPH = md5(this.state.loginPassphrase);
+
     // reset the login pass phrase values so that when the user logs out, the values are clear
     this.setState({
       loginPassphrase: '',
@@ -361,19 +374,19 @@ class Login extends React.Component {
 
     const passPhraseWords = passPhrase.split(' ');
 
-    if (!crypto.passphraseGenerator.arePassPhraseWordsValid(passPhraseWords)) {
+    if (!passphraseGenerator.arePassPhraseWordsValid(passPhraseWords)) {
       return null;
     }
 
-    if (crypto.passphraseGenerator.isPassPhraseValid(passPhraseWords, 256)) {
+    if (passphraseGenerator.isPassPhraseValid(passPhraseWords, 256)) {
       return translate('LOGIN.IGUANA_SEED');
     }
 
-    if (crypto.passphraseGenerator.isPassPhraseValid(passPhraseWords, 160)) {
+    if (passphraseGenerator.isPassPhraseValid(passPhraseWords, 160)) {
       return translate('LOGIN.WAVES_SEED');
     }
 
-    if (crypto.passphraseGenerator.isPassPhraseValid(passPhraseWords, 128)) {
+    if (passphraseGenerator.isPassPhraseValid(passPhraseWords, 128)) {
       return translate('LOGIN.NXT_SEED');
     }
 
@@ -388,7 +401,7 @@ class Login extends React.Component {
       loginPassPhraseSeedType: null,
       seedInputVisibility: false,
       bitsOption: 256,
-      randomSeed: crypto.passphraseGenerator.generatePassPhrase(256),
+      randomSeed: passphraseGenerator.generatePassPhrase(256),
       randomSeedConfirm: '',
       isSeedConfirmError: false,
       isSeedBlank: false,
@@ -407,8 +420,8 @@ class Login extends React.Component {
   }
 
   execWalletCreate() {
-    // mainWindow.createSeed.triggered = true;
-    // mainWindow.createSeed.firstLoginPH = md5(this.state.randomSeed);
+    window.createSeed.triggered = true;
+    window.createSeed.firstLoginPH = md5(this.state.randomSeed);
 
     Store.dispatch(
       shepherdElectrumAuth(this.state.randomSeedConfirm)
@@ -490,7 +503,7 @@ class Login extends React.Component {
 
   updateSelectedShortcut(e, type) {
     this.setState({
-      [type === 'native' ? 'selectedShortcutNative' : 'selectedShortcutSPV'] : e.value,
+      'selectedShortcutSPV' : e.value,
     });
 
     if (e.value === 'kmd+revs+jumblr') {
@@ -517,6 +530,33 @@ class Login extends React.Component {
     Store.dispatch(getDexCoins());
   }
 
+  renderResetSPVCoinsOption() {
+    if (this.props.Main &&
+        this.props.Main.coins &&
+        this.props.Main.coins.spv &&
+        this.props.Main.coins.spv.length) {
+      return true;
+    }
+  }
+
+  resetSPVCoins() {
+    shepherdElectrumLogout()
+    .then((res) => {
+      const _spvCoins = this.props.Main.coins.spv;
+
+      for (let i = 0; i < _spvCoins.length; i++) {
+        Store.dispatch(dashboardRemoveCoin(_spvCoins[i]));
+      }
+
+      this.setState({
+        selectedShortcutSPV: null,
+      });
+
+      Store.dispatch(getDexCoins());
+      Store.dispatch(activeHandle());
+    });
+  }
+
   renderSwallModal() {
     if (this.state.displaySeedBackupModal) {
       return SwallModalRender.call(this);
@@ -538,9 +578,9 @@ class Login extends React.Component {
               alt={ _comps[i].toUpperCase() }
               width="30px"
               height="30px" />
-              { i !== _comps.length - 1 &&
-                <span className="margin-left-10 margin-right-10">+</span>
-              }
+            { i !== _comps.length - 1 &&
+              <span className="margin-left-10 margin-right-10">+</span>
+            }
           </span>
         );
       }
@@ -554,7 +594,7 @@ class Login extends React.Component {
             alt={ option.value.toUpperCase() }
             width="30px"
             height="30px" />
-            <span className="margin-left-10">{ option.value.toUpperCase() }</span>
+          <span className="margin-left-10">{ option.value.toUpperCase() }</span>
         </div>
       );
     }

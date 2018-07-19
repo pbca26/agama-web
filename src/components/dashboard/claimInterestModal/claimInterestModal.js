@@ -12,13 +12,20 @@ import {
   shepherdElectrumListunspent,
   shepherdElectrumSendPromise,
   validateAddressPromise,
+  shepherdGetRemoteTimestamp,
 } from '../../../actions/actionCreators';
-import { translate } from '../../../translate/translate';
+import translate from '../../../translate/translate';
 import {
   ClaimInterestModalRender,
   _ClaimInterestTableRender,
 } from './claimInterestModal.render';
-import { eservers } from 'agama-wallet-lib/src/index-fe';
+import electrumServers from 'agama-wallet-lib/src/electrum-servers';
+import {
+  secondsToString,
+  checkTimestamp,
+} from 'agama-wallet-lib/src/time';
+
+const SPV_MAX_LOCAL_TIMESTAMP_DEVIATION = 60; // seconds    if (this.props.ActiveCoin.mode === 'spv') {
 
 // TODO: promises
 
@@ -47,19 +54,7 @@ class ClaimInterestModal extends React.Component {
     this.openDropMenu = this.openDropMenu.bind(this);
     this.closeDropMenu = this.closeDropMenu.bind(this);
     this.closeModal = this.closeModal.bind(this);
-    this.isFullySynced = this.isFullySynced.bind(this);
     this.confirmClaimInterest = this.confirmClaimInterest.bind(this);
-  }
-
-  isFullySynced() {
-    if (this.props.ActiveCoin.progress &&
-        this.props.ActiveCoin.progress.longestchain &&
-        this.props.ActiveCoin.progress.blocks &&
-        this.props.ActiveCoin.progress.longestchain > 0 &&
-        this.props.ActiveCoin.progress.blocks > 0 &&
-        Number(this.props.ActiveCoin.progress.blocks) * 100 / Number(this.props.ActiveCoin.progress.longestchain) === 100) {
-      return true;
-    }
   }
 
   openDropMenu() {
@@ -121,16 +116,14 @@ class ClaimInterestModal extends React.Component {
             txid: json[i].txid,
           });
           _totalInterest += Number(Number(json[i].interest).toFixed(8));
-
-          if (i === json.length - 1) {
-            this.setState({
-              transactionsList: _transactionsList,
-              isLoading: false,
-              totalInterest: _totalInterest,
-              displayShowZeroInterestToggle: _zeroInterestUtxo,
-            });
-          }
         }
+
+        this.setState({
+          transactionsList: _transactionsList,
+          isLoading: false,
+          totalInterest: _totalInterest,
+          displayShowZeroInterestToggle: _zeroInterestUtxo,
+        });
       } else {
         this.setState({
           transactionsList: [],
@@ -154,7 +147,7 @@ class ClaimInterestModal extends React.Component {
       this.props.ActiveCoin.balance.balanceSats,
       this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub,
       this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub,
-      eservers[this.props.ActiveCoin.coin].txfee,
+      electrumServers[this.props.ActiveCoin.coin].txfee,
       true
     )
     .then((res) => {
@@ -192,7 +185,7 @@ class ClaimInterestModal extends React.Component {
         this.props.ActiveCoin.balance.balanceSats,
         this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub,
         this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub,
-        eservers[this.props.ActiveCoin.coin].txfee
+        electrumServers[this.props.ActiveCoin.coin].txfee
       )
       .then((sendPreflight) => {
         if (sendPreflight &&
@@ -225,7 +218,10 @@ class ClaimInterestModal extends React.Component {
     if (this.state.transactionsList &&
         this.state.transactionsList.length) {
       return true;
-    } else if (!this.state.transactionsList || !this.state.transactionsList.length) {
+    } else if (
+      !this.state.transactionsList ||
+      !this.state.transactionsList.length
+    ) {
       return false;
     }
   }
@@ -266,7 +262,7 @@ class ClaimInterestModal extends React.Component {
       <div className={ `btn-group bootstrap-select form-control form-material showkmdwalletaddrs show-tick ${(this.state.addressSelectorOpen ? 'open' : '')}` }>
         <button
           type="button"
-          className={ 'btn dropdown-toggle btn-info' + (this.props.ActiveCoin.mode === 'spv' ? ' disabled' : '') }
+          className="btn dropdown-toggle btn-info disabled"
           onClick={ this.openDropMenu }>
           <span className="filter-option pull-left">{ this.state.selectedAddress }</span>
           <span className="bs-caret inline">
@@ -292,6 +288,22 @@ class ClaimInterestModal extends React.Component {
     if (!this.state.open &&
         props.Dashboard.displayClaimInterestModal) {
       this.loadListUnspent();
+
+      shepherdGetRemoteTimestamp()
+      .then((res) => {
+        if (res.msg === 'success') {
+          if (Math.abs(checkTimestamp(res.result)) > SPV_MAX_LOCAL_TIMESTAMP_DEVIATION) {
+            Store.dispatch(
+              triggerToaster(
+                translate('SEND.CLOCK_OUT_OF_SYNC'),
+                translate('TOASTR.WALLET_NOTIFICATION'),
+                'warning',
+                false
+              )
+            );
+          }
+        }
+      });
     }
   }
 

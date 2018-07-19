@@ -9,10 +9,7 @@ import {
 } from '../../../actions/actionCreators';
 import Store from '../../../store';
 import Config from '../../../config';
-import {
-  WalletsNavNoWalletRender,
-  WalletsNavWithWalletRender,
-} from './walletsNav.render';
+import { WalletsNavWithWalletRender } from './walletsNav.render';
 
 const NET_INFO_INTERVAL = 10000;
 
@@ -20,8 +17,8 @@ class WalletsNav extends React.Component {
   constructor() {
     super();
     this.toggleSendReceiveCoinForms = this.toggleSendReceiveCoinForms.bind(this);
-    this.toggleNativeWalletInfo = this.toggleNativeWalletInfo.bind(this);
-    this.toggleNativeWalletTransactions = this.toggleNativeWalletTransactions.bind(this);
+    this.toggleWalletInfo = this.toggleWalletInfo.bind(this);
+    this.toggleWalletTransactions = this.toggleWalletTransactions.bind(this);
     this.checkTotalBalance = this.checkTotalBalance.bind(this);
   }
 
@@ -33,30 +30,18 @@ class WalletsNav extends React.Component {
     const _mode = this.props.ActiveCoin.mode;
     let _balance = '0';
 
-    if (this.props.ActiveCoin.balance &&
-        this.props.ActiveCoin.balance.total &&
-        _mode === 'native') {
-      _balance = this.props.ActiveCoin.balance.total;
-    } else if (_mode === 'spv' && this.props.ActiveCoin.balance.balance) {
+    if (this.props.ActiveCoin.balance.balance) {
       _balance = this.props.ActiveCoin.balance.balance;
     }
 
     return _balance;
   }
 
-  componentWillReceiveProps(props) {
-    if (this.netInfoInterval &&
-        props.ActiveCoin.activeSection !== 'settings') {
-      clearInterval(this.netInfoInterval);
-      this.netInfoInterval = null;
-    }
-  }
-
-  toggleNativeWalletInfo() {
+  toggleWalletInfo() {
     Store.dispatch(toggleDashboardActiveSection('settings'));
   }
 
-  toggleNativeWalletTransactions() {
+  toggleWalletTransactions() {
     Store.dispatch(toggleDashboardActiveSection('default'));
   }
 

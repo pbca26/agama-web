@@ -1,5 +1,5 @@
 import React from 'react';
-import { translate } from '../../translate/translate';
+import translate from '../../translate/translate';
 import QRModal from '../dashboard/qrModal/qrModal';
 import Select from 'react-select';
 import ReactTooltip from 'react-tooltip';
@@ -35,6 +35,15 @@ const LoginRender = function() {
                 onClick={ this.toggleRisksWarningModal }
                 className="pointer fs-16">
                 <i className="icon fa-warning margin-right-5"></i> { translate('INDEX.UNDERSTAND_RISKS_LINK') }
+              </span>
+            </div>
+          }
+          { this.renderResetSPVCoinsOption() &&
+            <div className="margin-top-30 margin-bottom-40">
+              <span
+                onClick={ this.resetSPVCoins }
+                className="pointer fs-16">
+                <i className="icon fa-trash margin-right-5"></i> { translate('LOGIN.QMENU_REMOVE_SPV') }
               </span>
             </div>
           }
@@ -84,6 +93,16 @@ const LoginRender = function() {
                 style={{ width: `${this.state.loginPassPhraseSeedType.length * 8}px` }}>
                 <div className="placeholder-label">{ this.state.loginPassPhraseSeedType }</div>
               </div>
+            }
+            { this.state.seedExtraSpaces &&
+              <span>
+                <i className="icon fa-warning seed-extra-spaces-warning unselectable"
+                  data-tip={ translate('LOGIN.SEED_TRAILING_CHARS') }
+                  data-html={ true }></i>
+                <ReactTooltip
+                  effect="solid"
+                  className="text-left" />
+              </span>
             }
             { this.state.loginPassphrase &&
               this.state.enableEncryptSeed &&
@@ -183,7 +202,10 @@ const LoginRender = function() {
 
             <button
               type="button"
-              disabled={ !this.state.loginPassphrase || !this.state.loginPassphrase.length }
+              disabled={
+                !this.state.loginPassphrase ||
+                !this.state.loginPassphrase.length
+              }
               className="btn btn-primary btn-block margin-top-20"
               onClick={ this.loginSeed }>
               { translate('INDEX.SIGN_IN') }
@@ -214,7 +236,7 @@ const LoginRender = function() {
             </div>
           </div>
 
-          <div className={ this.state.activeLoginSection === 'activateCoin' && !Config.whitelabel ? 'show' : 'hide' }>
+          <div className={ this.state.activeLoginSection === 'activateCoin' ? 'show' : 'hide' }>
             <h4 className="color-white">
               { translate('INDEX.WELCOME_PLEASE_ADD') }
             </h4>
@@ -234,7 +256,7 @@ const LoginRender = function() {
                   { translate('INDEX.SPV_MODE') }
                   <i
                     className="icon fa-question-circle login-help"
-                    data-tip="If you need a quick and easy access to your funds try <u>Lite (SPV) mode</u> which doesn't require any blockchain to be loaded locally.<br/>All data is requested on demand from Electrum servers."
+                    data-tip={ `${ translate('LOGIN.SPV_MODE_DESC_P1') } <u>${ translate('LOGIN.SPV_MODE_DESC_P2') }</u> ${ translate('LOGIN.SPV_MODE_DESC_P3') }<br/>${ translate('LOGIN.SPV_MODE_DESC_P4') }` }
                     data-html={ true }></i>
                   <ReactTooltip
                     effect="solid"
@@ -380,7 +402,7 @@ const LoginRender = function() {
                   <QRModal
                     qrSize="256"
                     modalSize="md"
-                    title="Seed QR recovery"
+                    title={ translate('LOGIN.SEED_QR_RECOVERY') }
                     fileName="agama-seed"
                     content={ this.state.randomSeed } />
                 </button>

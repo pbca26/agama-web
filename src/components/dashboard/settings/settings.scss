@@ -130,6 +130,10 @@
       content: '\F273';
     }
   }
+  .seed-extra-spaces-warning {
+    right: -20px;
+    margin-top: -20px;
+  }
 }
 
 @keyframes max-height {
@@ -152,29 +156,4 @@
 
 .select-settings {
   max-width: 200px;
-}
-
-.manual-debuglog-refresh {
-  position: absolute;
-  top: 40px;
-  right: 40px;
-  font-size: 20px;
-}
-
-.coind-stdout-refresh-icon {
-  font-size: 20px;
-  margin-top: 7px;
-}
-
-.settings-coind-stdout-textarea {
-  border: none;
-  background-image: none !important;
-}
-
-.app-update-progress {
-  min-height: 200px;
-}
-
-.zcparams-progress {
-  min-height: 140px;
 }

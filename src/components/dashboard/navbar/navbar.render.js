@@ -1,5 +1,5 @@
 import React from 'react';
-import { translate } from '../../../translate/translate';
+import translate from '../../../translate/translate';
 import ReactTooltip from 'react-tooltip';
 import Config from '../../../config';
 
@@ -83,6 +83,13 @@ const NavbarRender = function() {
                 </span>
               </a>
               <ul className="dropdown-menu">
+                <li>
+                  <a
+                    href={ Config.whitelabel ? Config.wlConfig.support.standaloneLink : 'https://www.atomicexplorer.com/wallet.zip' }
+                    target="_blank">
+                    <i className="icon fa-download"></i> { translate('INDEX.STANDALONE') }
+                  </a>
+                </li>
                 { !this.isSectionActive('settings') &&
                   <li>
                     <a onClick={ () => this.dashboardChangeSection('settings') }>
@@ -91,7 +98,6 @@ const NavbarRender = function() {
                   </li>
                 }
                 { !this.isSectionActive('about') &&
-                  !Config.whitelabel &&
                   <li>
                     <a onClick={ () => this.dashboardChangeSection('about') }>
                       <i className="icon fa-users"></i> { translate('ABOUT.ABOUT_AGAMA') }
@@ -99,7 +105,6 @@ const NavbarRender = function() {
                   </li>
                 }
                 { !this.isSectionActive('support') &&
-                  !Config.whitelabel &&
                   <li>
                     <a onClick={ () => this.dashboardChangeSection('support') }>
                       <i className="icon fa-life-ring"></i> { translate('SETTINGS.SUPPORT') }

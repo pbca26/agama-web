@@ -1,9 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { translate } from '../../../translate/translate';
+import translate from '../../../translate/translate';
 import {
   formatValue,
   sortByDate,
+  getRandomElectrumServer,
 } from 'agama-wallet-lib/src/utils';
 import Config from '../../../config';
 import {
@@ -26,11 +27,9 @@ import {
   TxAmountRender,
   TxHistoryListRender,
   TxConfsRender,
-  AddressListRender,
   WalletsDataRender,
 } from  './walletsData.render';
 import { secondsToString } from 'agama-wallet-lib/src/time';
-import getRandomElectrumServer from '../../../util/serverRandom';
 import DoubleScrollbar from 'react-double-scrollbar';
 
 const BOTTOM_BAR_DISPLAY_THRESHOLD = 15;
@@ -78,8 +77,6 @@ class WalletsData extends React.Component {
       this.handleClickOutside,
       false
     );
-
-    // socket.removeAllListeners('messages');
   }
 
   displayClaimInterestUI() {
@@ -130,23 +127,6 @@ class WalletsData extends React.Component {
   generateItemsListColumns(itemsCount) {
     let columns = [];
     let _col;
-
-    if (this.props.ActiveCoin.mode === 'native') {
-      _col = {
-        Header: translate('INDEX.TYPE'),
-        Footer: translate('INDEX.TYPE'),
-        className: 'colum--type',
-        headerClassName: 'colum--type',
-        footerClassName: 'colum--type',
-        Cell: AddressTypeRender(),
-      };
-
-      if (itemsCount <= BOTTOM_BAR_DISPLAY_THRESHOLD) {
-        delete _col.Footer;
-      }
-
-      columns.push(_col);
-    }
 
     _col = [{
       id: 'direction',
@@ -201,39 +181,21 @@ class WalletsData extends React.Component {
 
     columns.push(_col);
 
-    if (this.props.ActiveCoin.mode === 'spv') {
-      _col = {
-        id: 'tx-detail',
-        Header: translate('INDEX.TX_DETAIL'),
-        Footer: translate('INDEX.TX_DETAIL'),
-        className: 'colum--txinfo',
-        headerClassName: 'colum--txinfo',
-        footerClassName: 'colum--txinfo',
-        accessor: (tx) => TransactionDetailRender.call(this, tx),
-      };
+    _col = {
+      id: 'tx-detail',
+      Header: translate('INDEX.TX_DETAIL'),
+      Footer: translate('INDEX.TX_DETAIL'),
+      className: 'colum--txinfo',
+      headerClassName: 'colum--txinfo',
+      footerClassName: 'colum--txinfo',
+      accessor: (tx) => TransactionDetailRender.call(this, tx),
+    };
 
-      if (itemsCount <= BOTTOM_BAR_DISPLAY_THRESHOLD) {
-        delete _col.Footer;
-      }
-
-      columns.push(_col);
-    } else {
-      _col = {
-        id: 'tx-detail',
-        Header: translate('INDEX.TX_DETAIL'),
-        Footer: translate('INDEX.TX_DETAIL'),
-        className: 'colum--txinfo',
-        headerClassName: 'colum--txinfo',
-        footerClassName: 'colum--txinfo',
-        Cell: props => TransactionDetailRender.call(this, props.index),
-      };
-
-      if (itemsCount <= BOTTOM_BAR_DISPLAY_THRESHOLD) {
-        delete _col.Footer;
-      }
-
-      columns.push(_col);
+    if (itemsCount <= BOTTOM_BAR_DISPLAY_THRESHOLD) {
+      delete _col.Footer;
     }
+
+    columns.push(_col);
 
     return columns;
   }
@@ -260,16 +222,12 @@ class WalletsData extends React.Component {
       });
     }, 1000);
 
-    if (this.props.ActiveCoin.mode === 'native') {
-      Store.dispatch(getDashboardUpdate(this.props.ActiveCoin.coin));
-    } else if (this.props.ActiveCoin.mode === 'spv') {
-      Store.dispatch(
-        shepherdElectrumTransactions(
-          this.props.ActiveCoin.coin,
-          this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub
-        )
-      );
-    }
+    Store.dispatch(
+      shepherdElectrumTransactions(
+        this.props.ActiveCoin.coin,
+        this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub
+      )
+    );
   }
 
   toggleTxInfoModal(display, txIndex) {
@@ -338,11 +296,15 @@ class WalletsData extends React.Component {
     shepherdElectrumCheckServerConnection(_randomServer.ip, _randomServer.port)
     .then((res) => {
       if (res.result) {
-        shepherdElectrumSetServer(this.props.ActiveCoin.coin, _randomServer.ip, _randomServer.port)
+        shepherdElectrumSetServer(
+          this.props.ActiveCoin.coin,
+          _randomServer.ip,
+          _randomServer.port
+        )
         .then((serverSetRes) => {
           Store.dispatch(
             triggerToaster(
-              `${this.props.ActiveCoin.coin} SPV ${translate('DASHBOARD.SERVER_SET_TO')} ${_randomServer.ip}:${_randomServer.port}`,
+              `${this.props.ActiveCoin.coin} ${translate('INDEX.LITE')} ${translate('DASHBOARD.SERVER_SET_TO')} ${_randomServer.ip}:${_randomServer.port}`,
               translate('TOASTR.WALLET_NOTIFICATION'),
               'success'
             )
@@ -352,7 +314,7 @@ class WalletsData extends React.Component {
       } else {
         Store.dispatch(
           triggerToaster(
-            `${this.props.ActiveCoin.coin} SPV ${translate('DASHBOARD.SERVER_SM')} ${_randomServer.ip}:${_randomServer.port} ${translate('DASHBOARD.IS_UNREACHABLE')}!`,
+            `${this.props.ActiveCoin.coin} ${translate('INDEX.LITE')} ${translate('DASHBOARD.SERVER_SM')} ${_randomServer.ip}:${_randomServer.port} ${translate('DASHBOARD.IS_UNREACHABLE')}!`,
             translate('TOASTR.WALLET_NOTIFICATION'),
             'error'
           )
@@ -361,39 +323,15 @@ class WalletsData extends React.Component {
     });
   }
 
-  isFullySynced() {
-    const _progress = this.props.ActiveCoin.progress;
-
-    if (_progress &&
-        (Number(_progress.balances) +
-        Number(_progress.validated) +
-        Number(_progress.bundles) +
-        Number(_progress.utxo)) / 4 === 100) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
   renderTxHistoryList() {
     if (this.state.itemsList === 'loading') {
-      if (this.isFullySynced()) {
-        return (
-          <tr className="hover--none">
-            <td
-              colSpan="7"
-              className="table-cell-offset-16">{ translate('INDEX.LOADING_HISTORY') }...</td>
-          </tr>
-        );
-      } else {
-        return (
-          <tr className="hover--none">
-            <td
-              colSpan="7"
-              className="table-cell-offset-16">{ translate('INDEX.SYNC_IN_PROGRESS') }...</td>
-          </tr>
-        );
-      }
+      return (
+        <tr className="hover--none">
+          <td
+            colSpan="7"
+            className="table-cell-offset-16">{ translate('INDEX.SYNC_IN_PROGRESS') }...</td>
+        </tr>
+      );
     } else if (this.state.itemsList === 'no data') {
       return (
         <tr className="hover--none">
