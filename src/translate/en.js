@@ -294,6 +294,7 @@ const LANG_EN = {
     'PUBLIC_SM': 'public',
   },
   'LOGIN': {
+    'SEED_TRAILING_CHARS': 'Your seed contains leading/trailing space characters',
     'SPV_MODE_DESC_P1': 'If you need a quick and easy access to your funds try',
     'SPV_MODE_DESC_P2': 'Lite (SPV) mode',
     'SPV_MODE_DESC_P3': 'which doesn\'t require any blockchain to be loaded locally.',

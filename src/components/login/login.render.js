@@ -85,6 +85,16 @@ const LoginRender = function() {
                 <div className="placeholder-label">{ this.state.loginPassPhraseSeedType }</div>
               </div>
             }
+            { this.state.seedExtraSpaces &&
+              <span>
+                <i className="icon fa-warning seed-extra-spaces-warning unselectable"
+                  data-tip={ translate('LOGIN.SEED_TRAILING_CHARS') }
+                  data-html={ true }></i>
+                <ReactTooltip
+                  effect="solid"
+                  className="text-left" />
+              </span>
+            }
             { this.state.loginPassphrase &&
               this.state.enableEncryptSeed &&
               <div className="row">
