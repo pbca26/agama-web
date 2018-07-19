@@ -535,7 +535,11 @@ class Login extends React.Component {
         this.props.Main.coins &&
         this.props.Main.coins.spv &&
         this.props.Main.coins.spv.length) {
-      return true;
+      if (!Config.whitelabel ||
+          (Config.whitelabel && this.props.Main.coins.spv.length === 1 && this.props.Main.coins.spv[0] !== Config.wlConfig.coin.ticker.toLowerCase()) ||
+          (Config.whitelabel && this.props.Main.coins.spv.length > 1)) {
+        return true;
+      }
     }
   }
 
@@ -545,7 +549,10 @@ class Login extends React.Component {
       const _spvCoins = this.props.Main.coins.spv;
 
       for (let i = 0; i < _spvCoins.length; i++) {
-        Store.dispatch(dashboardRemoveCoin(_spvCoins[i]));
+        if (!Config.whitelabel ||
+          (Config.whitelabel && _spvCoins[i].toLowerCase() !== Config.wlConfig.coin.ticker.toLowerCase())) {
+          Store.dispatch(dashboardRemoveCoin(_spvCoins[i]));
+        }
       }
 
       this.setState({

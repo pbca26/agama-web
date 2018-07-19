@@ -13,14 +13,14 @@ const NavbarRender = function() {
             src={ Config.whitelabel ? 'assets/images/' + Config.wlConfig.coin.logo : 'assets/images/agama-logo-side.svg' }
             height="100"
             width="100"
-            title={ translate('ABOUT.AGAMA_WALLET') } />
+            title={ Config.whitelabel ? Config.wlConfig.title : translate('ABOUT.AGAMA_WALLET') } />
           { Config.whitelabel &&
             <span className="whitelabel-icon-title">{ Config.wlConfig.coin.ticker }</span>
           }
           <img
             className={ 'navbar-brand-logo hidden-lg' + (Config.whitelabel ? ' whitelabel' : '') }
             src={ Config.whitelabel ? 'assets/images/' + Config.wlConfig.coin.logo : 'assets/images/agama-icon.svg' }
-            title={ translate('ABOUT.AGAMA_WALLET') } />
+            title={ Config.whitelabel ? Config.wlConfig.title : translate('ABOUT.AGAMA_WALLET') } />
           <span className="navbar-brand-text hidden-xs"></span>
         </div>
       </div>
@@ -100,7 +100,7 @@ const NavbarRender = function() {
                 { !this.isSectionActive('about') &&
                   <li>
                     <a onClick={ () => this.dashboardChangeSection('about') }>
-                      <i className="icon fa-users"></i> { translate('ABOUT.ABOUT_AGAMA') }
+                      <i className="icon fa-users"></i> { translate('ABOUT.ABOUT') }
                     </a>
                   </li>
                 }

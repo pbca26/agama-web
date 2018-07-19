@@ -120,7 +120,7 @@ const LoginRender = function() {
                     <div
                       className="toggle-label white"
                       onClick={ () => this.toggleShouldEncryptSeed() }>
-                        { translate('LOGIN.ENCRYPT_SEED') }
+                      { translate('LOGIN.ENCRYPT_SEED') }
                     </div>
                   </span>
                 </div>
@@ -222,7 +222,7 @@ const LoginRender = function() {
                 id="logint-another-wallet">
                 { translate('INDEX.LOGIN_ANOTHER_WALLET') }
               </button>
-              { !Config.whitelabel &&
+              { (!Config.whitelabel || (Config.whitelabel && Config.wlConfig.enableAllCoins)) &&
                 <button
                   className="btn btn-lg btn-flat btn-block waves-effect margin-top-20"
                   id="register-btn"
@@ -240,45 +240,47 @@ const LoginRender = function() {
             <h4 className="color-white">
               { translate('INDEX.WELCOME_PLEASE_ADD') }
             </h4>
-            <div className="form-group form-material floating width-540 vertical-margin-30 auto-side-margin">
-              <button
-                className="btn btn-lg btn-primary btn-block ladda-button"
-                onClick={ this.toggleActivateCoinForm }
-                disabled={ !this.props.Main }>
-                <span className="ladda-label">
-                  { translate('INDEX.ACTIVATE_COIN') }
-                </span>
-              </button>
-              <div className="line">{ translate('LOGIN.OR_USE_A_SHORTCUT') }</div>
-              <div className="addcoin-shortcut">
-                <div>
-                  <i className="icon fa-flash margin-right-5"></i>
-                  { translate('INDEX.SPV_MODE') }
-                  <i
-                    className="icon fa-question-circle login-help"
-                    data-tip={ `${ translate('LOGIN.SPV_MODE_DESC_P1') } <u>${ translate('LOGIN.SPV_MODE_DESC_P2') }</u> ${ translate('LOGIN.SPV_MODE_DESC_P3') }<br/>${ translate('LOGIN.SPV_MODE_DESC_P4') }` }
-                    data-html={ true }></i>
-                  <ReactTooltip
-                    effect="solid"
-                    className="text-left" />
+            { (!Config.whitelabel || (Config.whitelabel && Config.wlConfig.enableAllCoins)) &&
+              <div className="form-group form-material floating width-540 vertical-margin-30 auto-side-margin">
+                <button
+                  className="btn btn-lg btn-primary btn-block ladda-button"
+                  onClick={ this.toggleActivateCoinForm }
+                  disabled={ !this.props.Main }>
+                  <span className="ladda-label">
+                    { translate('INDEX.ACTIVATE_COIN') }
+                  </span>
+                </button>
+                <div className="line">{ translate('LOGIN.OR_USE_A_SHORTCUT') }</div>
+                <div className="addcoin-shortcut">
+                  <div>
+                    <i className="icon fa-flash margin-right-5"></i>
+                    { translate('INDEX.SPV_MODE') }
+                    <i
+                      className="icon fa-question-circle login-help"
+                      data-tip={ `${ translate('LOGIN.SPV_MODE_DESC_P1') } <u>${ translate('LOGIN.SPV_MODE_DESC_P2') }</u> ${ translate('LOGIN.SPV_MODE_DESC_P3') }<br/>${ translate('LOGIN.SPV_MODE_DESC_P4') }` }
+                      data-html={ true }></i>
+                    <ReactTooltip
+                      effect="solid"
+                      className="text-left" />
+                  </div>
+                  <Select
+                    name="selectedShortcutSPV"
+                    value={ this.state.selectedShortcutSPV }
+                    onChange={ (event) => this.updateSelectedShortcut(event, 'spv') }
+                    optionRenderer={ this.renderShortcutOption }
+                    valueRenderer={ this.renderShortcutOption }
+                    options={[
+                      { value: 'kmd', label: 'kmd' },
+                      { value: 'chips', label: 'chips' },
+                      { value: 'btch', label: 'btch' },
+                      { value: 'mnz', label: 'mnz' },
+                      { value: 'revs', label: 'revs' },
+                      { value: 'jumblr', label: 'jumblr' },
+                      { value: 'kmd+revs+jumblr', label: 'kmd+revs+jumblr' },
+                    ]} />
                 </div>
-                <Select
-                  name="selectedShortcutSPV"
-                  value={ this.state.selectedShortcutSPV }
-                  onChange={ (event) => this.updateSelectedShortcut(event, 'spv') }
-                  optionRenderer={ this.renderShortcutOption }
-                  valueRenderer={ this.renderShortcutOption }
-                  options={[
-                    { value: 'kmd', label: 'kmd' },
-                    { value: 'chips', label: 'chips' },
-                    { value: 'btch', label: 'btch' },
-                    { value: 'mnz', label: 'mnz' },
-                    { value: 'revs', label: 'revs' },
-                    { value: 'jumblr', label: 'jumblr' },
-                    { value: 'kmd+revs+jumblr', label: 'kmd+revs+jumblr' },
-                  ]} />
               </div>
-            </div>
+            }
           </div>
 
           <div className={ this.state.activeLoginSection === 'signup' ? 'show' : 'hide' }>
