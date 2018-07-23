@@ -272,5 +272,6 @@ export const cryptoCoins = [
   'HODLC',
   'BTX',
   'QTUM',
-  'BTCZ'
+  'BTCZ',
+  'CRW'
 ];

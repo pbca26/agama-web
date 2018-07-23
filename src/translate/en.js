@@ -498,6 +498,7 @@ const LANG_EN = {
     'BTX': 'Bitcore',
     'QTUM': 'Qtum',
     'BTCZ': 'BitcoinZ',
+    'CRW': 'Crown',
   },
   'RISKS_MODAL': {
     'DESC_P1': 'This wallet is a web-based interface that allows you to use',
