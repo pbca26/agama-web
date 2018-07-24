@@ -1,9 +1,9 @@
 import { DISPLAY_ADDCOIN_MODAL } from '../actions/storeType';
 
-export function AddCoin(state = {
+const AddCoin = (state = {
   display: false,
   isLogin: false,
-}, action) {
+}, action) => {
   switch (action.type) {
     case DISPLAY_ADDCOIN_MODAL:
       return {

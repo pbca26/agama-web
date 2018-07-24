@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactTooltip from 'react-tooltip';
-import { translate } from '../../../translate/translate';
+import translate from '../../../translate/translate';
 import ReactTable from 'react-table';
 import TablePaginationRenderer from './pagination';
 import { formatValue } from 'agama-wallet-lib/src/utils';
@@ -75,48 +75,6 @@ export const AddressItemRender = function(address, type, amount, coin) {
       </a>
     </li>
   );
-};
-
-export const AddressListRender = function() {
-  const isMultiPublicAddress = this.props.ActiveCoin.addresses && this.props.ActiveCoin.addresses.public && this.props.ActiveCoin.addresses.public.length > 1;
-  const isMultiPrivateAddress = this.props.ActiveCoin.addresses && this.props.ActiveCoin.addresses.private && this.props.ActiveCoin.addresses.private.length > 1;
-
-  if (isMultiPublicAddress ||
-      isMultiPrivateAddress) {
-    return (
-      <div className={ `btn-group bootstrap-select form-control form-material showkmdwalletaddrs show-tick margin-bottom-10${(this.state.addressSelectorOpen ? ' open ' : '')}` }>
-        <button
-          type="button"
-          className="btn dropdown-toggle btn-info"
-          data-tip={ `${translate('KMD_NATIVE.SELECT_ADDRESS')}` }
-          onClick={ this.openDropMenu }>
-          <span className="filter-option pull-left">{ this.renderSelectorCurrentLabel() } </span>&nbsp;
-          <span className="bs-caret">
-            <span className="caret"></span>
-          </span>
-        </button>
-        <ReactTooltip
-          effect="solid"
-          className="text-left" />
-        <div className="dropdown-menu open">
-          <ul className="dropdown-menu inner">
-            <li className="no--hover">
-              <a><span className="text">{ translate('KMD_NATIVE.SELECT_ADDRESS') }</span></a>
-            </li>
-            <li className={ !this.state.currentAddress ? 'selected' : '' }>
-              <a onClick={ () => this.updateAddressSelection('') }>
-                <span className="text">{ translate('INDEX.ALL') }</span>
-                <span className="glyphicon glyphicon-ok check-mark"></span>
-              </a>
-            </li>
-            { this.renderAddressByType('public') }
-          </ul>
-        </div>
-      </div>
-    );
-  } else {
-    return null;
-  }
 };
 
 export const TxTypeRender = function(category) {

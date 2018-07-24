@@ -1,7 +1,4 @@
-import {
-  triggerToaster,
-  dashboardCoinsState,
-} from '../actionCreators';
+import { dashboardCoinsState } from '../actionCreators';
 import Config from '../../config';
 import appData from './appData';
 

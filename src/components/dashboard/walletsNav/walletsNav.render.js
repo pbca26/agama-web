@@ -1,31 +1,13 @@
 import React from 'react';
-import { translate } from '../../../translate/translate';
-
-export const WalletsNavNoWalletRender = function() {
-  return (
-    <div>
-      <div className="col-xs-12 padding-top-20">
-        <div className="alert alert-info alert-dismissible">
-          <span className="font-size-24 text-align-center">
-            <i className="icon fa-paw"></i> { translate('INDEX.NO_WALLET_CAPS') }
-          </span>
-          <br/>
-          { translate('INDEX.PLEASE_SELECT_A_WALLET') }.
-        </div>
-      </div>
-    </div>
-  );
-};
+import translate from '../../../translate/translate';
 
 export const WalletsNavWithWalletRender = function() {
   return (
     <div>
       <div
-        className={ 'page-header page-header-bordered header-easydex padding-bottom-40 ' + (this.props.ActiveCoin.mode === 'spv' ? 'page-header--spv' : 'page-header--native') }
-        id="header-dashboard"
-        style={{ marginBottom: '30px' }}>
+        className="page-header page-header-bordered header-easydex padding-bottom-40 page-header--spv margin-bottom-30"
+        id="header-dashboard">
         { this.props.ActiveCoin &&
-          this.props.ActiveCoin.mode === 'spv' &&
           <div>
             <strong>{ translate('INDEX.MY') } { this.props && this.props.ActiveCoin ? this.props.ActiveCoin.coin.toUpperCase() : '-' } { translate('INDEX.ADDRESS') }: </strong>
             { this.props &&
@@ -44,13 +26,13 @@ export const WalletsNavWithWalletRender = function() {
             <button
               type="button"
               className="btn btn-info waves-effect waves-light"
-              onClick={ this.toggleNativeWalletInfo }>
+              onClick={ this.toggleWalletInfo }>
               <i className="icon fa-info"></i>
             </button>
             <button
               type="button"
               className="btn btn-dark waves-effect waves-light"
-              onClick={ this.toggleNativeWalletTransactions }>
+              onClick={ this.toggleWalletTransactions }>
               <i className="icon md-view-dashboard"></i> <span className="placeholder">{ translate('INDEX.TRANSACTIONS') }</span>
             </button>
             { this.props.ActiveCoin &&

@@ -1,5 +1,5 @@
 import React from 'react';
-import { translate } from '../../../translate/translate';
+import translate from '../../../translate/translate';
 import QRCode from 'qrcode.react';
 
 export const InvoiceModalRender = function() {
@@ -46,7 +46,6 @@ export const InvoiceModalRender = function() {
                             { translate('INDEX.CHOOSE_RECEIVING_ADDRESS') }
                           </option>
                           { this.renderAddressList('public') }
-                          { this.renderAddressList('private') }
                         </select>
                         <label
                           className="control-label margin-top-20"
@@ -77,8 +76,8 @@ export const InvoiceModalRender = function() {
                             className="btn btn-success waves-effect waves-light save-image-btn margin-right-10"
                             disabled={ this.state.qrAddress === '-1' }
                             onClick={ this.saveAsImage }>
-                              <i className="icon fa-picture-o"></i>&nbsp;
-                              { translate('INDEX.SAVE_AS_IMAGE') }
+                            <i className="icon fa-picture-o"></i>&nbsp;
+                            { translate('INDEX.SAVE_AS_IMAGE') }
                           </a>
                         </p>
                     </div>

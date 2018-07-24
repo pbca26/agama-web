@@ -1,5 +1,5 @@
 import React from 'react';
-import { translate } from '../../../translate/translate';
+import translate from '../../../translate/translate';
 import ReactTooltip from 'react-tooltip';
 
 const CoinTileItemRender = function() {
@@ -7,9 +7,6 @@ const CoinTileItemRender = function() {
 
   return (
     <div className="list-group-item col-xlg-6 col-lg-12 wallet-widgets-info pointer">
-      <span className={ `badge up badge-${item.modecolor}` }>
-        { item.modecode }
-      </span>
       <div className={ 'widget widget-shadow' + (this.props.ActiveCoin.coin === item.coin ? ' active' : '') }>
         <div
           className="widget-content text-center bg-white padding-20"
@@ -21,7 +18,7 @@ const CoinTileItemRender = function() {
               alt={ item.coinname }/>
           </a>
           <div className="coin-name">
-            { item.coinname } ({ item.coinlogo.toUpperCase() })
+            { item.coinname } { item.coinlogo !== 'BEER' && item.coinlogo !== 'PIZZA' && item.coinlogo !== 'VOTE2018' && <span>({ item.coinlogo.toUpperCase() })</span> }
           </div>
         </div>
       </div>
@@ -39,17 +36,9 @@ const CoinTileItemRender = function() {
         this.state.toggledCoinMenu === item.coin &&
         <div className="coin-tile-context-menu">
           <ul>
-            { this.renderStopCoinButton() &&
-              item.mode === 'native' &&
-              <li onClick={ () => this.stopCoind(item.coin, item.mode) }>
-                <i className="icon fa-stop-circle margin-right-5"></i> { translate('DASHBOARD.STOP') }
-              </li>
-            }
-            { this.renderRemoveCoinButton() &&
-              <li onClick={ () => this.removeCoin(item.coin, item.mode) }>
-                <i className="icon fa-trash-o margin-right-5"></i> { translate('DASHBOARD.REMOVE') }
-              </li>
-            }
+            <li onClick={ () => this.removeCoin(item.coin, item.mode) }>
+              <i className="icon fa-trash-o margin-right-5"></i> { translate('DASHBOARD.REMOVE') }
+            </li>
           </ul>
         </div>
       }
@@ -61,13 +50,6 @@ const CoinTileItemRender = function() {
         <i
           data-tip={ translate('SETTINGS.SPV_SINGLE_SERVER_NOTICE') }
           className="icon fa-info-circle icon-spv-connection-warning"></i>
-      }
-      { this.renderCoinConError(item) &&
-        !this.props.ActiveCoin.rescanInProgress &&
-        <i
-          onClick={ this.openCoindDownModal }
-          data-tip={ `${translate('DASHBOARD.RPC_CONN_FAILURE')}: ${this.props.ActiveCoin.getinfoFetchFailures}.` }
-          className="icon fa-warning icon-native-connection-warning"></i>
       }
       <ReactTooltip
         effect="solid"

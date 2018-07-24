@@ -1,8 +1,8 @@
 import { GET_PIN_LIST } from '../actions/storeType';
 
-export function Login(state = {
+const Login = (state = {
   pinList: [],
-}, action) {
+}, action) => {
   if (state === null) state = { pinList: [] };
 
   switch (action.type) {

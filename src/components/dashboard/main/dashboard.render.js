@@ -30,7 +30,7 @@ const DashboardRender = function() {
           <ClaimInterestModal />
         </div>
         { this.isSectionActive('settings') &&
-          <Settings disableWalletSpecificUI={false} />
+          <Settings disableWalletSpecificUI={ false } />
         }
         { this.isSectionActive('about') &&
           <About />

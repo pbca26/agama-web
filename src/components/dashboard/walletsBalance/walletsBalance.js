@@ -1,13 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { translate } from '../../../translate/translate';
-import {
-  shepherdElectrumBalance,
-} from '../../../actions/actionCreators';
+import translate from '../../../translate/translate';
+import { shepherdElectrumBalance } from '../../../actions/actionCreators';
 import Config from '../../../config';
 import { formatValue } from 'agama-wallet-lib/src/utils';
 import ReactTooltip from 'react-tooltip';
-
 import Store from '../../../store';
 
 import WalletsBalanceRender from './walletsBalance.render';
@@ -40,16 +37,12 @@ class WalletsBalance extends React.Component {
       });
     }, 1000);
 
-    if (this.props.ActiveCoin.mode === 'native') {
-      Store.dispatch(getDashboardUpdate(this.props.ActiveCoin.coin));
-    } else if (this.props.ActiveCoin.mode === 'spv') {
-      Store.dispatch(
-        shepherdElectrumBalance(
-          this.props.ActiveCoin.coin,
-          this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub
-        )
-      );
-    }
+    Store.dispatch(
+      shepherdElectrumBalance(
+        this.props.ActiveCoin.coin,
+        this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub
+      )
+    );
   }
 
   renderBalance(type, returnFiatPrice) {
@@ -60,15 +53,7 @@ class WalletsBalance extends React.Component {
       _balance = '-777';
     }
 
-    if (_mode === 'native') {
-      if (this.props.ActiveCoin.balance &&
-          this.props.ActiveCoin.balance[type]) {
-        _balance = this.props.ActiveCoin.balance[type];
-      }
-    } else if (
-      _mode === 'spv' &&
-      this.props.ActiveCoin.balance.balance
-    ) {
+    if (this.props.ActiveCoin.balance.balance) {
       if (this.props.ActiveCoin.coin.toUpperCase() === 'KMD') {
         if (type === 'total' &&
             this.props.ActiveCoin.balance &&
@@ -121,7 +106,7 @@ class WalletsBalance extends React.Component {
           { _fiatPriceTotal > 0 &&
             _fiatPricePerCoin > 0 &&
             <div
-              data-tip={ `Price per 1 ${this.props.ActiveCoin.coin.toUpperCase()} ~ $${formatValue(_fiatPricePerCoin)}` }
+              data-tip={ `${translate('INDEX.PRICE_PER')} ${this.props.ActiveCoin.coin.toUpperCase()} ~ $${formatValue(_fiatPricePerCoin)}` }
               className="text-right">${ formatValue(_fiatPriceTotal) }</div>
           }
         </div>

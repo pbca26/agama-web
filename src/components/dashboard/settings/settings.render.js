@@ -1,5 +1,5 @@
 import React from 'react';
-import { translate } from '../../../translate/translate';
+import translate from '../../../translate/translate';
 import PanelSection from './settings.panelBody';
 import Panel from './settings.panel';
 
@@ -11,29 +11,29 @@ export const SettingsRender = function() {
     <div
       id="section-iguana-wallet-settings"
       className="padding-30">
-        <div className="row">
-          <div className="col-sm-12">
-            <h4 className="font-size-14 text-uppercase">{ translate('INDEX.WALLET_SETTINGS') }</h4>
-            <Panel>
+      <div className="row">
+        <div className="col-sm-12">
+          <h4 className="font-size-14 text-uppercase">{ translate('INDEX.WALLET_SETTINGS') }</h4>
+          <Panel>
+            <PanelSection
+              title={ translate('INDEX.EXPORT_KEYS') }
+              icon="icon md-key"
+              openByDefault={ true }>
+              <ExportKeysPanel />
+            </PanelSection>
+            { this.props.Main.coins &&
+              this.props.Main.coins.spv &&
+              Object.keys(this.props.Main.coins.spv).length &&
+              this.displaySPVServerListTab() &&
               <PanelSection
-                title={ translate('INDEX.EXPORT_KEYS') }
-                icon="icon md-key"
-                openByDefault={true}>
-                <ExportKeysPanel />
+                title={ translate('SETTINGS.SPV_SERVERS') }
+                icon="icon fa-server">
+                <SPVServersPanel />
               </PanelSection>
-              { this.props.Main.coins &&
-                this.props.Main.coins.spv &&
-                Object.keys(this.props.Main.coins.spv).length &&
-                this.displaySPVServerListTab() &&
-                <PanelSection
-                  title={ translate('SETTINGS.SPV_SERVERS') }
-                  icon="icon fa-server">
-                  <SPVServersPanel />
-                </PanelSection>
-              }
-            </Panel>
-          </div>
+            }
+          </Panel>
         </div>
       </div>
+    </div>
   );
 };

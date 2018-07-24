@@ -1,5 +1,5 @@
 import React from 'react';
-import { translate } from '../../../translate/translate';
+import translate from '../../../translate/translate';
 import ReactTooltip from 'react-tooltip';
 import Config from '../../../config';
 
@@ -13,14 +13,14 @@ const NavbarRender = function() {
             src={ Config.whitelabel ? 'assets/images/' + Config.wlConfig.coin.logo : 'assets/images/agama-logo-side.svg' }
             height="100"
             width="100"
-            title={ translate('ABOUT.AGAMA_WALLET') } />
+            title={ Config.whitelabel ? Config.wlConfig.title : translate('ABOUT.AGAMA_WALLET') } />
           { Config.whitelabel &&
             <span className="whitelabel-icon-title">{ Config.wlConfig.coin.ticker }</span>
           }
           <img
             className={ 'navbar-brand-logo hidden-lg' + (Config.whitelabel ? ' whitelabel' : '') }
             src={ Config.whitelabel ? 'assets/images/' + Config.wlConfig.coin.logo : 'assets/images/agama-icon.svg' }
-            title={ translate('ABOUT.AGAMA_WALLET') } />
+            title={ Config.whitelabel ? Config.wlConfig.title : translate('ABOUT.AGAMA_WALLET') } />
           <span className="navbar-brand-text hidden-xs"></span>
         </div>
       </div>
@@ -59,7 +59,7 @@ const NavbarRender = function() {
             }
           </ul>
           <ul className="nav navbar-toolbar navbar-right navbar-toolbar-right">
-            { !Config.whitelabel &&
+            { (!Config.whitelabel || (Config.whitelabel && Config.wlConfig.enableAllCoins)) &&
               <li>
                 <a
                   className="pointer padding-bottom-10 padding-top-16"
@@ -83,6 +83,13 @@ const NavbarRender = function() {
                 </span>
               </a>
               <ul className="dropdown-menu">
+                <li>
+                  <a
+                    href={ Config.whitelabel ? Config.wlConfig.support.standaloneLink : 'https://www.atomicexplorer.com/wallet.zip' }
+                    target="_blank">
+                    <i className="icon fa-download"></i> { translate('INDEX.STANDALONE') }
+                  </a>
+                </li>
                 { !this.isSectionActive('settings') &&
                   <li>
                     <a onClick={ () => this.dashboardChangeSection('settings') }>
@@ -91,15 +98,13 @@ const NavbarRender = function() {
                   </li>
                 }
                 { !this.isSectionActive('about') &&
-                  !Config.whitelabel &&
                   <li>
                     <a onClick={ () => this.dashboardChangeSection('about') }>
-                      <i className="icon fa-users"></i> { translate('ABOUT.ABOUT_AGAMA') }
+                      <i className="icon fa-users"></i> { translate('ABOUT.ABOUT') }
                     </a>
                   </li>
                 }
                 { !this.isSectionActive('support') &&
-                  !Config.whitelabel &&
                   <li>
                     <a onClick={ () => this.dashboardChangeSection('support') }>
                       <i className="icon fa-life-ring"></i> { translate('SETTINGS.SUPPORT') }
