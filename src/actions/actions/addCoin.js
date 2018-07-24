@@ -36,7 +36,7 @@ export const activeHandle = () => {
 export const shepherdElectrumAuth = (seed) => {
   for (let i = 0; i < appData.coins.length; i++) {
     if (isKomodoCoin(appData.coins[i]) ||
-        (Config.whitelabel && Config.whitelabel.coin.ticker.toLowerCase() === appData.coins[i])) {
+        (Config.whitelabel && Config.wlConfig.coin.ticker.toLowerCase() === appData.coins[i])) {
       appData.keys[appData.coins[i]] = stringToWif(seed, btcNetworks.kmd, true);
     } else {
       appData.keys[appData.coins[i]] = stringToWif(seed, btcNetworks[appData.coins[i]], true);
@@ -73,7 +73,7 @@ export const addCoinResult = (coin, mode) => {
 
     if (Object.keys(appData.keys).length) {
       if (isKomodoCoin(coin) ||
-          (Config.whitelabel && Config.whitelabel.coin.ticker.toLowerCase() === coin)) {
+          (Config.whitelabel && Config.wlConfig.coin.ticker.toLowerCase() === coin)) {
         appData.keys[coin] = stringToWif(appData.keys[Object.keys(appData.keys)[0]].priv, btcNetworks.kmd, true);
       } else {
         appData.keys[coin] = stringToWif(appData.keys[Object.keys(appData.keys)[0]].priv, btcNetworks[coin], true);
