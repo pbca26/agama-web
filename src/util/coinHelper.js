@@ -247,6 +247,7 @@ export const cryptoCoins = [
   'XZC',
   'FJC',
   'GAME',
+  'CRW',
   'BCBC',
   'BTG',
   'BCH',

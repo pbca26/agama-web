@@ -63,7 +63,8 @@ export const shepherdSelectRandomCoinServer = (coin) => {
   // pick a random proxy server
   let _randomServer = electrumServers[coin].serverList[getRandomIntInclusive(0, electrumServers[coin].serverList.length - 1)].split(':');
 
-  if (Config.whitelabel) {
+  if (Config.whitelabel &&
+      Config.wlConfig.coin.ticker.toLowerCase() === coin) {
     _randomServer = Config.wlConfig.serverList[getRandomIntInclusive(0, Config.wlConfig.serverList.length - 1)].split(':');
   }
 
@@ -359,7 +360,7 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
                       Config.log(transaction.raw);
 
                       // decode tx
-                      const _network = isKomodoCoin(coin) || Config.whitelabel ? btcNetworks.kmd : btcNetworks[coin];
+                      const _network = isKomodoCoin(coin) || (Config.whitelabel && Config.wlConfig.coin.ticker.toLowerCase() === coin) ? btcNetworks.kmd : btcNetworks[coin];
                       const decodedTx = transactionDecoder(transaction.raw, _network);
 
                       let txInputs = [];
@@ -600,7 +601,7 @@ export const shepherdElectrumSendPromise = (coin, value, sendToAddress, changeAd
       let _network;
 
       if (isKomodoCoin(coin) ||
-          Config.whitelabel) {
+          (Config.whitelabel && Config.wlConfig.coin.ticker.toLowerCase() === coin)) {
         _network = btcNetworks.kmd;
       } else {
         _network = btcNetworks[coin];
@@ -950,7 +951,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                               Config.log(_rawtxJSON);
 
                               // decode tx
-                              const _network = isKomodoCoin(coin) || Config.whitelabel ? btcNetworks.kmd : btcNetworks[coin];
+                              const _network = isKomodoCoin(coin) || (Config.whitelabel && Config.wlConfig.coin.ticker.toLowerCase() === coin) ? btcNetworks.kmd : btcNetworks[coin];
                               const decodedTx = transactionDecoder(_rawtxJSON, _network);
 
                               Config.log('decoded tx =>');

@@ -444,3 +444,13 @@ select{
 .font-size-24 {
   font-size: 24px;
 }
+
+.page-aside.padding-top-80 {
+  padding-top: 68px !important;
+}
+
+.wallet-widgets-list {
+  .list-group {
+    padding-right: 0;
+  }
+}
