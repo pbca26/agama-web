@@ -18,7 +18,7 @@ import btcNetworks from 'agama-wallet-lib/src/bitcoinjs-networks';
 import electrumServers from 'agama-wallet-lib/src/electrum-servers';
 import komodoInterest from 'agama-wallet-lib/src/komodo-interest';
 import transactionType from 'agama-wallet-lib/src/transaction-type';
-import transactionBuilder from 'agama-wallet-lib/src/transaction-type';
+import transactionBuilder from 'agama-wallet-lib/src/transaction-builder';
 import { stringToWif } from 'agama-wallet-lib/src/keys';
 import { isKomodoCoin } from 'agama-wallet-lib/src/coin-helpers';
 import transactionDecoder from 'agama-wallet-lib/src/transaction-decoder';
