@@ -31,6 +31,16 @@ const WalletsBalanceRender = function() {
                         <span className="padding-right-30">&nbsp;</span>
                       }
                       <span className="font-size-18">{ translate('INDEX.BALANCE') }</span>
+                      { Number(this.props.ActiveCoin.balance.unconfirmed) < 0 &&
+                        <span>
+                          <i
+                            className="icon fa-info-circle margin-left-5 icon-unconf-balance"
+                            data-tip={ `${translate('INDEX.UNCONFIRMED_BALANCE')} ${Math.abs(this.props.ActiveCoin.balance.unconfirmed)}` }></i>
+                          <ReactTooltip
+                            effect="solid"
+                            className="text-left" />
+                        </span>
+                      }
                     </div>
                     <span
                       className="pull-right padding-top-10 font-size-22">
