@@ -1,12 +1,16 @@
 // web app config
 let Config = {
-  version: '0.1.8-beta',
-  debug: false,
+  version: '0.1.9-beta',
+  debug: true,
   defaultLang: 'EN',
   roundValues: false,
   fiatRates: true,
   // single coin option
   whitelabel: false,
+  /*preload: {
+    seed: '',
+    coins: ['kmd', 'chips'],
+  },*/
 };
 
 export const devlog = (msg, data) => {
