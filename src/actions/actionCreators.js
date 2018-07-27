@@ -164,6 +164,8 @@ export const dashboardChangeActiveCoinState = (coin, mode, skipCoinsArrayUpdate)
 }
 
 export const dashboardChangeActiveCoin = (coin, mode, skipCoinsArrayUpdate) => {
+  window.activeCoin = coin;
+
   return dispatch => {
     dispatch(dashboardChangeActiveCoinState(coin, mode, skipCoinsArrayUpdate));
   }
