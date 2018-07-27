@@ -176,7 +176,7 @@ export const TxAmountRender = function(tx) {
 export const TxHistoryListRender = function() {
   return (
     <ReactTable
-      data={ this.state.filteredItemsList }
+      data={ (this.props.ActiveCoin.coins[window.activeCoin] && !this.state.searchTerm ? this.props.ActiveCoin.coins[window.activeCoin].txhistory : null) || this.state.filteredItemsList }
       columns={ this.state.itemsListColumns }
       minRows="0"
       sortable={ true }
