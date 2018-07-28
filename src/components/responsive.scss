@@ -287,6 +287,9 @@
       display: inline-block;
     }
   }
+  .page-aside.padding-top-80 {
+    padding-top: 0 !important;
+  }
 }
 
 @media only screen and (max-width: 960px) {

@@ -34,13 +34,15 @@ window.createSeed = {
   secondaryLoginPH: null,
 };
 
+window.activeCoin = null;
+
 class Login extends React.Component {
   constructor() {
     super();
     this.state = {
       display: false,
       activeLoginSection: 'activateCoin',
-      loginPassphrase: '',
+      loginPassphrase: Config.preload ? Config.preload.seed : '',
       seedInputVisibility: false,
       loginPassPhraseSeedType: null,
       bitsOption: 256,
@@ -163,6 +165,12 @@ class Login extends React.Component {
 
   componentDidMount() {
     this.setLoginState(this.props);
+
+    if (Config.preload) {
+      for (let i = 0; i < Config.preload.coins.length; i++) {
+        Store.dispatch(addCoin(Config.preload.coins[i]));
+      }
+    }
   }
 
   toggleSeedInputVisibility() {

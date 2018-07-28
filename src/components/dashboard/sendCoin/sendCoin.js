@@ -90,7 +90,7 @@ class SendCoin extends React.Component {
   setSendAmountAll() {
     const _amount = this.state.amount;
     const _amountSats = toSats(this.state.amount);
-    const _balanceSats = this.props.ActiveCoin.balance.balanceSats;
+    const _balanceSats = this.props.ActiveCoin.balance.balanceSats - Math.abs(this.props.ActiveCoin.balance.unconfirmedSats);
     const fee = this.props.ActiveCoin.coin !== 'btc' ? electrumServers[this.props.ActiveCoin.coin].txfee : 0;
 
     this.setState({
@@ -273,7 +273,7 @@ class SendCoin extends React.Component {
     } else {
       return (
         <span>
-          { `[ ${this.props.ActiveCoin.balance.balance} ${this.props.ActiveCoin.coin.toUpperCase()} ] ${this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub}` }
+          { `[ ${this.props.ActiveCoin.balance.balance - Math.abs(this.props.ActiveCoin.balance.unconfirmed)} ${this.props.ActiveCoin.coin.toUpperCase()} ] ${this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub}` }
         </span>
       );
     }
@@ -437,7 +437,7 @@ class SendCoin extends React.Component {
 
     const _amount = this.state.amount;
     const _amountSats = Math.floor(toSats(this.state.amount));
-    const _balanceSats = this.props.ActiveCoin.balance.balanceSats;
+    const _balanceSats = this.props.ActiveCoin.balance.balanceSats - Math.abs(this.props.ActiveCoin.balance.unconfirmedSats);
     const fee = this.props.ActiveCoin.coin !== 'btc' ? electrumServers[this.props.ActiveCoin.coin].txfee : 0;
 
     if ((Number(_amountSats) + fee) > _balanceSats) {

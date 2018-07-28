@@ -1,6 +1,6 @@
 // web app config
 let Config = {
-  version: '0.1.8-beta',
+  version: '0.1.9-beta',
   debug: false,
   defaultLang: 'EN',
   roundValues: false,
@@ -44,6 +44,10 @@ let Config = {
       },
     },
   },
+  /*preload: {
+    seed: '',
+    coins: ['kmd', 'chips'],
+  },*/
 };
 
 export const devlog = (msg, data) => {

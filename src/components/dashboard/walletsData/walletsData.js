@@ -528,6 +528,7 @@ const mapStateToProps = (state) => {
   return {
     ActiveCoin: {
       coin: state.ActiveCoin.coin,
+      coins: state.ActiveCoin.coins,
       mode: state.ActiveCoin.mode,
       send: state.ActiveCoin.send,
       receive: state.ActiveCoin.receive,
