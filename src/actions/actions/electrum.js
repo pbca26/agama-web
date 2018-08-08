@@ -158,7 +158,7 @@ export const shepherdElectrumCheckServerConnection = (address, port) => {
 
 export const shepherdElectrumKeys = (seed) => {
   return new Promise((resolve, reject) => {
-    const keys = stringToWif(seed, btcNetworks[Object.keys(appData.keys)[0]], true);
+    const keys = stringToWif(seed, (Config.whitelabel && Config.wlConfig.coin.ticker.toLowerCase() === Object.keys(appData.keys)[0]) ? btcNetworks.kmd : btcNetworks[Object.keys(appData.keys)[0]], true);
 
     if (keys.priv === appData.keys[Object.keys(appData.keys)[0]].priv) {
       resolve({ result: appData.keys });

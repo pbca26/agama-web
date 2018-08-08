@@ -82,7 +82,8 @@ export const addCoinResult = (coin, mode) => {
   }
 
   return dispatch => {
-    if (coin !== Config.wlConfig.coin.ticker.toLowerCase()) {
+    if (!Config.whitelabel ||
+        (Config.whitelabel && coin !== Config.wlConfig.coin.ticker.toLowerCase())) {
       dispatch(
         triggerToaster(
           `${coin.toUpperCase()} ${translate('TOASTR.STARTED_IN')} ${translate('INDEX.LITE')} ${translate('TOASTR.MODE')}`,

@@ -344,6 +344,7 @@ const LANG_EN = {
     DECRYPT_KEY: 'Decrypt key'
   },
   SETTINGS: {
+    WIF_KEY_LIST: 'WIF',
     SPV_SERVER_SET: 'SPV server set to',
     SPV_SERVER: 'SPV server',
     OR_WIF: 'or WIF key',
