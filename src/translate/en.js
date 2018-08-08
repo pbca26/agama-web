@@ -207,7 +207,7 @@ const LANG_EN = {
     ONLY_ACTIVE_WIF_KEYS: 'Only the active coin wallet WIF keys will be shown here.<br>' +
                           'You can use these WIF keys to import to another coin wallets.',
     PLEASE_KEEP_KEYS_SAFE: 'Please keep these keys extra safe and secure.',
-    PASSPHRASE: 'Passphrase',
+    PASSPHRASE: 'Seed',
     GET_WIF_KEYS: 'Get WIF Keys',
     INFO: 'Info',
     ENTER: 'Enter',
@@ -320,7 +320,7 @@ const LANG_EN = {
     QR_SCAN_ERR_DESC: 'Unable to recognize QR code',
     QR_SCAN_ERR: 'QR scan Error',
     OR_USE_A_SHORTCUT: 'or use a shortcut',
-    PIN_LOGIN_INFO: 'You can login be entering a login seed or by selecting a pin',
+    PIN_LOGIN_INFO: 'You can login by entering a login seed or by selecting a pin',
     SAVED_WALLET_SEED: 'Have you saved your wallet seed?',
     SEED_MAKE_SURE_BACKUP: 'Make sure you have it backed up. Without this seed you won\'t be able to access your wallet in the future!',
     YES_I_BACKUP: 'Yes, I have taken backup.',
@@ -344,6 +344,7 @@ const LANG_EN = {
     DECRYPT_KEY: 'Decrypt key'
   },
   SETTINGS: {
+    WIF_KEY_LIST: 'WIF',
     SPV_SERVER_SET: 'SPV server set to',
     SPV_SERVER: 'SPV server',
     OR_WIF: 'or WIF key',
@@ -356,7 +357,7 @@ const LANG_EN = {
     BIP39_DESC_P1: 'Description: the form below is going to search for a pub key depending on a range of key path combinations is chosen (No of accounts * account address path depth).',
     BIP39_DESC_P2: 'The app might temporary freeze for several seconds during search procedure.',
     SHOW_APP_RUNTIME_LOG: 'Show app runtime log',
-    WRONG_PASSPHRASE: 'Wrong passphrase',
+    WRONG_PASSPHRASE: 'Wrong seed',
     SPV_SERVER_LIST_DESC: 'Server list selection is only available for active coins that have more than 1 server to connect to.',
     SPV_SERVERS: 'SPV servers list',
     SPV_SINGLE_SERVER_NOTICE: 'There is only one electrum server available. SPV verification is coming from the same server providing all remote data.',
@@ -366,10 +367,10 @@ const LANG_EN = {
     SUPPORT_TICKETS: 'Support tickets',
     GET_DISCORD_INVITE: 'Get Discord invite',
     ADDRESS_LIST: 'Address',
-    PASSPHRASE_REQ: 'Passphrase is required.',
+    PASSPHRASE_REQ: 'Seed is required.',
     SAVE_APP_CONFIG: 'Save app config',
     APP_CONFIG: 'App Config',
-    EXPORT_KEYS_NOTE: 'Note: it\'s important that you provide the same passphrase you used to login to the wallet!',
+    EXPORT_KEYS_NOTE: 'Note: it\'s important that you provide the same seed you used to login to the wallet!',
   },
   TX_INFO: {
     ADDRESS: 'address',
