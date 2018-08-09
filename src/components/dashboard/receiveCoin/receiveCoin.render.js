@@ -37,12 +37,7 @@ export const AddressItemRender = function(address, type) {
   return (
     <tr key={ address.address }>
       { this.renderAddressActions(address.address, type) }
-      <td data-tip={ address.address }>
-        <ReactTooltip
-          effect="solid"
-          className="text-left" />
-        { address.address }
-      </td>
+      <td>{ address.address }</td>
       <td>
         <span>{ address.amount }</span>
       </td>
