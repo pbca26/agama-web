@@ -26,5 +26,9 @@
 #QRModal {
   .modal-body {
     text-align: center;
+
+    a {
+      text-decoration: none;
+    }
   }
 }
