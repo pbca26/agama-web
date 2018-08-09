@@ -398,16 +398,15 @@ const LoginRender = function() {
                 <label
                   className="floating-label"
                   htmlFor="rwalletseed">{ translate('INDEX.CONFIRM_SEED') }</label>
-                <button
-                  type="button"
-                  className="btn btn-success btn-block margin-top-20 btn-generate-qr">
+                { /* ff click issue fix, span tag inside button tag doesn't receive a click event */ }
+                <div className="btn btn-success btn-block margin-top-20 btn-generate-qr">
                   <QRModal
                     qrSize="256"
                     modalSize="md"
                     title={ translate('LOGIN.SEED_QR_RECOVERY') }
                     fileName="agama-seed"
                     content={ this.state.randomSeed } />
-                </button>
+                </div>
               </div>
               <button
                 type="button"
