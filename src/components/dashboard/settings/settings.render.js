@@ -10,14 +10,16 @@ export const SettingsRender = function() {
   return (
     <div
       id="section-iguana-wallet-settings"
-      className="padding-30">
+      className="padding-30 unselectable">
       <div className="row">
         <div className="col-sm-12">
           <h4 className="font-size-14 text-uppercase">{ translate('INDEX.WALLET_SETTINGS') }</h4>
-          <Panel>
+          <Panel
+            uniqId={ 'SettingsAccordion' }
+            singleOpen={ true }>
             <PanelSection
               title={ translate('INDEX.EXPORT_KEYS') }
-              icon="icon md-key"
+              icon="icon fa-key"
               openByDefault={ true }>
               <ExportKeysPanel />
             </PanelSection>

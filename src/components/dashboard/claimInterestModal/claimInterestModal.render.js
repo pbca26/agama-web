@@ -17,10 +17,10 @@ export const _ClaimInterestTableRender = function() {
               className="btn btn-default btn-xs clipboard-edexaddr copy-string-btn"
               title={ translate('INDEX.COPY_TO_CLIPBOARD') }
               onClick={ () => this.copyTxId(_transactionsList[i].txid) }>
-              <i className="icon wb-copy"></i> { translate('INDEX.COPY') + ' TXID' }
+              <i className="icon fa-copy"></i> { translate('INDEX.COPY') + ' TXID' }
             </button>
           </td>
-          <td>{ _transactionsList[i].address }</td>
+          <td className="selectable">{ _transactionsList[i].address }</td>
           <td className={ _transactionsList[i].amount > 10 ? 'green bold' : '' }>{ _transactionsList[i].amount }</td>
           <td>{ _transactionsList[i].interest }</td>
           <td className="locktime center">

@@ -172,6 +172,7 @@ class WalletsData extends React.Component {
       id: 'destination-address',
       Header: translate('INDEX.DEST_ADDRESS'),
       Footer: translate('INDEX.DEST_ADDRESS'),
+      className: 'selectable',
       accessor: (tx) => AddressRender.call(this, tx),
     };
 
@@ -288,35 +289,36 @@ class WalletsData extends React.Component {
   }
 
   spvAutoReconnect() {
-    let _spvServers = this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].serverList;
+    let _spvServers = window.servers[this.props.ActiveCoin.coin].serverList;
     let _server = [
-      this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].server.ip,
-      this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].server.port
+      window.servers[this.props.ActiveCoin.coin].ip,
+      window.servers[this.props.ActiveCoin.coin].port,
+      window.servers[this.props.ActiveCoin.coin].proto
     ];
     const _randomServer = getRandomElectrumServer(_spvServers, _server.join(':'));
 
-    shepherdElectrumCheckServerConnection(_randomServer.ip, _randomServer.port)
+    shepherdElectrumCheckServerConnection(
+      _randomServer.ip,
+      _randomServer.port,
+      _randomServer.proto
+    )
     .then((res) => {
       if (res.result) {
-        shepherdElectrumSetServer(
-          this.props.ActiveCoin.coin,
-          _randomServer.ip,
-          _randomServer.port
-        )
-        .then((serverSetRes) => {
-          Store.dispatch(
-            triggerToaster(
-              `${this.props.ActiveCoin.coin} ${translate('INDEX.LITE')} ${translate('DASHBOARD.SERVER_SET_TO')} ${_randomServer.ip}:${_randomServer.port}`,
-              translate('TOASTR.WALLET_NOTIFICATION'),
-              'success'
-            )
-          );
-          Store.dispatch(electrumServerChanged(true));
-        });
+        window.servers[this.props.ActiveCoin.coin].ip = _server[0];
+        window.servers[this.props.ActiveCoin.coin].port = _server[1];
+        window.servers[this.props.ActiveCoin.coin].proto = _server[2];
+
+        Store.dispatch(
+          triggerToaster(
+            `${this.props.ActiveCoin.coin} ${translate('INDEX.LITE')} ${translate('DASHBOARD.SERVER_SET_TO')} ${_randomServer.ip}:${_randomServer.port}:${_randomServer.proto}`,
+            translate('TOASTR.WALLET_NOTIFICATION'),
+            'success'
+          )
+        );
       } else {
         Store.dispatch(
           triggerToaster(
-            `${this.props.ActiveCoin.coin} ${translate('INDEX.LITE')} ${translate('DASHBOARD.SERVER_SM')} ${_randomServer.ip}:${_randomServer.port} ${translate('DASHBOARD.IS_UNREACHABLE')}!`,
+            `${this.props.ActiveCoin.coin} ${translate('INDEX.LITE')} ${translate('DASHBOARD.SERVER_SM')} ${_randomServer.ip}:${_randomServer.port}:${_randomServer.proto} ${translate('DASHBOARD.IS_UNREACHABLE')}!`,
             translate('TOASTR.WALLET_NOTIFICATION'),
             'error'
           )

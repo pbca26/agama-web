@@ -4,12 +4,12 @@ import Config from '../../../config';
 
 const CoinTileRender = function() {
   return (
-    <div className={ 'page-aside padding-top-80' + (this.state.toggledSidebar && this.renderSidebarToggle() ? ' open' : '') }>
+    <div className={ 'unselectable page-aside padding-top-80' + (this.state.toggledSidebar && this.renderSidebarToggle() ? ' open' : '') }>
       { this.renderSidebarToggle() &&
         <div
           onClick={ this.toggleSidebar }
           className="page-aside-switch">
-          <i className={ 'icon md-chevron-' + (this.state.toggledSidebar ? 'left' : 'right') }></i>
+          <i className={ 'icon fa-chevron-' + (this.state.toggledSidebar ? 'left' : 'right') }></i>
         </div>
       }
       <div className="page-aside-inner">

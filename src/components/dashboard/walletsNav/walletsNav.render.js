@@ -5,19 +5,21 @@ export const WalletsNavWithWalletRender = function() {
   return (
     <div>
       <div
-        className="page-header page-header-bordered header-easydex padding-bottom-40 page-header--spv margin-bottom-30"
+        className="page-header page-header-bordered header-easydex padding-bottom-40 page-header--spv margin-bottom-30 unselectable"
         id="header-dashboard">
         { this.props.ActiveCoin &&
           <div>
             <strong>{ translate('INDEX.MY') } { this.props && this.props.ActiveCoin ? this.props.ActiveCoin.coin.toUpperCase() : '-' } { translate('INDEX.ADDRESS') }: </strong>
-            { this.props &&
-              this.props.Dashboard &&
-              this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin] &&
-              this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub ? this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub : '-' }
+            <span className="selectable">
+              { this.props &&
+                this.props.Dashboard &&
+                this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin] &&
+                this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub ? this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub : '-' }
+            </span>
             <button
               className="btn btn-default btn-xs clipboard-edexaddr"
               onClick={ () => this.copyMyAddress(this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub) }>
-              <i className="icon wb-copy"></i> { translate('INDEX.COPY') }
+              <i className="icon fa-copy"></i> { translate('INDEX.COPY') }
             </button>
           </div>
         }
@@ -33,7 +35,7 @@ export const WalletsNavWithWalletRender = function() {
               type="button"
               className="btn btn-dark waves-effect waves-light"
               onClick={ this.toggleWalletTransactions }>
-              <i className="icon md-view-dashboard"></i> <span className="placeholder">{ translate('INDEX.TRANSACTIONS') }</span>
+              <i className="icon fa-th-large"></i> <span className="placeholder">{ translate('INDEX.TRANSACTIONS') }</span>
             </button>
             { this.props.ActiveCoin &&
               <button

@@ -5,12 +5,12 @@ import Config from '../../../config';
 
 const NavbarRender = function() {
   return (
-    <nav className="site-navbar navbar navbar-default navbar-fixed-top navbar-mega">
+    <nav className="site-navbar navbar navbar-default navbar-fixed-top navbar-mega unselectable">
       <div className="navbar-header">
         <div className="navbar-brand navbar-brand-center site-gridmenu-toggle">
           <img
             className={ 'navbar-brand-logo hidden-xs' + (Config.whitelabel ? ' whitelabel' : '') }
-            src={ Config.whitelabel ? 'assets/images/' + Config.wlConfig.coin.logo : 'assets/images/agama-logo-side.svg' }
+            src={ Config.whitelabel ? (Config.wlConfig.coin.logo.indexOf('http') > -1 ? Config.wlConfig.coin.logo : 'assets/images/' + Config.wlConfig.coin.logo) : 'assets/images/agama-logo-side.svg' }
             height="100"
             width="100"
             title={ Config.whitelabel ? Config.wlConfig.title : translate('ABOUT.AGAMA_WALLET') } />
@@ -19,7 +19,7 @@ const NavbarRender = function() {
           }
           <img
             className={ 'navbar-brand-logo hidden-lg' + (Config.whitelabel ? ' whitelabel' : '') }
-            src={ Config.whitelabel ? 'assets/images/' + Config.wlConfig.coin.logo : 'assets/images/agama-icon.svg' }
+            src={ Config.whitelabel ? (Config.wlConfig.coin.logo.indexOf('http') > -1 ? Config.wlConfig.coin.logo : 'assets/images/' + Config.wlConfig.coin.logo) : 'assets/images/agama-icon.svg' }
             title={ Config.whitelabel ? Config.wlConfig.title : translate('ABOUT.AGAMA_WALLET') } />
           <span className="navbar-brand-text hidden-xs"></span>
         </div>
@@ -93,7 +93,7 @@ const NavbarRender = function() {
                 { !this.isSectionActive('settings') &&
                   <li>
                     <a onClick={ () => this.dashboardChangeSection('settings') }>
-                      <i className="icon md-settings"></i> { translate('INDEX.SETTINGS') }
+                      <i className="icon fa-cog"></i> { translate('INDEX.SETTINGS') }
                     </a>
                   </li>
                 }

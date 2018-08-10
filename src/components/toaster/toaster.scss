@@ -1,4 +1,8 @@
 #toast-container {
+  .toast {
+    box-shadow: 0 0 12px #999 !important;
+  }
+
   > div {
     padding: 15px 15px 15px 60px;
     width: 310px;

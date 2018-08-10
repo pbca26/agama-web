@@ -9,8 +9,8 @@ export const AddressActionsNonBasiliskModeRender = function(address, type) {
     <td>
       <button
         onClick={ () => this.toggleAddressMenu(address) }
-        data-tip="Toggle address context menu"
-        className="btn btn-default btn-xs clipboard-edexaddr margin-left-10 receive-address-context-menu-trigger">
+        data-tip={ translate('DASHBOARD.TOGGLE_ADD_MENU') }
+        className="btn btn-default btn-xs clipboard-edexaddr margin-left-10 receive-address-context-menu-trigger unselectable">
         <i className="fa fa-ellipsis-v receive-address-context-menu-trigger"></i>
       </button>
       <ReactTooltip
@@ -21,7 +21,7 @@ export const AddressActionsNonBasiliskModeRender = function(address, type) {
         <div className="receive-address-context-menu">
           <ul>
             <li onClick={ () => this._copyCoinAddress(address) }>
-              <i className="icon wb-copy margin-right-5"></i> { `${translate('INDEX.COPY')} ${translate('INDEX.PUB_KEY')}` }
+              <i className="icon fa-copy margin-right-5"></i> { `${translate('INDEX.COPY')} ${translate('INDEX.PUB_KEY')}` }
             </li>
             <li className="receive-address-context-menu-get-qr">
               <QRModal content={ address } />
@@ -49,7 +49,7 @@ export const _ReceiveCoinTableRender = function() {
   return (
     <span>
       <table className="table table-hover dataTable table-striped">
-        <thead>
+        <thead className="unselectable">
           <tr>
             <th></th>
             <th>{ translate('INDEX.ADDRESS') }</th>
@@ -59,7 +59,7 @@ export const _ReceiveCoinTableRender = function() {
         <tbody>
           { this.renderAddressList('public') }
         </tbody>
-        <tfoot>
+        <tfoot className="unselectable">
           <tr>
             <th></th>
             <th>{ translate('INDEX.ADDRESS') }</th>
@@ -88,7 +88,7 @@ export const ReceiveCoinRender = function() {
                     <div className="panel-actions">
                       <InvoiceModal />
                     </div>
-                    <h4 className="panel-title">{ translate('INDEX.RECEIVING_ADDRESS') }</h4>
+                    <h4 className="panel-title unselectable">{ translate('INDEX.RECEIVING_ADDRESS') }</h4>
                   </header>
                   <div className="panel-body">
                   { this.ReceiveCoinTableRender() }

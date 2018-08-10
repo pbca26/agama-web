@@ -85,21 +85,22 @@ class ExportKeysPanel extends React.Component {
         items.push(
           <tr key={ _key }>
             <td className="padding-bottom-30">
-              <strong className="padding-right-20">{ _key.toUpperCase() }</strong>{ _wifKeys[_key].pub }
+              <strong className="padding-right-20">{ _key.toUpperCase() }</strong>
+              <span className="selectable">{ _wifKeys[_key].pub }</span>
               <button
                 className="btn btn-default btn-xs clipboard-edexaddr margin-left-10"
                 title={ translate('INDEX.COPY_TO_CLIPBOARD') }
                 onClick={ () => this._copyCoinAddress(_wifKeys[_key].pub) }>
-                <i className="icon wb-copy"></i> { translate('INDEX.COPY') }
+                <i className="icon fa-copy"></i> { translate('INDEX.COPY') }
               </button>
             </td>
-              <td className="padding-bottom-30 padding-left-15">
-              { _wifKeys[_key].priv }
+            <td className="padding-bottom-30 padding-left-15">
+              <span className="selectable">{ _wifKeys[_key].priv }</span>
               <button
                 className="btn btn-default btn-xs clipboard-edexaddr margin-left-10"
                 title={ translate('INDEX.COPY_TO_CLIPBOARD') }
                 onClick={ () => this._copyCoinAddress(_wifKeys[_key].priv) }>
-                <i className="icon wb-copy"></i> { translate('INDEX.COPY') }
+                <i className="icon fa-copy"></i> { translate('INDEX.COPY') }
               </button>
             </td>
           </tr>

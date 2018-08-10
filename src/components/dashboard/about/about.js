@@ -9,7 +9,7 @@ class About extends React.Component {
 
   render() {
     return (
-      <div className="page margin-left-0">
+      <div className="page margin-left-0 unselectable">
         <div className="page-content">
           <h2>{ translate('ABOUT.ABOUT_AGAMA_ALT') }</h2>
           <p>{ translate('ABOUT.AGAMA_MODES') }</p>

@@ -8,7 +8,7 @@ export const shepherdRemoveCoin = (coin, mode) => {
       spv: appData.coins,
       total: appData.coins.length,
     };
-    delete appData.servers[coin];
+    delete window.servers[coin];
 
     if (!appData.coins ||
         !appData.coins.length) {

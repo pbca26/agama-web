@@ -66,12 +66,12 @@ export const AddressRender = function(tx) {
 export const AddressItemRender = function(address, type, amount, coin) {
   return (
     <li
-      key={address}
+      key={ address }
       className={ address === this.state.currentAddress ? 'selected' : '' }>
       <a onClick={ () => this.updateAddressSelection(address) }>
         <i className={ 'icon fa-eye' + (type === 'public' ? '' : '-slash') }></i>&nbsp;&nbsp;
         <span className="text">[ { amount } { coin } ]  { address }</span>
-        <span className="glyphicon glyphicon-ok check-mark"></span>
+        <span className="icon fa-check check-mark"></span>
       </a>
     </li>
   );
@@ -197,7 +197,7 @@ export const TxHistoryListRender = function() {
 
 export const WalletsDataRender = function() {
   return (
-    <span>
+    <div className="unselectable">
       <div id="edexcoin_dashboardinfo">
         { (this.displayClaimInterestUI() === 777 || this.displayClaimInterestUI() === -777) &&
           <div className="col-xs-12 margin-top-20 backround-gray">
@@ -276,6 +276,6 @@ export const WalletsDataRender = function() {
           </div>
         </div>
       </div>
-    </span>
+    </div>
   );
 };

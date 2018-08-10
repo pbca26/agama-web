@@ -32,7 +32,7 @@ export const AddressListRender = function() {
                 { `[ ${this.props.ActiveCoin.balance.balance - Math.abs(this.props.ActiveCoin.balance.unconfirmed)} ${this.props.ActiveCoin.coin.toUpperCase()} ] ${this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub}` }
               </span>
               <span
-                className="glyphicon glyphicon-ok check-mark pull-right"
+                className="icon fa-check check-mark pull-right"
                 style={{ display: this.state.sendFrom === null ? 'inline-block' : 'none' }}></span>
             </a>
           </li>
@@ -164,7 +164,7 @@ export const SendRender = function() {
     );
   } else {
     return (
-      <div className="col-sm-12 padding-top-10 coin-send-form">
+      <div className="col-sm-12 padding-top-10 coin-send-form unselectable">
         <div className="col-xlg-12 col-md-12 col-sm-12 col-xs-12">
           <div className="steps row margin-top-10">
             <div className={ 'step col-md-4' + (this.state.currentStep === 0 ? ' current' : '') }>
@@ -216,7 +216,7 @@ export const SendRender = function() {
                 <div className="col-xs-12">
                   <strong>{ translate('INDEX.TO') }</strong>
                 </div>
-                <div className="col-lg-6 col-sm-6 col-xs-12 overflow-hidden">{ this.state.sendTo }</div>
+                <div className="col-lg-6 col-sm-6 col-xs-12 overflow-hidden selectable">{ this.state.sendTo }</div>
                 <div className="col-lg-6 col-sm-6 col-xs-6">
                   { this.state.amount } { this.props.ActiveCoin.coin.toUpperCase() }
                 </div>
@@ -330,7 +330,7 @@ export const SendRender = function() {
                         <td className="padding-left-30">
                         { translate('INDEX.SEND_FROM') }
                         </td>
-                        <td className="padding-left-30">
+                        <td className="padding-left-30 selectable">
                           { this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub }
                         </td>
                       </tr>
@@ -338,7 +338,7 @@ export const SendRender = function() {
                         <td className="padding-left-30">
                         { translate('INDEX.SEND_TO') }
                         </td>
-                        <td className="padding-left-30">
+                        <td className="padding-left-30 selectable">
                           { this.state.sendTo }
                         </td>
                       </tr>
@@ -353,14 +353,14 @@ export const SendRender = function() {
                       <tr>
                         <td className="padding-left-30">{ translate('SEND.TRANSACTION_ID') }</td>
                         <td className="padding-left-30">
-                          { this.state.lastSendToResponse && this.state.lastSendToResponse.txid ? this.state.lastSendToResponse.txid : '' }
+                          <span className="selectable">{ this.state.lastSendToResponse && this.state.lastSendToResponse.txid ? this.state.lastSendToResponse.txid : '' }</span>
                           { this.state.lastSendToResponse &&
                             this.state.lastSendToResponse.txid &&
                             <button
                               className="btn btn-default btn-xs clipboard-edexaddr margin-left-10"
                               title={ translate('INDEX.COPY_TO_CLIPBOARD') }
                               onClick={ () => this.copyTXID(this.state.lastSendToResponse && this.state.lastSendToResponse.txid ? this.state.lastSendToResponse.txid : '') }>
-                              <i className="icon wb-copy"></i> { translate('INDEX.COPY') }
+                              <i className="icon fa-copy"></i> { translate('INDEX.COPY') }
                             </button>
                           }
                           { this.state.lastSendToResponse &&
@@ -389,7 +389,7 @@ export const SendRender = function() {
                 { this.state.lastSendToResponse &&
                   this.state.lastSendToResponse.msg &&
                   this.state.lastSendToResponse.msg === 'error' &&
-                  <div className="padding-left-30 padding-top-10">
+                  <div className="padding-left-30 padding-top-10 selectable">
                     <div>
                       <strong className="text-capitalize">{ translate('API.ERROR_SM') }</strong>
                     </div>

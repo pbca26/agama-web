@@ -15,7 +15,7 @@ const WalletsMainRender = function() {
       <div className="padding-top-0">
         <div
           id="easydex-header-div"
-          className="background-color-white"
+          className="background-color-white unselectable"
           style={ this.getCoinStyle('transparent') }>
           <ol className={ 'coin-logo breadcrumb' + (this.props.ActiveCoin.coin.toUpperCase() === 'KMD' || this.props.ActiveCoin.coin.toUpperCase() === 'JUMBLR' || this.props.ActiveCoin.coin.toUpperCase() === 'MESH' || this.props.ActiveCoin.coin.toUpperCase() === 'MVP' ? ' coin-logo-wide' : '') + ' native-coin-logo' }>
             <li className="header-easydex-section">

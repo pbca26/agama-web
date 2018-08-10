@@ -251,7 +251,7 @@ class ClaimInterestModal extends React.Component {
           <a onClick={ () => this.updateAddressSelection(key) }>
             <span className="text">{ key }</span>
             <span
-              className="glyphicon glyphicon-ok check-mark pull-right"
+              className="icon fa-check check-mark pull-right"
               style={{ display: this.state.selectedAddress === key ? 'inline-block' : 'none' }}></span>
           </a>
         </li>
