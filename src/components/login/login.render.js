@@ -25,7 +25,7 @@ const LoginRender = function() {
             { Config.whitelabel &&
               <img
                 className="brand-img"
-                src={ 'assets/images/' + Config.wlConfig.mainLogo }
+                src={ Config.wlConfig.mainLogo.indexOf('http') > -1 ? Config.wlConfig.mainLogo : 'assets/images/' + Config.wlConfig.mainLogo }
                 alt={ Config.wlConfig.title } />
             }
           </div>
