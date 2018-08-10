@@ -13,7 +13,7 @@ const LoginRender = function() {
       <WalletRisksModal />
       <div className="page vertical-align text-center">
         <div className="page-content vertical-align-middle col-xs-12 col-sm-6 col-sm-offset-3">
-          <div className="brand">
+          <div className="brand unselectable">
             { !Config.whitelabel &&
               <img
                 className="brand-img"
@@ -30,7 +30,7 @@ const LoginRender = function() {
             }
           </div>
           { !this.state.risksWarningRead &&
-            <div className="margin-top-30 margin-bottom-40">
+            <div className="margin-top-30 margin-bottom-40 unselectable">
               <span
                 onClick={ this.toggleRisksWarningModal }
                 className="pointer fs-16">
@@ -39,7 +39,7 @@ const LoginRender = function() {
             </div>
           }
           { this.renderResetSPVCoinsOption() &&
-            <div className="margin-top-30 margin-bottom-40">
+            <div className="margin-top-30 margin-bottom-40 unselectable">
               <span
                 onClick={ this.resetSPVCoins }
                 className="pointer fs-16">
@@ -47,7 +47,7 @@ const LoginRender = function() {
               </span>
             </div>
           }
-          <div className={ this.state.activeLoginSection === 'login' ? 'show' : 'hide' }>
+          <div className={ this.state.activeLoginSection === 'login' ? 'show unselectable' : 'hide' }>
             <h4 className="color-white">
               { translate('INDEX.WELCOME_LOGIN') }
             </h4>
@@ -236,7 +236,7 @@ const LoginRender = function() {
             </div>
           </div>
 
-          <div className={ this.state.activeLoginSection === 'activateCoin' ? 'show' : 'hide' }>
+          <div className={ this.state.activeLoginSection === 'activateCoin' ? 'show unselectable' : 'hide' }>
             <h4 className="color-white">
               { translate('INDEX.WELCOME_PLEASE_ADD') }
             </h4>
@@ -285,10 +285,10 @@ const LoginRender = function() {
 
           <div className={ this.state.activeLoginSection === 'signup' ? 'show' : 'hide' }>
             <div className="register-form">
-              <h4 className="hint color-white">
+              <h4 className="hint color-white unselectable">
                 { translate('INDEX.SELECT_SEED_TYPE') }:
               </h4>
-              <div className="row">
+              <div className="row unselectable">
                 <div className="col-sm-5 horizontal-padding-0">
                   <div className="toggle-box vertical-padding-20">
                     <span className="pointer">
@@ -308,7 +308,7 @@ const LoginRender = function() {
                     </span>
                   </div>
                 </div>
-                <div className="col-sm-7 horizontal-padding-0">
+                <div className="col-sm-7 horizontal-padding-0 unselectable">
                 { !this.isCustomWalletSeed() &&
                   <div>
                     <div className="form-group form-material floating">
@@ -354,9 +354,9 @@ const LoginRender = function() {
                 </div>
               </div>
 
-              <div className="form-group form-material floating seed-tooltip">
+              <div className="form-group form-material floating seed-tooltip unselectable">
                 <textarea
-                  className="form-control placeholder-no-fix height-100"
+                  className="form-control placeholder-no-fix height-100 selectable"
                   type="text"
                   id="walletseed"
                   value={ this.state.randomSeed }
@@ -381,7 +381,7 @@ const LoginRender = function() {
                   className="floating-label"
                   htmlFor="walletseed">{ translate('INDEX.WALLET_SEED') }</label>
               </div>
-              <div className="form-group form-material floating">
+              <div className="form-group form-material floating unselectable">
                 <textarea
                   className="form-control placeholder-no-fix height-100"
                   type="text"

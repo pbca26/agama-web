@@ -5,19 +5,21 @@ export const WalletsNavWithWalletRender = function() {
   return (
     <div>
       <div
-        className="page-header page-header-bordered header-easydex padding-bottom-40 page-header--spv margin-bottom-30"
+        className="page-header page-header-bordered header-easydex padding-bottom-40 page-header--spv margin-bottom-30 unselectable"
         id="header-dashboard">
         { this.props.ActiveCoin &&
           <div>
             <strong>{ translate('INDEX.MY') } { this.props && this.props.ActiveCoin ? this.props.ActiveCoin.coin.toUpperCase() : '-' } { translate('INDEX.ADDRESS') }: </strong>
-            { this.props &&
-              this.props.Dashboard &&
-              this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin] &&
-              this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub ? this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub : '-' }
+            <span className="selectable">
+              { this.props &&
+                this.props.Dashboard &&
+                this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin] &&
+                this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub ? this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub : '-' }
+            </span>
             <button
               className="btn btn-default btn-xs clipboard-edexaddr"
               onClick={ () => this.copyMyAddress(this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub) }>
-              <i className="icon wb-copy"></i> { translate('INDEX.COPY') }
+              <i className="icon fa-copy"></i> { translate('INDEX.COPY') }
             </button>
           </div>
         }

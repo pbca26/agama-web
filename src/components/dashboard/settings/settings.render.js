@@ -10,7 +10,7 @@ export const SettingsRender = function() {
   return (
     <div
       id="section-iguana-wallet-settings"
-      className="padding-30">
+      className="padding-30 unselectable">
       <div className="row">
         <div className="col-sm-12">
           <h4 className="font-size-14 text-uppercase">{ translate('INDEX.WALLET_SETTINGS') }</h4>

@@ -172,6 +172,7 @@ class WalletsData extends React.Component {
       id: 'destination-address',
       Header: translate('INDEX.DEST_ADDRESS'),
       Footer: translate('INDEX.DEST_ADDRESS'),
+      className: 'selectable',
       accessor: (tx) => AddressRender.call(this, tx),
     };
 

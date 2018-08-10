@@ -197,7 +197,7 @@ export const TxHistoryListRender = function() {
 
 export const WalletsDataRender = function() {
   return (
-    <span>
+    <div className="unselectable">
       <div id="edexcoin_dashboardinfo">
         { (this.displayClaimInterestUI() === 777 || this.displayClaimInterestUI() === -777) &&
           <div className="col-xs-12 margin-top-20 backround-gray">
@@ -276,6 +276,6 @@ export const WalletsDataRender = function() {
           </div>
         </div>
       </div>
-    </span>
+    </div>
   );
 };

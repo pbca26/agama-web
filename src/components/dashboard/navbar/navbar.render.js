@@ -5,7 +5,7 @@ import Config from '../../../config';
 
 const NavbarRender = function() {
   return (
-    <nav className="site-navbar navbar navbar-default navbar-fixed-top navbar-mega">
+    <nav className="site-navbar navbar navbar-default navbar-fixed-top navbar-mega unselectable">
       <div className="navbar-header">
         <div className="navbar-brand navbar-brand-center site-gridmenu-toggle">
           <img

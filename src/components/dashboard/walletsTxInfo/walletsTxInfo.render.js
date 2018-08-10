@@ -46,7 +46,7 @@ const WalletsTxInfoRender = function(txInfo) {
                             <tbody>
                               <tr>
                                 <td>{ this.capitalizeFirstLetter(translate('TX_INFO.ADDRESS')) }</td>
-                                <td>
+                                <td className="selectable">
                                   { this.state.txDetails.address }
                                 </td>
                               </tr>
@@ -94,7 +94,7 @@ const WalletsTxInfoRender = function(txInfo) {
                               }
                               <tr>
                                 <td>{ this.capitalizeFirstLetter('txid') }</td>
-                                <td>
+                                <td className="selectable">
                                   { this.state.txDetails.txid }
                                 </td>
                               </tr>
@@ -123,7 +123,7 @@ const WalletsTxInfoRender = function(txInfo) {
                         </div>
                       }
                       { this.state.activeTab === 2 &&
-                        <div className="tab-pane active">
+                        <div className="tab-pane active selectable">
                           <textarea
                             className="full-width height-400"
                             rows="20"
@@ -133,7 +133,7 @@ const WalletsTxInfoRender = function(txInfo) {
                         </div>
                       }
                       { this.state.activeTab === 3 &&
-                        <div className="tab-pane active">
+                        <div className="tab-pane active selectable">
                           <textarea
                             className="full-width height-400"
                             rows="40"
