@@ -242,6 +242,7 @@ const LANG_EN = {
                     'Lite mode has higher network latency compared to native mode.',
   },
   DASHBOARD: {
+    TOGGLE_ADD_MENU: 'Toggle address context menu',
     SHOW_ALL_ADDR: 'Show all addresses',
     REMOVE: 'Remove',
     SOFT_LOGOUT: 'Soft logout',

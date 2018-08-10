@@ -66,12 +66,12 @@ export const AddressRender = function(tx) {
 export const AddressItemRender = function(address, type, amount, coin) {
   return (
     <li
-      key={address}
+      key={ address }
       className={ address === this.state.currentAddress ? 'selected' : '' }>
       <a onClick={ () => this.updateAddressSelection(address) }>
         <i className={ 'icon fa-eye' + (type === 'public' ? '' : '-slash') }></i>&nbsp;&nbsp;
         <span className="text">[ { amount } { coin } ]  { address }</span>
-        <span className="glyphicon glyphicon-ok check-mark"></span>
+        <span className="icon fa-check check-mark"></span>
       </a>
     </li>
   );

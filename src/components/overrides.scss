@@ -46,8 +46,15 @@ body {
   background-size: 100%;
 }
 
-.unselectable {
+.unselectable,
+.modal,
+.single-toast {
   user-select: none;
+  cursor: default;
+}
+
+.selectable {
+  user-select: all;
 }
 
 .seed-toggle {

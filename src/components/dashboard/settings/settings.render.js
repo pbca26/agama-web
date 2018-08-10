@@ -17,7 +17,7 @@ export const SettingsRender = function() {
           <Panel>
             <PanelSection
               title={ translate('INDEX.EXPORT_KEYS') }
-              icon="icon md-key"
+              icon="icon fa-key"
               openByDefault={ true }>
               <ExportKeysPanel />
             </PanelSection>

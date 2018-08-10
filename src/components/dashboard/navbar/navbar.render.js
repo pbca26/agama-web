@@ -93,7 +93,7 @@ const NavbarRender = function() {
                 { !this.isSectionActive('settings') &&
                   <li>
                     <a onClick={ () => this.dashboardChangeSection('settings') }>
-                      <i className="icon md-settings"></i> { translate('INDEX.SETTINGS') }
+                      <i className="icon fa-cog"></i> { translate('INDEX.SETTINGS') }
                     </a>
                   </li>
                 }

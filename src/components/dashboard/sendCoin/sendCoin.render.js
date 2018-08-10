@@ -32,7 +32,7 @@ export const AddressListRender = function() {
                 { `[ ${this.props.ActiveCoin.balance.balance - Math.abs(this.props.ActiveCoin.balance.unconfirmed)} ${this.props.ActiveCoin.coin.toUpperCase()} ] ${this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub}` }
               </span>
               <span
-                className="glyphicon glyphicon-ok check-mark pull-right"
+                className="icon fa-check check-mark pull-right"
                 style={{ display: this.state.sendFrom === null ? 'inline-block' : 'none' }}></span>
             </a>
           </li>

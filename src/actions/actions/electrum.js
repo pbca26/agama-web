@@ -848,8 +848,8 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
 
                               if (Number(fromSats(_utxoItem.value)) >= 10 &&
                                   decodedTx.format.locktime > 0) {
-                                Config.log('interest', komodoInterest);
                                 interest = komodoInterest(decodedTx.format.locktime, _utxoItem.value, _utxoItem.height);
+                                Config.log('interest', interest);
                               }
 
                               let _resolveObj = {

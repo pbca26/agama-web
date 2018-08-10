@@ -247,7 +247,7 @@ class SendCoin extends React.Component {
                   { type === 'public' ? address.address : address.address.substring(0, 34) + '...' }
                 </span>
                 <span
-                  className="glyphicon glyphicon-ok check-mark pull-right"
+                  className="icon fa-check check-mark pull-right"
                   style={{ display: this.state.sendFrom === address.address ? 'inline-block' : 'none' }}></span>
               </a>
             </li>

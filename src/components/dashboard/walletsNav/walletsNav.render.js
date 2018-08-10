@@ -35,7 +35,7 @@ export const WalletsNavWithWalletRender = function() {
               type="button"
               className="btn btn-dark waves-effect waves-light"
               onClick={ this.toggleWalletTransactions }>
-              <i className="icon md-view-dashboard"></i> <span className="placeholder">{ translate('INDEX.TRANSACTIONS') }</span>
+              <i className="icon fa-th-large"></i> <span className="placeholder">{ translate('INDEX.TRANSACTIONS') }</span>
             </button>
             { this.props.ActiveCoin &&
               <button
