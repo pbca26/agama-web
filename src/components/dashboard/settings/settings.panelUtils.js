@@ -31,20 +31,15 @@ export const toggleSection = (sectionId, activeSections, singleOpen) => {
 
 export const setupAccordion = (info) => {
   const singleOpen = (checkUndef(info.singleOpen)) ? info.singleOpen : false;
-  const activeSections = [];
   const singleChild = typeof info.kids.length === 'undefined';
+  const activeSections = [];
 
   if (!singleChild) {
     info.kids.forEach((child, i) => {
       const { openByDefault } = child ? child.props : false;
 
-      if (singleOpen &&
-          activeSections.length === 0 &&
-          openByDefault) {
-        activeSections.push(`panel-sec-${i}`);
-      }
-      if (!singleOpen &&
-          openByDefault) {
+      if ((!singleOpen && openByDefault) ||
+          (singleOpen && activeSections.length === 0 && openByDefault)) {
         activeSections.push(`panel-sec-${i}`);
       }
     });

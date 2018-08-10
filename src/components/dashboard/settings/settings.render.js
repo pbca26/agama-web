@@ -14,7 +14,9 @@ export const SettingsRender = function() {
       <div className="row">
         <div className="col-sm-12">
           <h4 className="font-size-14 text-uppercase">{ translate('INDEX.WALLET_SETTINGS') }</h4>
-          <Panel>
+          <Panel
+            uniqId={ 'SettingsAccordion' }
+            singleOpen={ true }>
             <PanelSection
               title={ translate('INDEX.EXPORT_KEYS') }
               icon="icon fa-key"

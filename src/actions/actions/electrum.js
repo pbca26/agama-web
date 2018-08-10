@@ -30,6 +30,7 @@ import {
 import proxyServers from '../../util/proxyServers';
 
 let proxyConErr = false;
+window.servers = {};
 
 const getCache = (coin, type, key, data) => {
   if (!appData.cache[coin]) {
@@ -68,10 +69,11 @@ export const shepherdSelectRandomCoinServer = (coin) => {
     _randomServer = Config.wlConfig.serverList[getRandomIntInclusive(0, Config.wlConfig.serverList.length - 1)].split(':');
   }
 
-  appData.servers[coin] = {
+  window.servers[coin] = {
     ip: _randomServer[0],
     port: _randomServer[1],
     proto: _randomServer[2],
+    serverList: Config.whitelabel ? Config.wlConfig.serverList : electrumServers[coin].serverList,
   };
 }
 
@@ -92,7 +94,7 @@ export const shepherdElectrumLogout = () => {
       spv: [],
       total: 0,
     };
-    appData.servers = {};
+    window.servers = {};
 
     if (Config.whitelabel) {
       appData.allcoins = {
@@ -105,35 +107,9 @@ export const shepherdElectrumLogout = () => {
   });
 }
 
-export const shepherdElectrumSetServer = (coin, address, port) => {
+export const shepherdElectrumCheckServerConnection = (ip, port, proto) => {
   return new Promise((resolve, reject) => {
-    fetch(`http://127.0.0.1:${Config.agamaPort}/shepherd/electrum/coins/server/set?address=${address}&port=${port}&coin=${coin}&token=${Config.token}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-    .catch((error) => {
-      console.log(error);
-      Store.dispatch(
-        triggerToaster(
-          translate('API.shepherdElectrumSetServer'),
-          'shepherdElectrumSetServer',
-          'Error',
-          'error'
-        )
-      );
-    })
-    .then(response => response.json())
-    .then(json => {
-      resolve(json);
-    });
-  });
-}
-
-export const shepherdElectrumCheckServerConnection = (address, port) => {
-  return new Promise((resolve, reject) => {
-    fetch(`http://127.0.0.1:${Config.agamaPort}/shepherd/electrum/servers/test?address=${address}&port=${port}&token=${Config.token}`, {
+    fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/server/version?port=${port}&ip=${ip}&proto=${proto}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -185,7 +161,7 @@ export const shepherdElectrumBalance = (coin, address) => {
   }, 20000);*/
 
   return dispatch => {
-    fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/getbalance?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}&address=${address}`, {
+    fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/getbalance?port=${window.servers[coin].port}&ip=${window.servers[coin].ip}&proto=${window.servers[coin].proto}&address=${address}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -272,7 +248,7 @@ export const shepherdElectrumBalanceState = (json) => {
 export const shepherdElectrumTransactions = (coin, address, full = true, verify = false) => {
   return dispatch => {
     // get current height
-    fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/getcurrentblock?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}`, {
+    fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/getcurrentblock?port=${window.servers[coin].port}&ip=${window.servers[coin].ip}&proto=${window.servers[coin].proto}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -301,7 +277,7 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
           Config.log('currentHeight =>');
           Config.log(currentHeight);
 
-          fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/listtransactions?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}&address=${address}&raw=true`, {
+          fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/listtransactions?port=${window.servers[coin].port}&ip=${window.servers[coin].ip}&proto=${window.servers[coin].proto}&address=${address}&raw=true`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -332,7 +308,7 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
 
                 Promise.all(json.map((transaction, index) => {
                   return new Promise((resolve, reject) => {
-                    fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/getblockinfo?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}&address=${address}&height=${transaction.height}`, {
+                    fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/getblockinfo?port=${window.servers[coin].port}&ip=${window.servers[coin].ip}&proto=${window.servers[coin].proto}&address=${address}&height=${transaction.height}`, {
                       method: 'GET',
                       headers: {
                         'Content-Type': 'application/json',
@@ -392,7 +368,7 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
                                     _resolve(true);
                                   }
                                 } else {
-                                  fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/gettransaction?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}&address=${address}&txid=${_decodedInput.txid}`, {
+                                  fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/gettransaction?port=${window.servers[coin].port}&ip=${window.servers[coin].ip}&proto=${window.servers[coin].proto}&address=${address}&txid=${_decodedInput.txid}`, {
                                     method: 'GET',
                                     headers: {
                                       'Content-Type': 'application/json',
@@ -642,9 +618,9 @@ export const shepherdElectrumSendPromise = (coin, value, sendToAddress, changeAd
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            port: appData.servers[coin].port,
-            ip: appData.servers[coin].ip,
-            proto: appData.servers[coin].proto,
+            port: window.servers[coin].port,
+            ip: window.servers[coin].ip,
+            proto: window.servers[coin].proto,
             rawtx: _tx,
           }),
         })
@@ -757,7 +733,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
 
   if (full) {
     return new Promise((resolve, reject) => {
-      fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/listunspent?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}&address=${address}`, {
+      fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/listunspent?port=${window.servers[coin].port}&ip=${window.servers[coin].ip}&proto=${window.servers[coin].proto}&address=${address}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -789,7 +765,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
             let formattedUtxoList = [];
             let _utxo = [];
 
-            fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/getcurrentblock?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}`, {
+            fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/getcurrentblock?port=${window.servers[coin].port}&ip=${window.servers[coin].ip}&proto=${window.servers[coin].proto}`, {
               method: 'GET',
               headers: {
                 'Content-Type': 'application/json',
@@ -921,7 +897,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                             }
                           }
                         } else {
-                          fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/gettransaction?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}&address=${address}&txid=${_utxoItem['tx_hash']}`, {
+                          fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/gettransaction?port=${window.servers[coin].port}&ip=${window.servers[coin].ip}&proto=${window.servers[coin].proto}&address=${address}&txid=${_utxoItem['tx_hash']}`, {
                             method: 'GET',
                             headers: {
                               'Content-Type': 'application/json',
@@ -1074,7 +1050,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
     });
   } else {
     return new Promise((resolve, reject) => {
-      fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/listunspent?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}&address=${address}`, {
+      fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/listunspent?port=${window.servers[coin].port}&ip=${window.servers[coin].ip}&proto=${window.servers[coin].proto}&address=${address}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

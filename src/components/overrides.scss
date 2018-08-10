@@ -411,9 +411,20 @@ select{
   width: inherit !important;
 }
 
-#section-iguana-wallet-settings .panel-title:before,
-#section-iguana-wallet-settings .panel-title:after {
+#section-iguana-wallet-settings .panel-title:before {
   display: none;
+}
+
+#section-iguana-wallet-settings .panel-title:after {
+  content: '\f067';
+  font-family: FontAwesome;
+  opacity: 0.8;
+}
+
+#section-iguana-wallet-settings .active .panel-title:after {
+  content: '\f068';
+  font-family: FontAwesome;
+  opacity: 0.8;
 }
 
 .seed-toggle {
