@@ -7,7 +7,7 @@ import electrumServers from 'agama-wallet-lib/src/electrum-servers';
 
 const WalletsInfoRender = function() {
   const _balance = this.props.ActiveCoin.balance;
-  const _server = appData.servers[this.props.ActiveCoin.coin];
+  const _server = window.servers[this.props.ActiveCoin.coin];
 
   return (
     <div className="unselectable">

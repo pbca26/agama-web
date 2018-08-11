@@ -1,6 +1,7 @@
 import React from 'react';
 import translate from '../../../translate/translate';
 import QRCode from 'qrcode.react';
+import QrReader from 'react-qr-reader';
 
 export const QRModalRender = function() {
   return (
@@ -86,9 +87,14 @@ export const QRModalReaderRender = function() {
                 <div className="modal-body">
                   <div className="animsition vertical-align fade-in">
                     <div className="page-content vertical-align-middle webcam-frame">
-                      <div id="webcam">
-                        { this.state.error }
-                      </div>
+                      { !this.state.error &&
+                        <QrReader
+                        delay={ 50 }
+                        className="qr-reader-comp"
+                        onError={ this.handleError }
+                        onScan={ this.handleScan } />
+                      }
+                      { this.state.error }
                     </div>
                   </div>
                 </div>
