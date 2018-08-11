@@ -20,7 +20,6 @@ class Settings extends React.Component {
     if (this.props.Main &&
         this.props.Main.coins &&
         this.props.Main.coins.spv) {
-      console.warn(window.servers);
       for (let i = 0; i < this.props.Main.coins.spv.length; i++) {
         if (window.servers[this.props.Main.coins.spv[i]].serverList) {
           return true;

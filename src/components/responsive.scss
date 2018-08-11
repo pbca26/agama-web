@@ -22,7 +22,7 @@
 
 @media only screen and (max-width : 500px) {
   .wallet-risks-modal .modal-body {
-    overflow-y: scroll;
+    overflow-y: auto;
     margin-bottom: 20px;
   }
   .page-login .addcoin-shortcut {
@@ -68,7 +68,8 @@
   }
   .page-login {
     .qr-modal-login-block {
-      display: none;
+      position: inherit;
+      padding: 40px 0 25px 0;
     }
     form {
       margin-top: 50px;
@@ -171,7 +172,7 @@
                 tr {
                   td:nth-child(2) {
                     max-width: calc(100vw - 160px);
-                    overflow-x: scroll;
+                    overflow-x: auto;
                   }
                 }
               }

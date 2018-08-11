@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Store from '../../../store';
 import translate from '../../../translate/translate';
-import QrReader from 'react-qr-reader';
 import {
   QRModalRender,
   QRModalReaderRender,
@@ -43,16 +42,6 @@ class QRModal extends React.Component {
     this.setState({
       modalIsOpen: true,
     });
-
-    if (this.props.mode === 'scan') {
-      ReactDOM.render(
-        <QrReader
-          delay={ 50 }
-          className="qr-reader-comp"
-          onError={ this.handleError }
-          onScan={ this.handleScan } />, document.getElementById('webcam')
-      );
-    }
   }
 
   closeModal() {
@@ -60,10 +49,6 @@ class QRModal extends React.Component {
       modalIsOpen: false,
       errorShown: this.state.error ? true : false,
     });
-
-    if (this.props.mode === 'scan') {
-      ReactDOM.unmountComponentAtNode(document.getElementById('webcam'));
-    }
   }
 
   saveAsImage(e) {
