@@ -8,7 +8,7 @@ const WalletsBalanceRender = function() {
   return (
     <div
       id="wallet-widgets"
-      className="wallet-widgets unselectable">
+      className="wallet-widgets">
       { this.renderBalance('transparent') !== -777 &&
         <div className="col-xs-12 flex">
           <div className={ this.props.ActiveCoin.coin.toUpperCase() !== 'KMD' || this.renderBalance('total') === this.renderBalance('transparent') || this.renderBalance('total') === 0 ? 'col-lg-12 col-xs-12 balance-placeholder--bold' : 'col-lg-3 col-xs-12' }>

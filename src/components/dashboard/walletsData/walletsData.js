@@ -354,10 +354,9 @@ class WalletsData extends React.Component {
               { translate('DASHBOARD.SPV_CONN_ERROR') }
             </div>
             <div className={ this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].serverList !== 'none' ? '' : 'hide' }>
-              <div className="color-warning">{ translate('DASHBOARD.SPV_AUTO_SWITCH') }...</div>
-              <br />
+              <div className="color-warning padding-bottom-10">{ translate('DASHBOARD.SPV_AUTO_SWITCH') }...</div>
               <strong>{ translate('DASHBOARD.HOW_TO_SWITCH_MANUALLY') }:</strong>
-              <br/>{ translate('DASHBOARD.SPV_CONN_ERROR_P1') }
+              <div className="padding-top-10">{ translate('DASHBOARD.SPV_CONN_ERROR_P1') }</div>
             </div>
           </td>
         </tr>

@@ -85,7 +85,7 @@ export const InvoiceModalRender = function() {
                   <div className="row hide">
                     <div className="col-lg-12">
                       <p className="help-block">
-                        { translate('INDEX.QR_CONTENT') }:<br />
+                        <span className="display--block">{ translate('INDEX.QR_CONTENT') }:</span>
                         { this.state.content }
                       </p>
                     </div>

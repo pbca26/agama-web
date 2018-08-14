@@ -13,7 +13,7 @@ const LoginRender = function() {
       <WalletRisksModal />
       <div className="page vertical-align text-center">
         <div className="page-content vertical-align-middle col-xs-12 col-sm-6 col-sm-offset-3">
-          <div className="brand unselectable">
+          <div className="brand">
             { !Config.whitelabel &&
               <img
                 className="brand-img"
@@ -30,7 +30,7 @@ const LoginRender = function() {
             }
           </div>
           { !this.state.risksWarningRead &&
-            <div className="margin-top-30 margin-bottom-40 unselectable">
+            <div className="margin-top-30 margin-bottom-40">
               <span
                 onClick={ this.toggleRisksWarningModal }
                 className="pointer fs-16">
@@ -39,7 +39,7 @@ const LoginRender = function() {
             </div>
           }
           { this.renderResetSPVCoinsOption() &&
-            <div className="margin-top-30 margin-bottom-40 unselectable">
+            <div className="margin-top-30 margin-bottom-40">
               <span
                 onClick={ this.resetSPVCoins }
                 className="pointer fs-16">
@@ -47,7 +47,7 @@ const LoginRender = function() {
               </span>
             </div>
           }
-          <div className={ this.state.activeLoginSection === 'login' ? 'show unselectable' : 'hide' }>
+          <div className={ this.state.activeLoginSection === 'login' ? 'show' : 'hide' }>
             <h4 className="color-white">
               { translate('INDEX.WELCOME_LOGIN') }
             </h4>
@@ -96,7 +96,7 @@ const LoginRender = function() {
             }
             { this.state.seedExtraSpaces &&
               <span>
-                <i className="icon fa-warning seed-extra-spaces-warning unselectable"
+                <i className="icon fa-warning seed-extra-spaces-warning"
                   data-tip={ translate('LOGIN.SEED_TRAILING_CHARS') }
                   data-html={ true }></i>
                 <ReactTooltip
@@ -236,7 +236,7 @@ const LoginRender = function() {
             </div>
           </div>
 
-          <div className={ this.state.activeLoginSection === 'activateCoin' ? 'show unselectable' : 'hide' }>
+          <div className={ this.state.activeLoginSection === 'activateCoin' ? 'show' : 'hide' }>
             <h4 className="color-white">
               { translate('INDEX.WELCOME_PLEASE_ADD') }
             </h4>
@@ -257,7 +257,12 @@ const LoginRender = function() {
                     { translate('INDEX.SPV_MODE') }
                     <i
                       className="icon fa-question-circle login-help"
-                      data-tip={ `${ translate('LOGIN.SPV_MODE_DESC_P1') } <u>${ translate('LOGIN.SPV_MODE_DESC_P2') }</u> ${ translate('LOGIN.SPV_MODE_DESC_P3') }<br/>${ translate('LOGIN.SPV_MODE_DESC_P4') }` }
+                      data-tip={
+                        `${ translate('LOGIN.SPV_MODE_DESC_P1') }
+                        <u>${ translate('LOGIN.SPV_MODE_DESC_P2') }</u>
+                        ${ translate('LOGIN.SPV_MODE_DESC_P3') }
+                        <div className="padding-top-10">${ translate('LOGIN.SPV_MODE_DESC_P4') }</div>`
+                      }
                       data-html={ true }></i>
                     <ReactTooltip
                       effect="solid"
@@ -285,10 +290,10 @@ const LoginRender = function() {
 
           <div className={ this.state.activeLoginSection === 'signup' ? 'show' : 'hide' }>
             <div className="register-form">
-              <h4 className="hint color-white unselectable">
+              <h4 className="hint color-white">
                 { translate('INDEX.SELECT_SEED_TYPE') }:
               </h4>
-              <div className="row unselectable">
+              <div className="row">
                 <div className="col-sm-5 horizontal-padding-0">
                   <div className="toggle-box vertical-padding-20">
                     <span className="pointer">
@@ -308,7 +313,7 @@ const LoginRender = function() {
                     </span>
                   </div>
                 </div>
-                <div className="col-sm-7 horizontal-padding-0 unselectable">
+                <div className="col-sm-7 horizontal-padding-0">
                 { !this.isCustomWalletSeed() &&
                   <div>
                     <div className="form-group form-material floating">
@@ -354,7 +359,7 @@ const LoginRender = function() {
                 </div>
               </div>
 
-              <div className="form-group form-material floating seed-tooltip unselectable">
+              <div className="form-group form-material floating seed-tooltip">
                 <textarea
                   className="form-control placeholder-no-fix height-100 selectable"
                   type="text"
@@ -369,19 +374,19 @@ const LoginRender = function() {
                   { translate('INDEX.COPY') }
                 </button>
                 <span className={ this.state.isCustomSeedWeak ? 'tooltiptext' : 'hide' }>
-                  <strong>{ translate('INDEX.WEAK_SEED') }</strong><br /><br />
-                  { translate('INDEX.YOUR_SEED_MUST_CONTAIN') }<br />
-                  { translate('INDEX.YOUR_SEED_MUST_CONTAIN1') }<br />
-                  { translate('INDEX.YOUR_SEED_MUST_CONTAIN2') }<br />
-                  { translate('INDEX.YOUR_SEED_MUST_CONTAIN3') }<br />
-                  { translate('INDEX.YOUR_SEED_MUST_CONTAIN4') }<br />
-                  { translate('INDEX.YOUR_SEED_MUST_CONTAIN5') }<br />
+                  <strong className="display--block padding-bottom-10">{ translate('INDEX.WEAK_SEED') }</strong>
+                  <span className="display--block">{ translate('INDEX.YOUR_SEED_MUST_CONTAIN') }</span>
+                  <span className="display--block">{ translate('INDEX.YOUR_SEED_MUST_CONTAIN1') }</span>
+                  <span className="display--block">{ translate('INDEX.YOUR_SEED_MUST_CONTAIN2') }</span>
+                  <span className="display--block">{ translate('INDEX.YOUR_SEED_MUST_CONTAIN3') }</span>
+                  <span className="display--block">{ translate('INDEX.YOUR_SEED_MUST_CONTAIN4') }</span>
+                  <span className="display--block">{ translate('INDEX.YOUR_SEED_MUST_CONTAIN5') }</span>
                 </span>
                 <label
                   className="floating-label"
                   htmlFor="walletseed">{ translate('INDEX.WALLET_SEED') }</label>
               </div>
-              <div className="form-group form-material floating unselectable">
+              <div className="form-group form-material floating">
                 <textarea
                   className="form-control placeholder-no-fix height-100"
                   type="text"

@@ -10,7 +10,7 @@ export const AddressActionsNonBasiliskModeRender = function(address, type) {
       <button
         onClick={ () => this.toggleAddressMenu(address) }
         data-tip={ translate('DASHBOARD.TOGGLE_ADD_MENU') }
-        className="btn btn-default btn-xs clipboard-edexaddr margin-left-10 receive-address-context-menu-trigger unselectable">
+        className="btn btn-default btn-xs clipboard-edexaddr margin-left-10 receive-address-context-menu-trigger">
         <i className="fa fa-ellipsis-v receive-address-context-menu-trigger"></i>
       </button>
       <ReactTooltip
@@ -37,7 +37,7 @@ export const AddressItemRender = function(address, type) {
   return (
     <tr key={ address.address }>
       { this.renderAddressActions(address.address, type) }
-      <td>{ address.address }</td>
+      <td className="selectable">{ address.address }</td>
       <td>
         <span>{ address.amount }</span>
       </td>
@@ -49,7 +49,7 @@ export const _ReceiveCoinTableRender = function() {
   return (
     <span>
       <table className="table table-hover dataTable table-striped">
-        <thead className="unselectable">
+        <thead>
           <tr>
             <th></th>
             <th>{ translate('INDEX.ADDRESS') }</th>
@@ -59,7 +59,7 @@ export const _ReceiveCoinTableRender = function() {
         <tbody>
           { this.renderAddressList('public') }
         </tbody>
-        <tfoot className="unselectable">
+        <tfoot>
           <tr>
             <th></th>
             <th>{ translate('INDEX.ADDRESS') }</th>
@@ -88,7 +88,7 @@ export const ReceiveCoinRender = function() {
                     <div className="panel-actions">
                       <InvoiceModal />
                     </div>
-                    <h4 className="panel-title unselectable">{ translate('INDEX.RECEIVING_ADDRESS') }</h4>
+                    <h4 className="panel-title">{ translate('INDEX.RECEIVING_ADDRESS') }</h4>
                   </header>
                   <div className="panel-body">
                   { this.ReceiveCoinTableRender() }

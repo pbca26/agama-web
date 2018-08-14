@@ -10,7 +10,7 @@ const WalletsInfoRender = function() {
   const _server = window.servers[this.props.ActiveCoin.coin];
 
   return (
-    <div className="unselectable">
+    <div>
       <div className="col-xlg-6 col-md-6">
         <div className="panel">
           <div className="panel-heading">

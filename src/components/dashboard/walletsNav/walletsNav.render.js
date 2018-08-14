@@ -5,7 +5,7 @@ export const WalletsNavWithWalletRender = function() {
   return (
     <div>
       <div
-        className="page-header page-header-bordered header-easydex padding-bottom-40 page-header--spv margin-bottom-30 unselectable"
+        className="page-header page-header-bordered header-easydex padding-bottom-40 page-header--spv margin-bottom-30"
         id="header-dashboard">
         { this.props.ActiveCoin &&
           <div>

@@ -12,10 +12,14 @@ const SwallModalRender = function() {
         <hr className="swal2-spacer display-block" />
         <button
           className="swal2-confirm styled swal2-confirm-container"
-          onClick={ this.execWalletCreate }>{ translate('LOGIN.YES_I_BACKUP') }</button>
+          onClick={ this.execWalletCreate }>
+          { translate('LOGIN.YES_I_BACKUP') }
+        </button>
         <button
           className="swal2-cancel styled swal2-cancel-container"
-          onClick={ this.toggleSeedBackupModal }>{ translate('LOGIN.CANCEL') }</button>
+          onClick={ this.toggleSeedBackupModal }>
+          { translate('LOGIN.CANCEL') }
+        </button>
       </div>
     </div>
   );

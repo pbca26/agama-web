@@ -49,7 +49,6 @@ class SPVServersPanel extends React.Component {
             'success'
           )
         );
-        console.warn(window.servers);
       } else {
         Store.dispatch(
           triggerToaster(

@@ -130,7 +130,9 @@ class WalletsBalance extends React.Component {
     const _translationComponents = translate(_translationID).split('<br>');
 
     return _translationComponents.map((_translation) =>
-      <span key={ `translate-${Math.random(0, 9) * 10}` }>
+      <span
+        className="display--block"
+        key={ `translate-${Math.random(0, 9) * 10}` }>
         {_translation}
         <br />
       </span>

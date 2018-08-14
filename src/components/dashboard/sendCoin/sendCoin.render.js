@@ -164,7 +164,7 @@ export const SendRender = function() {
     );
   } else {
     return (
-      <div className="col-sm-12 padding-top-10 coin-send-form unselectable">
+      <div className="col-sm-12 padding-top-10 coin-send-form">
         <div className="col-xlg-12 col-md-12 col-sm-12 col-xs-12">
           <div className="steps row margin-top-10">
             <div className={ 'step col-md-4' + (this.state.currentStep === 0 ? ' current' : '') }>
@@ -241,7 +241,9 @@ export const SendRender = function() {
                   <div className="col-xs-12">
                     <strong>{ translate('SEND.FEE') }</strong>
                   </div>
-                  <div className="col-lg-12 col-sm-12 col-xs-12">{ formatValue(fromSats(this.state.spvPreflightRes.fee)) } ({ this.state.spvPreflightRes.fee } { translate('SEND.SATS_SM') })</div>
+                  <div className="col-lg-12 col-sm-12 col-xs-12">
+                    { formatValue(fromSats(this.state.spvPreflightRes.fee)) } ({ this.state.spvPreflightRes.fee } { translate('SEND.SATS_SM') })
+                  </div>
                 </div>
               }
               { this.state.spvPreflightRes &&
@@ -263,7 +265,8 @@ export const SendRender = function() {
                   { this.state.spvPreflightRes.estimatedFee < 0 &&
                     <div className="col-lg-12 col-sm-12 col-xs-12 padding-bottom-20">
                       <strong>KMD { translate('SEND.REWARDS_SM') }</strong>&nbsp;
-                      { Math.abs(formatValue(fromSats(this.state.spvPreflightRes.estimatedFee))) } { translate('SEND.TO_S,') } { this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub }
+                      { Math.abs(formatValue(fromSats(this.state.spvPreflightRes.estimatedFee))) }&nbsp;
+                      { translate('SEND.TO_S,') } { this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub }
                     </div>
                   }
                   { this.state.spvPreflightRes.change > 0 &&
@@ -280,7 +283,7 @@ export const SendRender = function() {
               { this.state.spvVerificationWarning &&
                 <div className="padding-top-20 fs-15">
                   <strong className="color-warning">{ translate('SEND.WARNING') }:</strong>&nbsp;
-                  { translate('SEND.WARNING_SPV_P1') }<br />
+                  <span className="display--block">{ translate('SEND.WARNING_SPV_P1') }</span>
                   { translate('SEND.WARNING_SPV_P2') }
                 </div>
               }
@@ -353,7 +356,9 @@ export const SendRender = function() {
                       <tr>
                         <td className="padding-left-30">{ translate('SEND.TRANSACTION_ID') }</td>
                         <td className="padding-left-30">
-                          <span className="selectable">{ this.state.lastSendToResponse && this.state.lastSendToResponse.txid ? this.state.lastSendToResponse.txid : '' }</span>
+                          <span className="selectable">
+                            { this.state.lastSendToResponse && this.state.lastSendToResponse.txid ? this.state.lastSendToResponse.txid : '' }
+                          </span>
                           { this.state.lastSendToResponse &&
                             this.state.lastSendToResponse.txid &&
                             <button
@@ -395,7 +400,7 @@ export const SendRender = function() {
                     </div>
                     { (this.state.lastSendToResponse.result.toLowerCase().indexOf('decode error') > -1) &&
                       <div>
-                        { translate('SEND.SEND_ERR_ZTX_P1') }<br />
+                        <span className="display--block">{ translate('SEND.SEND_ERR_ZTX_P1') }</span>
                         { translate('SEND.SEND_ERR_ZTX_P2') }
                       </div>
                     }

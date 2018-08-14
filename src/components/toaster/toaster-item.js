@@ -88,7 +88,7 @@ class ToasterItem extends React.Component {
     }
 
     return (
-      <div className={ `toast toast-${this.state.type}${this.state.className ? ' ' + this.state.className : ''}` }>
+      <div className={ `toast toast-${this.state.type}${this.state.className ? ' ' + this.state.className.replace('error', 'error selectable') : ''}` }>
         <button
           className="toast-close-button"
           onClick={ () => this.dismissToast(this.state.toastId) }>×

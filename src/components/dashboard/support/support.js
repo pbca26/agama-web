@@ -9,7 +9,7 @@ class Support extends React.Component {
 
   render() {
     return (
-      <div className="page margin-left-0 unselectable">
+      <div className="page margin-left-0">
         <div className="page-content">
           <h2>{ translate('SETTINGS.SUPPORT') }</h2>
           <div className="row">
@@ -67,10 +67,18 @@ class Support extends React.Component {
           <div className="row margin-top-30">
             <div className="col-sm-12">
               <p>
-                { translate('INDEX.FOR_GUIDES_AND_FAQ') } <a className="selectable" target="_blank" href={ Config.whitelabel ? Config.wlConfig.support.ticketsLink.url : 'https://support.komodoplatform.com/support/home' }>{ Config.whitelabel ? Config.wlConfig.support.ticketsLink.url : 'https://support.komodoplatform.com/support/home' }</a>
+                { translate('INDEX.FOR_GUIDES_AND_FAQ') }&nbsp;
+                <a
+                  className="selectable"
+                  target="_blank"
+                  href={ Config.whitelabel ? Config.wlConfig.support.ticketsLink.url : 'https://support.komodoplatform.com/support/home' }>{ Config.whitelabel ? Config.wlConfig.support.ticketsLink.url : 'https://support.komodoplatform.com/support/home' }</a>
               </p>
               <p>
-                { translate('INDEX.TO_SEND_FEEDBACK') } <a className="selectable" target="_blank" href={ Config.whitelabel ? Config.wlConfig.support.ticketsLink.urlNewTicket : 'https://support.komodoplatform.com/support/tickets/new' }>{ Config.whitelabel ? Config.wlConfig.support.ticketsLink.urlNewTicket : 'https://support.komodoplatform.com/support/tickets/new' }</a>
+                { translate('INDEX.TO_SEND_FEEDBACK') }&nbsp;
+                <a
+                  className="selectable"
+                  target="_blank"
+                  href={ Config.whitelabel ? Config.wlConfig.support.ticketsLink.urlNewTicket : 'https://support.komodoplatform.com/support/tickets/new' }>{ Config.whitelabel ? Config.wlConfig.support.ticketsLink.urlNewTicket : 'https://support.komodoplatform.com/support/tickets/new' }</a>
               </p>
             </div>
           </div>

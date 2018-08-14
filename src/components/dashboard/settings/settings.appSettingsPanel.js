@@ -110,9 +110,10 @@ class AppSettingsPanel extends React.Component {
     const _translationComponents = translate(_translationID).split('<br>');
 
     return _translationComponents.map((_translation) =>
-      <span key={ `translate-${Math.random(0, 9) * 10}` }>
+      <span
+        className="display--block"
+        key={ `translate-${Math.random(0, 9) * 10}` }>
         {_translation}
-        <br />
       </span>
     );
   }
@@ -332,11 +333,15 @@ class AppSettingsPanel extends React.Component {
             <button
               type="button"
               className="btn btn-primary waves-effect waves-light"
-              onClick={ this._saveAppConfig }>{ translate('SETTINGS.SAVE_APP_CONFIG') }</button>
+              onClick={ this._saveAppConfig }>
+              { translate('SETTINGS.SAVE_APP_CONFIG') }
+            </button>
             <button
               type="button"
               className="btn btn-primary waves-effect waves-light margin-left-30"
-              onClick={ this._resetAppConfig }>{ translate('SETTINGS.RESET_TO_DEFAULT') }</button>
+              onClick={ this._resetAppConfig }>
+              { translate('SETTINGS.RESET_TO_DEFAULT') }
+            </button>
           </div>
         </div>
       </div>

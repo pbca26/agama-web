@@ -155,9 +155,10 @@ class ExportKeysPanel extends React.Component {
     const _translationComponents = translate(_translationID).split('<br>');
 
     return _translationComponents.map((_translation) =>
-      <span key={ `settings-label-${Math.random(0, 9) * 10}` }>
+      <span
+        className="display--block"
+        key={ `settings-label-${Math.random(0, 9) * 10}` }>
         { _translation }
-        <br />
       </span>
     );
   }
@@ -220,7 +221,9 @@ class ExportKeysPanel extends React.Component {
                 <button
                   type="button"
                   className="btn btn-primary waves-effect waves-light margin-bottom-5"
-                  onClick={ this.exportWifKeys }>{ translate('INDEX.GET_WIF_KEYS') }</button>
+                  onClick={ this.exportWifKeys }>
+                  { translate('INDEX.GET_WIF_KEYS') }
+                </button>
               </div>
             </form>
           </div>
@@ -230,7 +233,7 @@ class ExportKeysPanel extends React.Component {
             <div className="col-sm-12 padding-top-15">
               <table className="table no-borders">
                 <tbody>
-                  <tr key={ `wif-export-table-header-pub` }>
+                  <tr key="wif-export-table-header-pub">
                     <td className="padding-bottom-20 padding-top-20">
                       <strong>{ translate('SETTINGS.ADDRESS_LIST') }</strong>
                     </td>
