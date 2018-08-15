@@ -110,3 +110,18 @@
   display: block;
   margin: 0 auto;
 }
+
+.txhistory-table {
+  .label {
+    &.label-danger,
+    &.label-success {
+      display: block;
+      width: 46px;
+      padding: .35em .6em .33em;
+      text-align: left;
+      position: relative;
+      top: 2px;
+      margin: 0 auto;
+    }
+  }
+}
