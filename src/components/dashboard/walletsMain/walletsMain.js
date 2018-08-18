@@ -83,18 +83,20 @@ class WalletsMain extends React.Component {
   }
 
   getCoinStyle(type) {
+    const _coin = this.props.ActiveCoin.coin;
+
     if (type === 'transparent') {
-      if (getCoinTitle(this.props.ActiveCoin.coin.toUpperCase()).transparentBG &&
+      if (getCoinTitle(_coin.toUpperCase()).transparentBG &&
           getCoinTitle().logo) {
         return { 'backgroundImage': `url("assets/images/bg/${getCoinTitle().logo.toLowerCase()}_transparent_header_bg.png")` };
       }
     } else if (type === 'title') {
       let _iconPath;
 
-      if (getCoinTitle(this.props.ActiveCoin.coin.toUpperCase()).titleBG) {
-        _iconPath = `assets/images/native/${getCoinTitle(this.props.ActiveCoin.coin.toUpperCase()).logo.toLowerCase()}_header_title_logo.png`;
-      } else if (!getCoinTitle(this.props.ActiveCoin.coin.toUpperCase()).titleBG) {
-        _iconPath = `assets/images/cryptologo/${this.props.ActiveCoin.coin.toLowerCase()}.png`;
+      if (getCoinTitle(_coin.toUpperCase()).titleBG) {
+        _iconPath = `assets/images/native/${getCoinTitle(_coin.toUpperCase()).logo.toLowerCase()}_header_title_logo.png`;
+      } else if (!getCoinTitle(_coin.toUpperCase()).titleBG) {
+        _iconPath = `assets/images/cryptologo/${_coin.toLowerCase()}.png`;
       }
 
       return _iconPath;

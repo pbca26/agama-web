@@ -67,14 +67,14 @@ class Support extends React.Component {
           <div className="row margin-top-30">
             <div className="col-sm-12">
               <p>
-                { translate('INDEX.FOR_GUIDES_AND_FAQ') }&nbsp;
+                <span className="nbsp">{ translate('INDEX.FOR_GUIDES_AND_FAQ') }</span>
                 <a
                   className="selectable"
                   target="_blank"
                   href={ Config.whitelabel ? Config.wlConfig.support.ticketsLink.url : 'https://support.komodoplatform.com/support/home' }>{ Config.whitelabel ? Config.wlConfig.support.ticketsLink.url : 'https://support.komodoplatform.com/support/home' }</a>
               </p>
               <p>
-                { translate('INDEX.TO_SEND_FEEDBACK') }&nbsp;
+                <span className="nbsp">{ translate('INDEX.TO_SEND_FEEDBACK') }</span>
                 <a
                   className="selectable"
                   target="_blank"

@@ -1,7 +1,7 @@
 // web app config
 let Config = {
-  version: '0.2.0-beta',
-  debug: false,
+  version: '0.2.1-beta',
+  debug: true,
   defaultLang: 'EN',
   roundValues: false,
   fiatRates: true,

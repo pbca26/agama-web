@@ -38,13 +38,14 @@ class SPVServersPanel extends React.Component {
     shepherdElectrumCheckServerConnection(_server[0], _server[1], _server[2])
     .then((res) => {
       if (res.result) {
+        const _newServer = `${_server[0]}:${_server[1]}:${_server[2]}`;
         window.servers[coin].ip = _server[0];
         window.servers[coin].port = _server[1];
         window.servers[coin].proto = _server[2];
 
         Store.dispatch(
           triggerToaster(
-            `${coin.toUpperCase()} ${translate('SETTINGS.SPV_SERVER_SET')} ${_server[0]}:${_server[1]}:${_server[2]}`,
+            `${coin.toUpperCase()} ${translate('SETTINGS.SPV_SERVER_SET')} ${_newServer}`,
             translate('TOASTR.WALLET_NOTIFICATION'),
             'success'
           )
@@ -52,7 +53,7 @@ class SPVServersPanel extends React.Component {
       } else {
         Store.dispatch(
           triggerToaster(
-            `${coin.toUpperCase()} ${translate('SETTINGS.SPV_SERVER')} ${_server[0]}:${_server[1]}:${_server[2]} ${translate('DASHBOARD.IS_UNREACHABLE')}!`,
+            `${coin.toUpperCase()} ${translate('SETTINGS.SPV_SERVER')} ${_newServer} ${translate('DASHBOARD.IS_UNREACHABLE')}!`,
             translate('TOASTR.WALLET_NOTIFICATION'),
             'error'
           )
@@ -90,6 +91,8 @@ class SPVServersPanel extends React.Component {
       if (window.servers[_spvCoins[i]] &&
           window.servers[_spvCoins[i]].serverList &&
           window.servers[_spvCoins[i]].serverList !== 'none') {
+        const _activeServer = `${window.servers[_spvCoins[i]].ip}:${window.servers[_spvCoins[i]].port}:${window.servers[_spvCoins[i]].proto}`;
+
         _items.push(
           <div
             className={ 'row' + (_spvCoins.length > 1 ? ' padding-bottom-30' : '') }
@@ -100,7 +103,7 @@ class SPVServersPanel extends React.Component {
                 <select
                   className="form-control form-material"
                   name={ _spvCoins[i] }
-                  value={ (this.state && this.state[_spvCoins[i]]) || window.servers[_spvCoins[i]].ip + ':' + window.servers[_spvCoins[i]].port + ':' + window.servers[_spvCoins[i]].proto }
+                  value={ (this.state && this.state[_spvCoins[i]]) || _activeServer }
                   onChange={ (event) => this.updateInput(event) }
                   autoFocus>
                   { this.renderServerListSelectorOptions(_spvCoins[i]) }

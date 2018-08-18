@@ -27,7 +27,7 @@ class WalletsInfo extends React.Component {
   render() {
     if (this.props &&
         this.props.ActiveCoin &&
-        (this.props.ActiveCoin.progress || this.props.Dashboard.electrumCoins) &&
+        this.props.Dashboard.electrumCoins &&
         this.props.ActiveCoin.activeSection === 'settings') {
       return WalletsNativeInfoRender.call(this);
     }

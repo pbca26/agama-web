@@ -53,7 +53,7 @@ const WalletsTxInfoRender = function(txInfo) {
                               <tr>
                                 <td>{ this.capitalizeFirstLetter(translate('TX_INFO.AMOUNT')) }</td>
                                 <td>
-                                  { this.state.txDetails.amount }
+                                  { Number(this.state.txDetails.amount) }
                                 </td>
                               </tr>
                               <tr>
@@ -154,7 +154,7 @@ const WalletsTxInfoRender = function(txInfo) {
               { this.state.txDetails &&
                 (explorerList[this.props.ActiveCoin.coin.toUpperCase()] || Config.whitelabel) &&
                 <a
-                  href={ this.openExplorerWindow(this.state.txDetails.txid) }
+                  href={ this.openExplorerWindow() }
                   target="_blank">
                   <button
                     type="button"

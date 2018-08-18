@@ -17,7 +17,9 @@ const translate = (langID, interpolateStr) => {
         _lang[defaultLang][langIDComponents[0]][langIDComponents[1]]) {
       if (interpolateStr) {
         if (Config.whitelabel) {
-          return _lang[defaultLang][langIDComponents[0]][langIDComponents[1]].replace('@template@', interpolateStr).replace(/Agama/g, Config.wlConfig.coin.name);
+          return _lang[defaultLang][langIDComponents[0]][langIDComponents[1]]
+                 .replace('@template@', interpolateStr)
+                 .replace(/Agama/g, Config.wlConfig.coin.name);
         } else {
           return _lang[defaultLang][langIDComponents[0]][langIDComponents[1]].replace('@template@', interpolateStr);
         }

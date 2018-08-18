@@ -73,14 +73,6 @@ export const toggleReceiveCoinFormState = (display) => {
   }
 }
 
-export const toggleSendReceiveCoinFormsState = () => {
-  return {
-    type: DASHBOARD_ACTIVE_COIN_RESET_FORMS,
-    send: false,
-    receive: false,
-  }
-}
-
 export const triggerToaster = (message, title, _type, autoClose = true, className) => {
   return {
     type: ADD_TOASTER_MESSAGE,
@@ -132,12 +124,6 @@ export const toggleSendCoinForm = (display) => {
 export const toggleReceiveCoinForm = (display) => {
   return dispatch => {
     dispatch(toggleReceiveCoinFormState(display));
-  }
-}
-
-export const toggleSendReceiveCoinForms = () => {
-  return dispatch => {
-    dispatch(toggleSendReceiveCoinFormsState());
   }
 }
 

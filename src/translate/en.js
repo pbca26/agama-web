@@ -52,6 +52,7 @@ const LANG_EN = {
     COULDNT_COPY_ADDRESS: 'Couldn\'t copy address to clipboard',
   },
   INDEX: {
+    AMOUNT_IN: 'Amount in',
     FOR_GUIDES_AND_FAQ: 'For guides & FAQ please go to',
     TO_SEND_FEEDBACK: 'To send feedback please open a ticket at',
     STANDALONE: 'Standalone',
@@ -383,6 +384,10 @@ const LANG_EN = {
     RAW_INFO: 'Raw info',
   },
   SEND: {
+    CONF_TIME_WITHIN_60_MIN: 'within 60 min',
+    CONF_TIME_WITHIN_3O_MIN: 'within 30 min',
+    CONF_TIME_LESS_THAN_30_MIN: 'within less than 30 min',
+    IS_NOT_A_VALID_ADDR: 'is not a valid @template@ pub address',
     CLOCK_OUT_OF_SYNC: 'Your local clock is not set properly. This will prevent sending a KMD transaction.',
     SEND_ERR_ZTX_P1: 'Your history contains shielded transactions(z).',
     SEND_ERR_ZTX_P2: 'Please move funds to another transparent address in order to use Lite mode.',

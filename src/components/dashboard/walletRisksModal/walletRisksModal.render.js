@@ -32,9 +32,9 @@ const WalletRisksModalRender = function() {
                 <div className="page-content vertical-align-middle">
                   <div className="margin-bottom-40">
                     <p>
-                      { translate('RISKS_MODAL.DESC_P1') }&nbsp;
-                      { Config.whitelabel ? Config.wlConfig.coin.ticker : 'KMD' }&nbps;
-                      { Config.whitelabel ? '' : translate('RISKS_MODAL.DESC_P2') }&nbsp;
+                      <span className="nbsp">{ translate('RISKS_MODAL.DESC_P1') }</span>
+                      <span className="nbsp">{ Config.whitelabel ? Config.wlConfig.coin.ticker : 'KMD' }</span>
+                      <span className="nbsp">{ Config.whitelabel ? '' : translate('RISKS_MODAL.DESC_P2') }</span>
                       { translate('RISKS_MODAL.DESC_P3', Config.whitelabel ? Config.wlConfig.coin.name : 'Komodo') }
                     </p>
                     <p>{ translate('RISKS_MODAL.DESC_P4', Config.whitelabel ? Config.wlConfig.coin.name : 'Komodo') }</p>

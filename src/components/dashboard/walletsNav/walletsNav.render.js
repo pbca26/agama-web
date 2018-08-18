@@ -28,20 +28,20 @@ export const WalletsNavWithWalletRender = function() {
             <button
               type="button"
               className="btn btn-info waves-effect waves-light"
-              onClick={ this.toggleWalletInfo }>
+              onClick={ () => this.toggleSection('settings', true) }>
               <i className="icon fa-info"></i>
             </button>
             <button
               type="button"
               className="btn btn-dark waves-effect waves-light"
-              onClick={ this.toggleWalletTransactions }>
+              onClick={ () => this.toggleSection('default', true) }>
               <i className="icon fa-th-large"></i> <span className="placeholder">{ translate('INDEX.TRANSACTIONS') }</span>
             </button>
             { this.props.ActiveCoin &&
               <button
                 type="button"
                 className="btn btn-primary waves-effect waves-light"
-                onClick={ () => this.toggleSendCoinForm(!this.props.ActiveCoin.send) }
+                onClick={ () => this.toggleSection('send') }
                 disabled={ this.checkTotalBalance() <= 0 }>
                 <i className="icon fa-send"></i> <span className="placeholder">{ translate('INDEX.SEND') }</span>
               </button>
@@ -49,7 +49,7 @@ export const WalletsNavWithWalletRender = function() {
             <button
               type="button"
               className="btn btn-success waves-effect waves-light"
-              onClick={ () => this.toggleReceiveCoinForm(!this.props.ActiveCoin.receive) }>
+              onClick={ () => this.toggleSection('receive') }>
               <i className="icon fa-inbox"></i> <span className="placeholder">{ translate('INDEX.RECEIVE') }</span>
             </button>
           </div>

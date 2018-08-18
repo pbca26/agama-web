@@ -9,10 +9,6 @@ import {
   shepherdElectrumCoins,
   shepherdSelectRandomCoinServer,
 } from '../actionCreators';
-import {
-  checkCoinType,
-  checkAC,
-} from '../../components/addcoin/payload';
 import { isKomodoCoin } from 'agama-wallet-lib/src/coin-helpers';
 import btcNetworks from 'agama-wallet-lib/src/bitcoinjs-networks';
 import { stringToWif } from 'agama-wallet-lib/src/keys';

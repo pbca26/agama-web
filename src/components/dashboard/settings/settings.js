@@ -29,7 +29,9 @@ class Settings extends React.Component {
   }
 
   componentDidMount(props) {
-    document.getElementById('section-iguana-wallet-settings').setAttribute('style', 'height:auto; min-height: 100%');
+    document.getElementById('section-iguana-wallet-settings').setAttribute('style',
+      'height: auto;' +
+      'min-height: 100%');
   }
 
   render() {

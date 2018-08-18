@@ -2,9 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import {
   copyCoinAddress,
-  toggleSendCoinForm,
-  toggleReceiveCoinForm,
-  toggleSendReceiveCoinForms,
   toggleDashboardActiveSection,
 } from '../../../actions/actionCreators';
 import Store from '../../../store';
@@ -16,9 +13,6 @@ const NET_INFO_INTERVAL = 10000;
 class WalletsNav extends React.Component {
   constructor() {
     super();
-    this.toggleSendReceiveCoinForms = this.toggleSendReceiveCoinForms.bind(this);
-    this.toggleWalletInfo = this.toggleWalletInfo.bind(this);
-    this.toggleWalletTransactions = this.toggleWalletTransactions.bind(this);
     this.checkTotalBalance = this.checkTotalBalance.bind(this);
   }
 
@@ -37,37 +31,16 @@ class WalletsNav extends React.Component {
     return _balance;
   }
 
-  toggleWalletInfo() {
-    Store.dispatch(toggleDashboardActiveSection('settings'));
-  }
-
-  toggleWalletTransactions() {
-    Store.dispatch(toggleDashboardActiveSection('default'));
-  }
-
-  // TODO: merge toggle func into one
-  toggleSendReceiveCoinForms() {
-    Store.dispatch(
-      toggleDashboardActiveSection(
-        this.props.ActiveCoin.activeSection === 'settings' ? 'default' : 'settings'
-      )
-    );
-  }
-
-  toggleSendCoinForm(display) {
-    Store.dispatch(
-      toggleDashboardActiveSection(
-        this.props.ActiveCoin.activeSection === 'send' ? 'default' : 'send'
-      )
-    );
-  }
-
-  toggleReceiveCoinForm(display) {
-    Store.dispatch(
-      toggleDashboardActiveSection(
-        this.props.ActiveCoin.activeSection === 'receive' ? 'default' : 'receive'
-      )
-    );
+  toggleSection(section, def) {
+    if (def) {
+      Store.dispatch(toggleDashboardActiveSection(section));
+    } else {
+      Store.dispatch(
+        toggleDashboardActiveSection(
+          this.props.ActiveCoin.activeSection === section ? 'default' : section
+        )
+      );
+    }
   }
 
   render() {

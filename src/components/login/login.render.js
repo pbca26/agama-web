@@ -6,6 +6,24 @@ import ReactTooltip from 'react-tooltip';
 import WalletRisksModal from '../dashboard/walletRisksModal/walletRisksModal';
 import Config from '../../config';
 
+const _shortcutOptions = [
+  'kmd',
+  'chips',
+  'btch',
+  'mnz',
+  'revs',
+  'jumblr',
+  'kmd+revs+jumblr' // custom option
+];
+let shortcutOptions = [];
+
+for (let i = 0; i < _shortcutOptions.length; i++) {
+  shortcutOptions.push({
+    value: _shortcutOptions[i],
+    label: _shortcutOptions[i],
+  });
+}
+
 const LoginRender = function() {
   return (
     <div>
@@ -274,15 +292,7 @@ const LoginRender = function() {
                     onChange={ (event) => this.updateSelectedShortcut(event, 'spv') }
                     optionRenderer={ this.renderShortcutOption }
                     valueRenderer={ this.renderShortcutOption }
-                    options={[
-                      { value: 'kmd', label: 'kmd' },
-                      { value: 'chips', label: 'chips' },
-                      { value: 'btch', label: 'btch' },
-                      { value: 'mnz', label: 'mnz' },
-                      { value: 'revs', label: 'revs' },
-                      { value: 'jumblr', label: 'jumblr' },
-                      { value: 'kmd+revs+jumblr', label: 'kmd+revs+jumblr' },
-                    ]} />
+                    options={ shortcutOptions } />
                 </div>
               </div>
             }

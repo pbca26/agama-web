@@ -45,12 +45,12 @@ export const InvoiceModalRender = function() {
                           <option value="-1">
                             { translate('INDEX.CHOOSE_RECEIVING_ADDRESS') }
                           </option>
-                          { this.renderAddressList('public') }
+                          { this.renderAddressList() }
                         </select>
                         <label
-                          className="control-label margin-top-20"
+                          className="text-left control-label margin-top-20"
                           htmlFor="qrCoinAmount">
-                          { this.props.ActiveCoin.coin }
+                          { translate('INDEX.AMOUNT_IN') } { this.props.ActiveCoin.coin.toUpperCase() }
                         </label>
                         <input
                           type="number"
@@ -71,12 +71,13 @@ export const InvoiceModalRender = function() {
                         value={ this.state.content }
                         size={ 198 } />
                         <p className="margin-top-10">
-                          <a href=""
+                          <a
+                            href=""
                             id="saveImage"
                             className="btn btn-success waves-effect waves-light save-image-btn margin-right-10"
                             disabled={ this.state.qrAddress === '-1' }
                             onClick={ this.saveAsImage }>
-                            <i className="icon fa-picture-o"></i>&nbsp;
+                            <i className="icon fa-picture-o nbsp"></i>
                             { translate('INDEX.SAVE_AS_IMAGE') }
                           </a>
                         </p>
@@ -112,16 +113,5 @@ export const InvoiceModalButtonRender = function() {
           { translate('INDEX.CREATE_INVOICE') }
       </button>
     </span>
-  );
-};
-
-export const AddressItemRender = function(address, type) {
-  return (
-    <option
-      key={ address.address }
-      value={ address.address }>
-      { type === 'public' ? address.address : `${address.address.substring(0, 34)}...` }
-       &nbsp; ({ translate('INDEX.BALANCE') }: { address.amount })
-    </option>
   );
 };

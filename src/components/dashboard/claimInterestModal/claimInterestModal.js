@@ -25,7 +25,7 @@ import {
   checkTimestamp,
 } from 'agama-wallet-lib/src/time';
 
-const SPV_MAX_LOCAL_TIMESTAMP_DEVIATION = 60; // seconds    if (this.props.ActiveCoin.mode === 'spv') {
+const SPV_MAX_LOCAL_TIMESTAMP_DEVIATION = 60; // seconds
 
 // TODO: promises
 
@@ -142,11 +142,13 @@ class ClaimInterestModal extends React.Component {
   }
 
   confirmClaimInterest() {
+    const _pub = this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub
+
     shepherdElectrumSendPromise(
       this.props.ActiveCoin.coin,
       this.props.ActiveCoin.balance.balanceSats,
-      this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub,
-      this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub,
+      _pub,
+      _pub,
       electrumServers[this.props.ActiveCoin.coin].txfee,
       true
     )
@@ -162,7 +164,7 @@ class ClaimInterestModal extends React.Component {
       } else {
         Store.dispatch(
           triggerToaster(
-            `${translate('TOASTR.CLAIM_INTEREST_BALANCE_SENT_P1')} ${this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub}. ${translate('TOASTR.CLAIM_INTEREST_BALANCE_SENT_P2')}`,
+            `${translate('TOASTR.CLAIM_INTEREST_BALANCE_SENT_P1')} ${_pub}. ${translate('TOASTR.CLAIM_INTEREST_BALANCE_SENT_P2')}`,
             translate('TOASTR.WALLET_NOTIFICATION'),
             'success',
             false

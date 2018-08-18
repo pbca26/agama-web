@@ -21,12 +21,14 @@ class Dashboard extends React.Component {
   }
 
   displayDashboard() {
-    return this.props &&
-          this.props.Main &&
-          this.props.Main.coins &&
-          this.props.Main.coins.spv &&
-          this.props.Main.coins.spv.length &&
-          this.props.Main.isLoggedIn;
+    const _props = this.props;
+
+    return _props &&
+          _props.Main &&
+          _props.Main.coins &&
+          _props.Main.coins.spv &&
+          _props.Main.coins.spv.length &&
+          _props.Main.isLoggedIn;
   }
 
   render() {

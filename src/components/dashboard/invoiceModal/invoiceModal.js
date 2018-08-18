@@ -42,7 +42,7 @@ class InvoiceModal extends React.Component {
       const time = new Date().getTime();
 
       a.href = dataURL;
-      a.download = this.state.qrAddress + '_' + time;
+      a.download = `${this.state.qrAddress}_${time}`;
     } else {
       e.preventDefault();
       return;
@@ -71,53 +71,19 @@ class InvoiceModal extends React.Component {
     });
   }
 
-  hasNoAmount(address) {
-    return address.amount === 'N/A' || address.amount === 0;
-  }
+  renderAddressList() {
+    const _address = this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub;
+    let _items = [];
 
-  hasNoInterest(address) {
-    return address.interest === 'N/A' || address.interest === 0 || !address.interest;
-  }
+    _items.push(
+      <option
+        key={ _address }
+        value={ _address }>
+        { _address }  ({ translate('INDEX.BALANCE') }: { this.props.ActiveCoin.balance.balance })
+      </option>
+    );
 
-  renderAddressList(type) {
-    const _addresses = this.props.ActiveCoin.addresses;
-    const _coin = this.props.ActiveCoin.coin;
-
-    if (_addresses &&
-        _addresses[type] &&
-        _addresses[type].length) {
-      let items = [];
-
-      for (let i = 0; i < _addresses[type].length; i++) {
-        let address = _addresses[type][i];
-
-        items.push(
-          AddressItemRender.call(this, address, type)
-        );
-      }
-
-      return items;
-    } else {
-      if (this.props.Dashboard.electrumCoins &&
-          type === 'public') {
-        let items = [];
-
-        items.push(
-          AddressItemRender.call(
-            this,
-            {
-              address: this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub,
-              amount: this.props.ActiveCoin.balance.balance
-            },
-            'public'
-          )
-        );
-
-        return items;
-      } else {
-        return null;
-      }
-    }
+    return _items;
   }
 
   render() {

@@ -47,7 +47,7 @@ class WalletMain extends React.Component {
         <Dashboard />
         <AddCoin />
         <Login />
-        <Toaster {...this.props.toaster} />
+        <Toaster { ...this.props.toaster } />
       </div>
     );
   }

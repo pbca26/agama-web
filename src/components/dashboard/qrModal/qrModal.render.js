@@ -24,7 +24,10 @@ export const QRModalRender = function() {
                 onClick={ this.closeModal }>
                 <span>×</span>
               </button>
-              <h4 className="modal-title white text-left">{ this.props.title || translate('INDEX.SCAN_QR_CODE') }</h4>
+              <h4 className="modal-title white text-left">{
+                this.props.title ||
+                translate('INDEX.SCAN_QR_CODE')
+              }</h4>
             </div>
             <div className="modal-body">
               <div className="animsition vertical-align fade-in">
@@ -35,11 +38,12 @@ export const QRModalRender = function() {
                     value={ this.props.content }
                     size={ Number(this.props.qrSize) || 198 } />
                   <p className="margin-top-10">
-                    <a href=""
+                    <a
+                      href=""
                       id={ 'saveModalImage' + this.props.content }
                       className="btn btn-success waves-effect waves-light save-image-btn margin-right-10"
                       onClick={ this.saveAsImage }>
-                      <i className="icon fa-picture-o"></i>&nbsp;
+                      <i className="icon fa-picture-o nbsp"></i>
                       { translate('INDEX.SAVE_AS_IMAGE') }
                     </a>
                   </p>

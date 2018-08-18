@@ -11,13 +11,16 @@ import {
 } from 'agama-wallet-lib/src/utils';
 
 export const AddressListRender = function() {
+  const _balance = this.props.ActiveCoin.balance.balance - Math.abs(this.props.ActiveCoin.balance.unconfirmed);
+  const _coin = this.props.ActiveCoin.coin;
+
   return (
     <div className={ `btn-group bootstrap-select form-control form-material showkmdwalletaddrs show-tick ${(this.state.addressSelectorOpen ? 'open' : '')}` }>
       <button
         type="button"
         className={ 'btn dropdown-toggle btn-info disabled' }
         onClick={ this.openDropMenu }>
-        <span className="filter-option pull-left">{ this.renderSelectorCurrentLabel() }&nbsp;</span>
+        <span className="filter-option pull-left">{ this.renderSelectorCurrentLabel() }</span>
         <span className="bs-caret">
           <span className="caret"></span>
         </span>
@@ -29,14 +32,13 @@ export const AddressListRender = function() {
             onClick={ () => this.updateAddressSelection(null, 'public', null) }>
             <a>
               <span className="text">
-                { `[ ${this.props.ActiveCoin.balance.balance - Math.abs(this.props.ActiveCoin.balance.unconfirmed)} ${this.props.ActiveCoin.coin.toUpperCase()} ] ${this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub}` }
+                { `[ ${_balance} ${_coin.toUpperCase()} ] ${this.props.Dashboard.electrumCoins[_coin].pub}` }
               </span>
               <span
                 className="icon fa-check check-mark pull-right"
                 style={{ display: this.state.sendFrom === null ? 'inline-block' : 'none' }}></span>
             </a>
           </li>
-          { this.renderAddressByType('public') }
         </ul>
       </div>
     </div>
@@ -46,16 +48,14 @@ export const AddressListRender = function() {
 export const _SendFormRender = function() {
   return (
     <div className="extcoin-send-form">
-      { this.state.renderAddressDropdown &&
-        <div className="row">
-          <div className="col-xlg-12 form-group form-material">
-            <label className="control-label padding-bottom-10">
-              { translate('INDEX.SEND_FROM') }
-            </label>
-            { this.renderAddressList() }
-          </div>
+      <div className="row">
+        <div className="col-xlg-12 form-group form-material">
+          <label className="control-label padding-bottom-10">
+            { translate('INDEX.SEND_FROM') }
+          </label>
+          { this.renderAddressList() }
         </div>
-      }
+      </div>
       <div className="row">
         <div className="col-xlg-12 form-group form-material">
           <button
@@ -138,8 +138,8 @@ export const _SendFormRender = function() {
         </div>
         <div className="col-lg-12 hide">
           <span>
-            <strong>{ translate('INDEX.TOTAL') }:</strong>&nbsp;
-            { this.state.amount } - { this.state.fee }/kb = { Number(this.state.amount) - Number(this.state.fee) }&nbsp;
+            <strong className="nbsp">{ translate('INDEX.TOTAL') }:</strong>
+            <span className="nbsp">{ this.state.amount } - { this.state.fee }/kb = { Number(this.state.amount) - Number(this.state.fee) }</span>
             { this.props.ActiveCoin.coin.toUpperCase() }
           </span>
         </div>
@@ -158,6 +158,8 @@ export const _SendFormRender = function() {
 }
 
 export const SendRender = function() {
+  const _coin = this.props.ActiveCoin.coin;
+
   if (this.props.renderFormOnly) {
     return (
       <div>{ this.SendFormRender() }</div>
@@ -195,7 +197,7 @@ export const SendRender = function() {
           <div className="panel">
             <div className="panel-heading">
               <h3 className="panel-title">
-                { translate('INDEX.SEND') } { this.props.ActiveCoin.coin.toUpperCase() }
+                { translate('INDEX.SEND') } { _coin.toUpperCase() }
               </h3>
             </div>
             <div className="qr-modal-send-block">
@@ -218,7 +220,7 @@ export const SendRender = function() {
                 </div>
                 <div className="col-lg-6 col-sm-6 col-xs-12 overflow-hidden selectable">{ this.state.sendTo }</div>
                 <div className="col-lg-6 col-sm-6 col-xs-6">
-                  { this.state.amount } { this.props.ActiveCoin.coin.toUpperCase() }
+                  { this.state.amount } { _coin.toUpperCase() }
                 </div>
                 <div className={ this.state.subtractFee ? 'col-lg-6 col-sm-6 col-xs-12 padding-top-10 bold' : 'hide' }>
                   { translate('DASHBOARD.SUBTRACT_FEE') }
@@ -232,7 +234,7 @@ export const SendRender = function() {
                   </div>
                   <div className="col-lg-6 col-sm-6 col-xs-12 overflow-hidden">{ this.state.sendFrom }</div>
                   <div className="col-lg-6 col-sm-6 col-xs-6 confirm-currency-send-container">
-                    { Number(this.state.amount) } { this.props.ActiveCoin.coin.toUpperCase() }
+                    { Number(this.state.amount) } { _coin.toUpperCase() }
                   </div>
                 </div>
               }
@@ -251,7 +253,7 @@ export const SendRender = function() {
                   { this.state.spvPreflightRes.change === 0 &&
                     <div className="col-lg-12 col-sm-12 col-xs-12">
                       <strong>{ translate('SEND.ADJUSTED_AMOUNT') }</strong>
-                      <span>
+                      <span className="nbsp">
                         <i
                           className="icon fa-question-circle settings-help send-btc"
                           data-tip={ translate('SEND.TOTAL_DESC') }></i>
@@ -259,19 +261,19 @@ export const SendRender = function() {
                           effect="solid"
                           className="text-left" />
                       </span>
-                      &nbsp;{ formatValue(fromSats(this.state.spvPreflightRes.value) - fromSats(this.state.spvPreflightRes.fee)) }
+                      { formatValue(fromSats(this.state.spvPreflightRes.value) - fromSats(this.state.spvPreflightRes.fee)) }
                     </div>
                   }
                   { this.state.spvPreflightRes.estimatedFee < 0 &&
                     <div className="col-lg-12 col-sm-12 col-xs-12 padding-bottom-20">
-                      <strong>KMD { translate('SEND.REWARDS_SM') }</strong>&nbsp;
-                      { Math.abs(formatValue(fromSats(this.state.spvPreflightRes.estimatedFee))) }&nbsp;
-                      { translate('SEND.TO_S,') } { this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub }
+                      <strong className="nbsp">KMD { translate('SEND.REWARDS_SM') }</strong>&nbsp;
+                      <span className="nbsp">{ Math.abs(formatValue(fromSats(this.state.spvPreflightRes.estimatedFee))) }</span>
+                      { translate('SEND.TO_S,') } { this.props.Dashboard.electrumCoins[_coin].pub }
                     </div>
                   }
                   { this.state.spvPreflightRes.change > 0 &&
                     <div className="col-lg-12 col-sm-12 col-xs-12">
-                      <strong>{ translate('SEND.TOTAL') }</strong>&nbsp;
+                      <strong className="nbsp">{ translate('SEND.TOTAL') }</strong>
                       { formatValue(fromSats(this.state.spvPreflightRes.value) + fromSats(this.state.spvPreflightRes.fee)) }
                     </div>
                   }
@@ -282,7 +284,7 @@ export const SendRender = function() {
               }
               { this.state.spvVerificationWarning &&
                 <div className="padding-top-20 fs-15">
-                  <strong className="color-warning">{ translate('SEND.WARNING') }:</strong>&nbsp;
+                  <strong className="color-warning nbsp">{ translate('SEND.WARNING') }:</strong>
                   <span className="display--block">{ translate('SEND.WARNING_SPV_P1') }</span>
                   { translate('SEND.WARNING_SPV_P2') }
                 </div>
@@ -334,7 +336,7 @@ export const SendRender = function() {
                         { translate('INDEX.SEND_FROM') }
                         </td>
                         <td className="padding-left-30 selectable">
-                          { this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub }
+                          { this.props.Dashboard.electrumCoins[_coin].pub }
                         </td>
                       </tr>
                       <tr>
@@ -364,21 +366,21 @@ export const SendRender = function() {
                             <button
                               className="btn btn-default btn-xs clipboard-edexaddr margin-left-10"
                               title={ translate('INDEX.COPY_TO_CLIPBOARD') }
-                              onClick={ () => this.copyTXID(this.state.lastSendToResponse && this.state.lastSendToResponse.txid ? this.state.lastSendToResponse.txid : '') }>
+                              onClick={ () => this.copyTXID(this.state.lastSendToResponse.txid) }>
                               <i className="icon fa-copy"></i> { translate('INDEX.COPY') }
                             </button>
                           }
                           { this.state.lastSendToResponse &&
                             this.state.lastSendToResponse.txid &&
-                            (explorerList[this.props.ActiveCoin.coin.toUpperCase()] || Config.whitelabel) &&
+                            (explorerList[_coin.toUpperCase()] || Config.whitelabel) &&
                             <div className="margin-top-10">
                               <a
-                                href={ this.openExplorerWindow(this.state.lastSendToResponse && this.state.lastSendToResponse.txid ? this.state.lastSendToResponse.txid : '') }
+                                href={ this.openExplorerWindow() }
                                 target="_blank">
                                 <button
                                   type="button"
                                   className="btn btn-sm white btn-dark waves-effect waves-light pull-left">
-                                  <i className="icon fa-external-link"></i> { translate('INDEX.OPEN_TRANSACTION_IN_EPLORER', this.props.ActiveCoin.coin.toUpperCase()) }
+                                  <i className="icon fa-external-link"></i> { translate('INDEX.OPEN_TRANSACTION_IN_EPLORER', _coin.toUpperCase()) }
                                 </button>
                               </a>
                             </div>

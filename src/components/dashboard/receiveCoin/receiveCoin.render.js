@@ -4,7 +4,7 @@ import QRModal from '../qrModal/qrModal';
 import InvoiceModal from '../invoiceModal/invoiceModal';
 import ReactTooltip from 'react-tooltip';
 
-export const AddressActionsNonBasiliskModeRender = function(address, type) {
+export const AddressActionsRender = function(address) {
   return (
     <td>
       <button
@@ -57,7 +57,7 @@ export const _ReceiveCoinTableRender = function() {
           </tr>
         </thead>
         <tbody>
-          { this.renderAddressList('public') }
+          { this.renderAddressList() }
         </tbody>
         <tfoot>
           <tr>

@@ -31,7 +31,7 @@ export const AddressTypeRender = function() {
   return (
     <span>
       <span className="label label-default">
-        <i className="icon fa-eye"></i>&nbsp;
+        <i className="icon fa-eye nbsp"></i>
         { translate('IAPI.PUBLIC_SM') }
       </span>
     </span>
@@ -156,7 +156,7 @@ export const TxAmountRender = function(tx) {
   return (
     <span>
       { Math.abs(tx.interest) !== Math.abs(tx.amount) &&
-        <span>{ tx.amount || translate('DASHBOARD.UNKNOWN') }</span>
+        <span>{ Number(tx.amount) || translate('DASHBOARD.UNKNOWN') }</span>
       }
       { tx.interest &&
         <span

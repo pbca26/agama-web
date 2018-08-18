@@ -15,28 +15,28 @@ class About extends React.Component {
           <p className="padding-bottom-15 padding-top-10">{ translate('ABOUT.AGAMA_MODES') }</p>
           <p className="font-weight-600 padding-bottom-15">{ translate('ABOUT.AGAMA_NOTE') }</p>
           <div className="font-weight-600">{ translate('ABOUT.TESTERS') }</div>
-          { translate('ABOUT.TESTERS_P1') }&nbsp;
+          { translate('ABOUT.TESTERS_P1') }
           <a
-            className="link"
+            className="link nbsp nbsp-l"
             target="_blank"
-            href={ Config.whitelabel ? Config.wlConfig.support.onlineLink.url : 'https://www.atomicexplorer.com/wallet' }>{ Config.whitelabel ? Config.wlConfig.support.onlineLink.title : 'https://www.atomicexplorer.com/wallet' }</a>&nbsp;
-          { translate('ABOUT.TESTERS_OR') }&nbsp;
+            href={ Config.whitelabel ? Config.wlConfig.support.onlineLink.url : 'https://www.atomicexplorer.com/wallet' }>{ Config.whitelabel ? Config.wlConfig.support.onlineLink.title : 'https://www.atomicexplorer.com/wallet' }</a>
+          <span className="nbsp">{ translate('ABOUT.TESTERS_OR') }</span>
           <a
-            className="link"
+            className="link nbsp"
             target="_blank"
-            href={ Config.whitelabel ? Config.wlConfig.support.standaloneLink : 'https://www.atomicexplorer.com/wallet.zip' }>{ translate('ABOUT.TESTERS_P2') }</a>.&nbsp;
-          { translate('ABOUT.TESTERS_P3') }&nbsp;
+            href={ Config.whitelabel ? Config.wlConfig.support.standaloneLink : 'https://www.atomicexplorer.com/wallet.zip' }>{ translate('ABOUT.TESTERS_P2') }</a>.
+          <span className="nbsp-l nbsp">{ translate('ABOUT.TESTERS_P3') }</span>
           <a
-            className="link"
+            className="link nbsp"
             target="_blank"
-            href={ Config.whitelabel ? Config.wlConfig.support.chatApp.url : 'https://discordapp.com/channels/412898016371015680/453204571393622027' }>{ Config.whitelabel ? Config.wlConfig.support.chatApp.channel : '#agama-wallet' }</a>&nbsp;
-          { Config.whitelabel ? Config.wlConfig.support.chatApp.name : 'Discord' } { translate('ABOUT.CHANNEL') }.&nbsp;
+            href={ Config.whitelabel ? Config.wlConfig.support.chatApp.url : 'https://discordapp.com/channels/412898016371015680/453204571393622027' }>{ Config.whitelabel ? Config.wlConfig.support.chatApp.channel : '#agama-wallet' }</a>
+          <span className="nbsp">{ Config.whitelabel ? Config.wlConfig.support.chatApp.name : 'Discord' } { translate('ABOUT.CHANNEL') }</span>.
           <a
-            className="link"
+            className="link nbsp nbsp-l"
             target="_blank"
-            href={ Config.whitelabel ? Config.wlConfig.support.chatApp.inviteUrl : 'https://komodoplatform.com/discord' }>{ translate('ABOUT.GET_AN_INVITE') }</a>&nbsp;
-          { translate('ABOUT.GET_AN_INVITE_P2').replace('Discord', Config.whitelabel ? Config.wlConfig.support.chatApp.name : 'Discord') }.&nbsp;
-          { translate('ABOUT.TESTERS_P4') }
+            href={ Config.whitelabel ? Config.wlConfig.support.chatApp.inviteUrl : 'https://komodoplatform.com/discord' }>{ translate('ABOUT.GET_AN_INVITE') }</a>
+          { translate('ABOUT.GET_AN_INVITE_P2').replace('Discord', Config.whitelabel ? Config.wlConfig.support.chatApp.name : 'Discord') }.
+          <span className="nbsp-l">{ translate('ABOUT.TESTERS_P4') }</span>
         </div>
       </div>
     );

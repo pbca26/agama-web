@@ -4,7 +4,6 @@ import {
   toggleAddcoinModal,
   shepherdElectrumAuth,
   shepherdElectrumCoins,
-  startInterval,
   getDexCoins,
   triggerToaster,
   toggleLoginSettingsModal,
@@ -17,6 +16,7 @@ import {
   dashboardRemoveCoin,
   activeHandle,
   addCoin,
+  copyString,
 } from '../../actions/actionCreators';
 import Config from '../../config';
 import Store from '../../store';
@@ -352,7 +352,11 @@ class Login extends React.Component {
     this.refs.loginPassphraseTextarea.value = '';
 
     if (this.state.shouldEncryptSeed) {
-      Store.dispatch(encryptPassphrase(this.state.loginPassphrase, this.state.encryptKey, this.state.pubKey));
+      Store.dispatch(encryptPassphrase(
+        this.state.loginPassphrase,
+        this.state.encryptKey,
+        this.state.pubKey
+      ));
     }
 
     if (this.state.selectedPin) {
@@ -456,7 +460,8 @@ class Login extends React.Component {
     // at least one special char
     // min length 10 chars
 
-    const _customSeed = this.state.customWalletSeed ? this.state.randomSeed.match('^(?=.*[A-Z])(?=.*[^<>{}\"/|;:.,~!?@#$%^=&*\\]\\\\()\\[_+]*$)(?=.*[0-9])(?=.*[a-z]).{10,99}$') : false;
+    const _regexPattern = '^(?=.*[A-Z])(?=.*[^<>{}\"/|;:.,~!?@#$%^=&*\\]\\\\()\\[_+]*$)(?=.*[0-9])(?=.*[a-z]).{10,99}$';
+    const _customSeed = this.state.customWalletSeed ? this.state.randomSeed.match(_regexPattern) : false;
 
     this.setState({
       isCustomSeedWeak: _customSeed === null ? true : false,
@@ -491,22 +496,7 @@ class Login extends React.Component {
   }
 
   copyPassPhraseToClipboard() {
-    const passPhrase = this.state.randomSeed;
-    const textField = document.createElement('textarea');
-
-    textField.innerText = passPhrase;
-    document.body.appendChild(textField);
-    textField.select();
-    document.execCommand('copy');
-    textField.remove();
-
-    Store.dispatch(
-      triggerToaster(
-        translate('LOGIN.SEED_SUCCESSFULLY_COPIED'),
-        translate('LOGIN.SEED_COPIED'),
-        'success'
-      )
-    );
+    Store.dispatch(copyString(this.state.randomSeed, translate('LOGIN.SEED_SUCCESSFULLY_COPIED')));
   }
 
   updateSelectedShortcut(e, type) {

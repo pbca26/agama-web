@@ -11,7 +11,11 @@ const WalletsBalanceRender = function() {
       className="wallet-widgets">
       { this.renderBalance('transparent') !== -777 &&
         <div className="col-xs-12 flex">
-          <div className={ this.props.ActiveCoin.coin.toUpperCase() !== 'KMD' || this.renderBalance('total') === this.renderBalance('transparent') || this.renderBalance('total') === 0 ? 'col-lg-12 col-xs-12 balance-placeholder--bold' : 'col-lg-3 col-xs-12' }>
+          <div className={
+            this.props.ActiveCoin.coin.toUpperCase() !== 'KMD' ||
+            this.renderBalance('total') === this.renderBalance('transparent') ||
+            this.renderBalance('total') === 0 ? 'col-lg-12 col-xs-12 balance-placeholder--bold' : 'col-lg-3 col-xs-12'
+          }>
             <div className="widget widget-shadow">
               <div className="widget-content">
                 { this.state.loading &&
@@ -28,7 +32,7 @@ const WalletsBalanceRender = function() {
                   <div className="clearfix cursor-default">
                     <div className="pull-left padding-vertical-10">
                       { Number(this.renderBalance('interest')) > 0 &&
-                        <span className="padding-right-30">&nbsp;</span>
+                        <span className="padding-right-30 nbsp">&nbsp;</span>
                       }
                       <span className="font-size-18">{ translate('INDEX.BALANCE') }</span>
                       { Number(this.props.ActiveCoin.balance.unconfirmed) < 0 &&
@@ -75,7 +79,11 @@ const WalletsBalanceRender = function() {
             </div>
           </div>
 
-          <div className={ this.props.ActiveCoin.coin.toUpperCase() !== 'KMD' || Number(this.renderBalance('total')) === 0 || this.renderBalance('total') === this.renderBalance('transparent') ? 'hide' : 'col-lg-3 col-xs-12' }>
+          <div className={
+            this.props.ActiveCoin.coin.toUpperCase() !== 'KMD' ||
+            Number(this.renderBalance('total')) === 0 ||
+            this.renderBalance('total') === this.renderBalance('transparent') ? 'hide' : 'col-lg-3 col-xs-12'
+          }>
             <div className="widget widget-shadow">
               <div className="widget-content">
                 <div className="padding-20 padding-top-10">

@@ -4,13 +4,25 @@ import ReactTooltip from 'react-tooltip';
 import Config from '../../../config';
 
 const NavbarRender = function() {
+  let _imagePath;
+
+  if (Config.whitelabel) {
+    if (Config.wlConfig.coin.logo.indexOf('http') > -1) {
+      _imagePath = Config.wlConfig.coin.logo;
+    } else {
+      _imagePath = 'assets/images/' + Config.wlConfig.coin.logo;
+    }
+  } else {
+    _imagePath = 'assets/images/';
+  }
+
   return (
     <nav className="site-navbar navbar navbar-default navbar-fixed-top navbar-mega">
       <div className="navbar-header">
         <div className="navbar-brand navbar-brand-center site-gridmenu-toggle">
           <img
             className={ 'navbar-brand-logo hidden-xs' + (Config.whitelabel ? ' whitelabel' : '') }
-            src={ Config.whitelabel ? (Config.wlConfig.coin.logo.indexOf('http') > -1 ? Config.wlConfig.coin.logo : 'assets/images/' + Config.wlConfig.coin.logo) : 'assets/images/agama-logo-side.svg' }
+            src={ _imagePath + 'agama-logo-side.svg' }
             height="100"
             width="100"
             title={ Config.whitelabel ? Config.wlConfig.title : translate('ABOUT.AGAMA_WALLET') } />
@@ -19,7 +31,7 @@ const NavbarRender = function() {
           }
           <img
             className={ 'navbar-brand-logo hidden-lg' + (Config.whitelabel ? ' whitelabel' : '') }
-            src={ Config.whitelabel ? (Config.wlConfig.coin.logo.indexOf('http') > -1 ? Config.wlConfig.coin.logo : 'assets/images/' + Config.wlConfig.coin.logo) : 'assets/images/agama-icon.svg' }
+            src={ _imagePath + 'agama-icon.svg' }
             title={ Config.whitelabel ? Config.wlConfig.title : translate('ABOUT.AGAMA_WALLET') } />
           <span className="navbar-brand-text hidden-xs"></span>
         </div>
