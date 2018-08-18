@@ -31,6 +31,7 @@ import {
 } from  './walletsData.render';
 import { secondsToString } from 'agama-wallet-lib/src/time';
 import DoubleScrollbar from 'react-double-scrollbar';
+import appData from '../../../actions/actions/appData';
 
 const BOTTOM_BAR_DISPLAY_THRESHOLD = 15;
 
@@ -254,7 +255,7 @@ class WalletsData extends React.Component {
 
   spvAutoReconnect() {
     const _coin = this.props.ActiveCoin.coin;
-    const _coinServers = window.servers[_coin];
+    const _coinServers = appData.servers[_coin];
     const _spvServers = _coinServers.serverList;
     const _server = [
       _coinServers.ip,

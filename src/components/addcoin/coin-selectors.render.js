@@ -10,11 +10,15 @@ const CoinSelectorsRender = function(item, coin, i) {
       className={ this.hasMoreThanOneCoin() ? 'multi' : 'single' }
       key={ `add-coin-${i}` }>
       <div
-        className={ this.hasMoreThanOneCoin() ? 'col-sm-10' : 'col-sm-8' }
-        style={{ paddingLeft: !this.hasMoreThanOneCoin() ? '0' : '15px' }}>
+        className={
+          (this.hasMoreThanOneCoin() ? '' : 'padding-left-15 ' ) +
+          (this.hasMoreThanOneCoin() ? 'col-sm-10' : 'col-sm-8')
+        }>
         <div
-          className={ this.hasMoreThanOneCoin() && (item.mode === '-1' || item.mode === -1) ? 'col-sm-6 form-group' : 'form-group' }
-          style={{ paddingLeft: this.hasMoreThanOneCoin() ? '0' : '15px' }}>
+          className={
+            (this.hasMoreThanOneCoin() ? '' : 'padding-left-15 ' ) +
+            (this.hasMoreThanOneCoin() && (item.mode === '-1' || item.mode === -1) ? 'col-sm-6 form-group' : 'form-group')
+          }>
           <Select
             name="selectedCoin"
             value={ coin }
@@ -24,23 +28,28 @@ const CoinSelectorsRender = function(item, coin, i) {
             options={ addCoinOptionsCrypto().concat(addCoinOptionsAC()) } />
         </div>
       </div>
-      <div className={ this.hasMoreThanOneCoin() ? 'hide' : 'col-sm-4' }>
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick={ () => this.activateCoin(i) }
-          disabled={ item.mode === -2 }>
-          { translate('INDEX.ACTIVATE_COIN') }
-        </button>
-      </div>
-      <div className={ this.hasMoreThanOneCoin() && i !== 0 ? 'col-sm-1' : 'hide' }>
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick={ () => this.removeCoin(i) }>
-          <i className="fa fa-trash-o"></i>
-        </button>
-      </div>
+      { this.hasMoreThanOneCoin() &&
+        <div className="col-sm-4">
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={ () => this.activateCoin(i) }
+            disabled={ item.mode === -2 }>
+            { translate('INDEX.ACTIVATE_COIN') }
+          </button>
+        </div>
+      }
+      { this.hasMoreThanOneCoin() &&
+        i !== 0 &&
+        <div className="col-sm-1">
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={ () => this.removeCoin(i) }>
+            <i className="fa fa-trash-o"></i>
+          </button>
+        </div>
+      }
     </div>
   )
 };

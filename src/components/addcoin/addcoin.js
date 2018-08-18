@@ -87,7 +87,7 @@ class AddCoin extends React.Component {
         e.value.indexOf('|')) {
       const coin = e.value.split('|');
       const defaultMode = coin[1];
-      const modeToValue = { // TODO: move to utils
+      const modeToValue = {
         spv: 0,
       };
       const _value = e.value;
@@ -100,7 +100,7 @@ class AddCoin extends React.Component {
           checked: defaultMode === 'spv' ? true : false,
         },
         mode: modeToValue[defaultMode] !== undefined ? modeToValue[defaultMode] : -2,
-      }
+      };
 
       this.setState(Object.assign({}, this.state, {
         coins: _coins,
@@ -114,7 +114,6 @@ class AddCoin extends React.Component {
 
     _coins[index] = {
       selectedCoin: _selectedCoin,
-
       spvMode: {
         disabled: _selectedCoin.indexOf('spv') > -1 ? false : true,
         checked: _value === '0' ? true : false,
@@ -250,7 +249,7 @@ class AddCoin extends React.Component {
     if (this.existingCoins &&
         this.existingCoins.spv &&
         this.existingCoins.spv.indexOf(coin.toLowerCase()) !== -1) {
-      const message = `${coin} ${translate('ADD_COIN.ALREADY_ADDED')} ${translate('ADD_COIN.IN')} ${translate('INDEX.LITE')} ${translate('ADD_COIN.MODE')}`;
+      const message = `${coin} ${translate('ADD_COIN.ALREADY_ADDED_ALT')}`;
 
       Store.dispatch(
         triggerToaster(

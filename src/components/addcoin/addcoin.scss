@@ -2,7 +2,6 @@
   color: #757575;
 
   .modal-body {
-    /* max-height: 590px; */
     height: 320px;
     overflow-y: auto;
   }
@@ -22,7 +21,7 @@
           padding: 0;
 
           .input{
-            &.to-labelauty+label {
+            &.to-labelauty + label {
               max-width: 136px;
             }
           }

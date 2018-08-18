@@ -232,6 +232,7 @@ const LANG_EN = {
     ACTIVATE_ALL: 'Activate all',
     ADD_ANOTHER_COIN: 'Add another coin',
     ALREADY_ADDED: 'is already added',
+    ALREADY_ADDED_ALT: 'is already added in Lite mode',
     COIN_ALREADY_ADDED: 'Coin already added',
     IN: 'in',
     MODE: 'mode',
