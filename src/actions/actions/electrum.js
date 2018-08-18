@@ -644,6 +644,7 @@ export const shepherdElectrumSendPromise = (coin, value, sendToAddress, changeAd
               result: translate('API.PUSH_ERR'),
             };
             Store.dispatch(sendToAddressState(_err));
+            resolve(_err);
           } else {
             const txid = json.result;
             const _rawObj = {
@@ -662,50 +663,56 @@ export const shepherdElectrumSendPromise = (coin, value, sendToAddress, changeAd
 
             if (txid &&
                 txid.indexOf('bad-txns-inputs-spent') > -1) {
-              const successObj = {
+              const retObj = {
                 msg: 'error',
                 result: translate('API.BAD_TX_INPUTS_SPENT'),
                 raw: _rawObj,
               };
 
-              Store.dispatch(sendToAddressState(successObj));
+              Store.dispatch(sendToAddressState(retObj));
+              resolve(retObj);
             } else {
               if (txid &&
                   txid.length === 64) {
                 if (txid.indexOf('bad-txns-in-belowout') > -1) {
-                  const successObj = {
+                  const retObj = {
                     msg: 'error',
                     result: translate('API.BAD_TX_INPUTS_SPENT'),
                     raw: _rawObj,
                   };
 
-                  Store.dispatch(sendToAddressState(successObj));
+                  Store.dispatch(sendToAddressState(retObj));
+                  resolve(retObj);
                 } else {
-                  const successObj = {
+                  const retObj = {
+                    msg: 'success',
                     result: _rawObj,
                     txid: _rawObj.txid,
                   };
 
-                  Store.dispatch(sendToAddressState(successObj));
+                  Store.dispatch(sendToAddressState(retObj));
+                  resolve(retObj);
                 }
               } else {
                 if (txid &&
                     txid.indexOf('bad-txns-in-belowout') > -1) {
-                  const successObj = {
+                  const retObj = {
                     msg: 'error',
                     result: translate('API.BAD_TX_INPUTS_SPENT'),
                     raw: _rawObj,
                   };
 
-                  dispatch(sendToAddressState(successObj));
+                  dispatch(sendToAddressState(retObj));
+                  resolve(retObj);
                 } else {
-                  const successObj = {
+                  const retObj = {
                     msg: 'error',
                     result: translate('API.CANT_BROADCAST_TX'),
                     raw: _rawObj,
                   };
 
-                  Store.dispatch(sendToAddressState(successObj));
+                  Store.dispatch(sendToAddressState(retObj));
+                  resolve(retObj);
                 }
               }
             }
