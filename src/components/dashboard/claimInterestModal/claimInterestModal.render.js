@@ -171,7 +171,7 @@ export const ClaimInterestModalRender = function() {
                   className="icon fa-refresh pointer refresh-icon"
                   onClick={ this.loadListUnspent }></i>
               }
-              <div className="animsition vertical-align fade-in">
+              <div className="vertical-align">
                 <div className="page-content vertical-align-middle full-width">
                   { this.state.isLoading &&
                     <span>{ translate('INDEX.LOADING') }...</span>
