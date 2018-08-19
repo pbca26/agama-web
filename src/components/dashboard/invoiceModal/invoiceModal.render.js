@@ -26,7 +26,7 @@ export const InvoiceModalRender = function() {
               <h4 className="modal-title white text-left">{ translate('INDEX.CREATE_INVOICE_QR') }</h4>
             </div>
             <div className="modal-body">
-              <div className="animsition fade-in">
+              <div>
                 <div className="page-content">
                   <div className="row">
                     <div className="col-lg-8 form-group form-material vertical-align-middle">
@@ -109,7 +109,7 @@ export const InvoiceModalButtonRender = function() {
         type="button"
         className="btn btn-success waves-effect waves-light margin-right-10"
         onClick={ this.openModal }>
-          <i className="icon fa-file-text-o"></i>&nbsp;
+          <i className="icon fa-file-text-o nbsp"></i>
           { translate('INDEX.CREATE_INVOICE') }
       </button>
     </span>
