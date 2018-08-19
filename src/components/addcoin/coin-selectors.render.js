@@ -5,7 +5,6 @@ import addCoinOptionsAC from '../addcoin/addcoinOptionsAC';
 import Select from 'react-select';
 
 const CoinSelectorsRender = function(item, coin, i) {
-  console.warn(this.state);
   return (
     <div
       className="single"

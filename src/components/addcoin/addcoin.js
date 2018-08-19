@@ -126,11 +126,6 @@ class AddCoin extends React.Component {
     const coin = this.state.coins[0].selectedCoin.split('|')[0];
     const _coin = this.state.coins[0];
 
-    if (this.isCoinAlreadyAdded(coin)) {
-      this.dismiss();
-      return;
-    }
-
     Store.dispatch(addCoin(
       coin,
       _coin.mode,
@@ -169,26 +164,6 @@ class AddCoin extends React.Component {
     return (
       AddCoinRender.call(this)
     );
-  }
-
-  isCoinAlreadyAdded(coin) {
-    if (this.existingCoins &&
-        this.existingCoins.spv &&
-        this.existingCoins.spv.indexOf(coin.toLowerCase()) !== -1) {
-      const message = `${coin} ${translate('ADD_COIN.ALREADY_ADDED_ALT')}`;
-
-      Store.dispatch(
-        triggerToaster(
-          message,
-          translate('ADD_COIN.COIN_ALREADY_ADDED'),
-          'error'
-        )
-      );
-
-      return true;
-    }
-
-    return false;
   }
 }
 

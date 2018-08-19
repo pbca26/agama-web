@@ -3,6 +3,7 @@ import {
   cryptoCoins,
   sortObject,
 } from '../../util/coinHelper';
+import appData from '../../actions/actions/appData';
 
 const addCoinOptionsCrypto = () => {
   // sort coins by their title
@@ -10,7 +11,9 @@ const addCoinOptionsCrypto = () => {
   let _coins = {};
 
   for (let i = 0; i < cryptoCoins.length; i++) {
-    _coins[translate('CRYPTO.' + cryptoCoins[i].toUpperCase())] = cryptoCoins[i];
+    if (appData.coins.indexOf(cryptoCoins[i].toLowerCase()) === -1) { // filter out active coins
+      _coins[translate('CRYPTO.' + cryptoCoins[i].toUpperCase())] = cryptoCoins[i];
+    }
   }
 
   _coins = sortObject(_coins);

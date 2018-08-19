@@ -14,7 +14,6 @@ const disabledAssets = [
 ];
 
 const addCoinOptionsAC = () => {
-  console.warn('appData', appData);
   // filter out disabled assets
   let _assetChains = [];
   let _items = [];
@@ -23,7 +22,8 @@ const addCoinOptionsAC = () => {
     const _ac = kmdAssetChains[i];
 
     if (electrumServers[_ac.toLowerCase()] &&
-        disabledAssets.indexOf(_ac) === -1) {
+        disabledAssets.indexOf(_ac) === -1 &&
+        appData.coins.indexOf(_ac.toLowerCase()) === -1) { // filter out active coins
       _assetChains.push(_ac);
     }
   }
