@@ -5,20 +5,14 @@ import addCoinOptionsAC from '../addcoin/addcoinOptionsAC';
 import Select from 'react-select';
 
 const CoinSelectorsRender = function(item, coin, i) {
+  console.warn(this.state);
   return (
     <div
-      className={ this.hasMoreThanOneCoin() ? 'multi' : 'single' }
+      className="single"
       key={ `add-coin-${i}` }>
-      <div
-        className={
-          (this.hasMoreThanOneCoin() ? '' : 'padding-left-15 ' ) +
-          (this.hasMoreThanOneCoin() ? 'col-sm-10' : 'col-sm-8')
-        }>
+      <div className="col-sm-7">
         <div
-          className={
-            (this.hasMoreThanOneCoin() ? '' : 'padding-left-15 ' ) +
-            (this.hasMoreThanOneCoin() && (item.mode === '-1' || item.mode === -1) ? 'col-sm-6 form-group' : 'form-group')
-          }>
+          className="col-sm-12 form-group no-padding-left">
           <Select
             name="selectedCoin"
             value={ coin }
@@ -28,28 +22,15 @@ const CoinSelectorsRender = function(item, coin, i) {
             options={ addCoinOptionsCrypto().concat(addCoinOptionsAC()) } />
         </div>
       </div>
-      { this.hasMoreThanOneCoin() &&
-        <div className="col-sm-4">
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={ () => this.activateCoin(i) }
-            disabled={ item.mode === -2 }>
-            { translate('INDEX.ACTIVATE_COIN') }
-          </button>
-        </div>
-      }
-      { this.hasMoreThanOneCoin() &&
-        i !== 0 &&
-        <div className="col-sm-1">
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={ () => this.removeCoin(i) }>
-            <i className="fa fa-trash-o"></i>
-          </button>
-        </div>
-      }
+      <div className="col-sm-2">
+        <button
+          type="button"
+          className="btn btn-primary"
+          disabled={ !this.state.coins[0].selectedCoin }
+          onClick={ () => this.activateCoin(i) }>
+          { translate('INDEX.ACTIVATE_COIN') }
+        </button>
+      </div>
     </div>
   )
 };

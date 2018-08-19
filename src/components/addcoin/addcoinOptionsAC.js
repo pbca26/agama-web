@@ -2,6 +2,7 @@ import translate from '../../translate/translate';
 import electrumServers from 'agama-wallet-lib/src/electrum-servers';
 import { kmdAssetChains } from 'agama-wallet-lib/src/coin-helpers';
 import { sortObject } from '../../util/coinHelper';
+import appData from '../../actions/actions/appData';
 
 const disabledAssets = [
   'VRSC',
@@ -13,6 +14,7 @@ const disabledAssets = [
 ];
 
 const addCoinOptionsAC = () => {
+  console.warn('appData', appData);
   // filter out disabled assets
   let _assetChains = [];
   let _items = [];

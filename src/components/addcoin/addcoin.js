@@ -16,35 +16,25 @@ class AddCoin extends React.Component {
   constructor() {
     super();
     this.state = {
-      coins: [],
-      defaultCoinState: {
+      coins: [{
         selectedCoin: null,
         spvMode: {
           disabled: true,
           checked: false,
         },
         mode: 0,
-      },
+      }],
       display: false,
-      actionsMenu: false,
       modalClassName: 'hide',
     };
+    this.defaultState = JSON.parse(JSON.stringify(this.state));
     this.existingCoins = null;
     this.activateCoin = this.activateCoin.bind(this);
     this.dismiss = this.dismiss.bind(this);
-    this.addNewItem = this.addNewItem.bind(this);
-    this.activateAllCoins = this.activateAllCoins.bind(this);
-    this.toggleActionsMenu = this.toggleActionsMenu.bind(this);
-  }
-
-  toggleActionsMenu() {
-    this.setState(Object.assign({}, this.state, {
-      actionsMenu: !this.state.actionsMenu,
-    }));
   }
 
   componentWillMount() {
-    this.addNewItem();
+    this.setState(this.defaultState);
   }
 
   componentWillReceiveProps(props) {
@@ -146,76 +136,12 @@ class AddCoin extends React.Component {
       _coin.mode,
     ));
 
-    this.removeCoin();
-    this.addNewItem();
-
+    this.setState(this.defaultState);
     Store.dispatch(toggleAddcoinModal(false, false));
   }
 
   dismiss() {
     Store.dispatch(toggleAddcoinModal(false, false));
-  }
-
-  addNewItem() {
-    let _coins = this.state.coins;
-    _coins.push(this.state.defaultCoinState);
-
-    this.setState(Object.assign({}, this.state, {
-      coins: _coins,
-    }));
-  }
-
-  removeCoin(index) {
-    let _coins = this.state.coins;
-    _coins.splice(index, 1);
-
-    this.setState(Object.assign({}, this.state, {
-      coins: _coins,
-    }));
-  }
-
-  hasMoreThanOneCoin() {
-    return this.state.coins.length > 1;
-  }
-
-  activateAllCoins() {
-    const coin = this.state.coins[0].selectedCoin.split('|')[0];
-
-    if (!this.isCoinAlreadyAdded(coin)) {
-      Store.dispatch(
-        addCoin(
-          coin,
-          this.state.coins[0].mode,
-        )
-      );
-    }
-
-    for (let i = 1; i < this.state.coins.length; i++) {
-      const _item = this.state.coins[i];
-      const itemCoin = _item.selectedCoin.split('|')[0];
-
-      setTimeout(() => {
-        if (!this.isCoinAlreadyAdded(itemCoin)) {
-          Store.dispatch(
-            addCoin(
-              itemCoin,
-              _item.mode,
-            )
-          );
-        }
-
-        if (i === this.state.coins.length - 1) {
-          let _coins = [];
-          _coins.push(this.state.defaultCoinState);
-
-          this.setState(Object.assign({}, this.state, {
-            coins: _coins,
-          }));
-
-          Store.dispatch(toggleAddcoinModal(false, false));
-        }
-      }, 2000 * i);
-    }
   }
 
   renderCoinSelectors() {
