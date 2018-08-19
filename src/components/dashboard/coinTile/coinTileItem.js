@@ -26,9 +26,6 @@ import translate from '../../../translate/translate';
 import CoinTileItemRender from './coinTileItem.render';
 
 const SPV_DASHBOARD_UPDATE_TIMEOUT = 60000;
-const ACTIVE_HANDLE_TIMEOUT_COIND_NATIVE = 15000;
-const ACTIVE_HANDLE_TIMEOUT_COIND_NATIVE_RCP2CLI = 40000;
-const COIND_DOWN_MODAL_FETCH_FAILURES_THRESHOLD = 10;
 
 class CoinTileItem extends React.Component {
   constructor() {
@@ -148,12 +145,16 @@ class CoinTileItem extends React.Component {
   dispatchCoinActions(coin, mode) {
     if (this.props.Dashboard &&
         this.props.Dashboard.activeSection === 'wallets') {
-      if (this.props.Dashboard.electrumCoins && this.props.Dashboard.electrumCoins[coin] && this.props.Dashboard.electrumCoins[coin].pub) {
-        Store.dispatch(shepherdElectrumBalance(coin, this.props.Dashboard.electrumCoins[coin].pub));
-        shepherdElectrumListunspent(coin, this.props.Dashboard.electrumCoins[coin].pub);
+      const _coinData = this.props.Dashboard.electrumCoins[coin];
+
+      if (this.props.Dashboard.electrumCoins &&
+          _coinData &&
+          _coinData.pub) {
+        Store.dispatch(shepherdElectrumBalance(coin, _coinData.pub));
+        shepherdElectrumListunspent(coin, _coinData.pub);
 
         if (this.props.ActiveCoin.activeSection === 'default') {
-          Store.dispatch(shepherdElectrumTransactions(coin, this.props.Dashboard.electrumCoins[coin].pub));
+          Store.dispatch(shepherdElectrumTransactions(coin, _coinData.pub));
         }
       }
     }
@@ -193,8 +194,11 @@ class CoinTileItem extends React.Component {
         this.props.Dashboard.eletrumServerChanged &&
         this.props.Dashboard &&
         this.props.Dashboard.activeSection === 'wallets') {
-      Store.dispatch(shepherdElectrumBalance(this.props.ActiveCoin.coin, this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub));
-      Store.dispatch(shepherdElectrumTransactions(this.props.ActiveCoin.coin, this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub));
+      const _coin = this.props.ActiveCoin.coin;
+      const _pub = this.props.Dashboard.electrumCoins[_coin].pub;
+
+      Store.dispatch(shepherdElectrumBalance(_coin, _pub));
+      Store.dispatch(shepherdElectrumTransactions(_coin, _pub));
       Store.dispatch(electrumServerChanged(false));
       setTimeout(() => {
         Store.dispatch(electrumServerChanged(false));

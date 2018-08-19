@@ -70,7 +70,7 @@ export const AddressItemRender = function(address, type, amount, coin) {
       key={ address }
       className={ address === this.state.currentAddress ? 'selected' : '' }>
       <a onClick={ () => this.updateAddressSelection(address) }>
-        <i className={ 'padding-right-5 icon fa-eye' + (type === 'public' ? '' : '-slash') }></i>
+        <i className="padding-right-5 icon fa-eye-slash"></i>
         <span className="text">
           [ { amount } { coin } ]
           <span className="padding-left-10">{ address }</span>

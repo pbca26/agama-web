@@ -33,10 +33,10 @@ export const AddressActionsRender = function(address) {
   );
 };
 
-export const AddressItemRender = function(address, type) {
+export const AddressItemRender = function(address) {
   return (
     <tr key={ address.address }>
-      { this.renderAddressActions(address.address, type) }
+      { this.renderAddressActions(address.address) }
       <td className="selectable">{ address.address }</td>
       <td>
         <span>{ address.amount }</span>

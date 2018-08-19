@@ -286,7 +286,7 @@ class WalletsData extends React.Component {
       } else {
         Store.dispatch(
           triggerToaster(
-            `${this.props.ActiveCoin.coin} ${translate('INDEX.LITE')} ${translate('DASHBOARD.SERVER_SM')} ${_newServer} ${translate('DASHBOARD.IS_UNREACHABLE')}!`,
+            `${_coin} ${translate('INDEX.LITE')} ${translate('DASHBOARD.SERVER_SM')} ${_newServer} ${translate('DASHBOARD.IS_UNREACHABLE')}!`,
             translate('TOASTR.WALLET_NOTIFICATION'),
             'error'
           )
@@ -310,11 +310,13 @@ class WalletsData extends React.Component {
           <div className="color-warning">
             { translate('DASHBOARD.SPV_CONN_ERROR') }
           </div>
-          <div className={ this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].serverList !== 'none' ? '' : 'hide' }>
-            <div className="color-warning padding-bottom-10">{ translate('DASHBOARD.SPV_AUTO_SWITCH') }...</div>
-            <strong>{ translate('DASHBOARD.HOW_TO_SWITCH_MANUALLY') }:</strong>
-            <div className="padding-top-10">{ translate('DASHBOARD.SPV_CONN_ERROR_P1') }</div>
-          </div>
+          { this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].serverList !== 'none' &&
+            <div>
+              <div className="color-warning padding-bottom-10">{ translate('DASHBOARD.SPV_AUTO_SWITCH') }...</div>
+              <strong>{ translate('DASHBOARD.HOW_TO_SWITCH_MANUALLY') }:</strong>
+              <div className="padding-top-10">{ translate('DASHBOARD.SPV_CONN_ERROR_P1') }</div>
+            </div>
+          }
         </div>
       );
     } else if (

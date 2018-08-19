@@ -189,12 +189,13 @@ class SendCoin extends React.Component {
 
   renderSelectorCurrentLabel() {
     const _balance = this.props.ActiveCoin.balance.balance - Math.abs(this.props.ActiveCoin.balance.unconfirmed);
+    const _coin = this.props.ActiveCoin.coin;
 
     if (this.state.sendFrom) {
       return (
         <span>
           <span className="text">
-            [ { this.state.sendFromAmount } { this.props.ActiveCoin.coin.toUpperCase() } ]  
+            [ { this.state.sendFromAmount } { _coin.toUpperCase() } ]  
             { this.state.sendFrom }
           </span>
         </span>
@@ -202,7 +203,7 @@ class SendCoin extends React.Component {
     } else {
       return (
         <span>
-          { `[ ${_balance} ${this.props.ActiveCoin.coin.toUpperCase()} ] ${this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub}` }
+          { `[ ${_balance} ${_coin.toUpperCase()} ] ${this.props.Dashboard.electrumCoins[_coin].pub}` }
         </span>
       );
     }
@@ -219,7 +220,7 @@ class SendCoin extends React.Component {
   }
 
   fetchBTCFees() {
-    if (this.props.ActiveCoin.coin.toUpperCase() === 'BTC') {
+    if (this.props.ActiveCoin.coin === 'btc') {
       shepherdGetRemoteBTCFees()
       .then((res) => {
         if (res.msg === 'success') {
@@ -286,14 +287,15 @@ class SendCoin extends React.Component {
         }));
 
         // spv pre tx push request
-        const fee = this.props.ActiveCoin.coin !== 'btc' ? electrumServers[this.props.ActiveCoin.coin].txfee : 0;
+        const _coin = this.props.ActiveCoin.coin;
+        const fee = _coin !== 'btc' ? electrumServers[_coin].txfee : 0;
 
         shepherdElectrumSendPromise(
-          this.props.ActiveCoin.coin,
+          _coin,
           toSats(this.state.amount),
           this.state.sendTo,
-          this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub,
-          this.props.ActiveCoin.coin.toUpperCase() === 'BTC' ? { perbyte: true, value: this.state.btcFeesSize } : fee
+          this.props.Dashboard.electrumCoins[_coin].pub,
+          _coin === 'btc' ? { perbyte: true, value: this.state.btcFeesSize } : fee
         )
         .then((sendPreflight) => {
           if (sendPreflight &&
@@ -330,16 +332,18 @@ class SendCoin extends React.Component {
       return;
     }
 
+    const _coin = this.props.ActiveCoin.coin;
+    const _pub = this.props.Dashboard.electrumCoins[_coin].pub;
     // no op
-    if (this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub) {
-      const fee = this.props.ActiveCoin.coin !== 'btc' ? electrumServers[this.props.ActiveCoin.coin].txfee : 0;
+    if (_pub) {
+      const fee = _coin !== 'btc' ? electrumServers[_coin].txfee : 0;
 
       shepherdElectrumSendPromise(
-        this.props.ActiveCoin.coin,
+        _coin,
         toSats(this.state.amount),
         this.state.sendTo,
-        this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub,
-        this.props.ActiveCoin.coin === 'btc' ? { perbyte: true, value: this.state.btcFeesSize } : fee,
+        _pub,
+        _coin === 'btc' ? { perbyte: true, value: this.state.btcFeesSize } : fee,
         true
       );
     }
@@ -433,7 +437,7 @@ class SendCoin extends React.Component {
   }
 
   renderBTCFees() {
-    if (this.props.ActiveCoin.coin.toUpperCase() === 'BTC' &&
+    if (this.props.ActiveCoin.coin === 'btc' &&
         !this.state.btcFees.lastUpdated) {
       return (
         <div className="col-lg-6 form-group form-material">
@@ -441,7 +445,7 @@ class SendCoin extends React.Component {
         </div>
       );
     } else if (
-      this.props.ActiveCoin.coin.toUpperCase() === 'BTC' &&
+      this.props.ActiveCoin.coin === 'btc' &&
       this.state.btcFees.lastUpdated
     ) {
       const _blockBased = {
@@ -482,7 +486,9 @@ class SendCoin extends React.Component {
             </div>
             <div className="send-target-block">
               { this.state.btcFeesType !== 'advanced' &&
-                <span>{ translate('SEND.CONF_TIME') } <strong>{ _confTime[this.state.btcFeesTimeBasedStep] }</strong></span>
+                <span>
+                  { translate('SEND.CONF_TIME') } <strong>{ _confTime[this.state.btcFeesTimeBasedStep] }</strong>
+                </span>
               }
               { this.state.btcFeesType === 'advanced' &&
                 <span>{ translate('SEND.ADVANCED_SELECTION') }</span>

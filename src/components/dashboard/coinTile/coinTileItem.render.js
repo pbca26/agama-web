@@ -18,7 +18,12 @@ const CoinTileItemRender = function() {
               alt={ item.coinname }/>
           </a>
           <div className="coin-name">
-            { item.coinname } { item.coinlogo !== 'BEER' && item.coinlogo !== 'PIZZA' && item.coinlogo !== 'VOTE2018' && <span>({ item.coinlogo.toUpperCase() })</span> }
+            { item.coinname }
+            { item.coinlogo !== 'BEER' &&
+              item.coinlogo !== 'PIZZA' &&
+              item.coinlogo !== 'VOTE2018' &&
+              <span className="nbsp-l">({ item.coinlogo.toUpperCase() })</span>
+            }
           </div>
         </div>
       </div>

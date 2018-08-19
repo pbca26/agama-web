@@ -2,23 +2,26 @@ import React from 'react';
 import translate from '../../../translate/translate';
 
 export const WalletsNavWithWalletRender = function() {
+  const _pub = this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub;
+  const _coin = this.props.ActiveCoin.coin;
+
   return (
     <div>
       <div
         className="page-header page-header-bordered header-easydex padding-bottom-40 page-header--spv margin-bottom-30"
         id="header-dashboard">
-        { this.props.ActiveCoin &&
+        { _coin &&
           <div>
-            <strong>{ translate('INDEX.MY') } { this.props && this.props.ActiveCoin ? this.props.ActiveCoin.coin.toUpperCase() : '-' } { translate('INDEX.ADDRESS') }: </strong>
+            <strong>{ translate('INDEX.MY') } { this.props && _coin ? _coin.toUpperCase() : '-' } { translate('INDEX.ADDRESS') }: </strong>
             <span className="selectable">
               { this.props &&
                 this.props.Dashboard &&
-                this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin] &&
-                this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub ? this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub : '-' }
+                this.props.Dashboard.electrumCoins[_coin] &&
+                _pub ? _pub : '-' }
             </span>
             <button
               className="btn btn-default btn-xs clipboard-edexaddr"
-              onClick={ () => this.copyMyAddress(this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub) }>
+              onClick={ () => this.copyMyAddress(_pub) }>
               <i className="icon fa-copy"></i> { translate('INDEX.COPY') }
             </button>
           </div>
@@ -37,7 +40,7 @@ export const WalletsNavWithWalletRender = function() {
               onClick={ () => this.toggleSection('default', true) }>
               <i className="icon fa-th-large"></i> <span className="placeholder">{ translate('INDEX.TRANSACTIONS') }</span>
             </button>
-            { this.props.ActiveCoin &&
+            { _coin &&
               <button
                 type="button"
                 className="btn btn-primary waves-effect waves-light"
