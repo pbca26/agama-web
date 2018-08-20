@@ -219,8 +219,15 @@ class ClaimInterestModal extends React.Component {
   componentWillReceiveProps(props) {
     if (props.Dashboard.displayClaimInterestModal !== this.state.open) {
       this.setState({
-        open: props.Dashboard.displayClaimInterestModal,
+        className: props.Dashboard.displayClaimInterestModal ? 'show fade' : 'show out',
       });
+
+      setTimeout(() => {
+        this.setState(Object.assign({}, this.state, {
+          open: props.Dashboard.displayClaimInterestModal,
+          className: props.Dashboard.displayClaimInterestModal ? 'show in' : 'hide',
+        }));
+      }, props.Dashboard.displayClaimInterestModal ? 50 : 300);
     }
 
     if (!this.state.open &&

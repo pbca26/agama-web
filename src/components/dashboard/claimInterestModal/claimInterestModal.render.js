@@ -140,9 +140,11 @@ export const _ClaimInterestTableRender = function() {
 };
 
 export const ClaimInterestModalRender = function() {
+  // fade hide
+  // show in
   return (
     <span onClick={ this.closeDropMenu }>
-      <div className={ 'modal modal-claim-interest modal-3d-sign ' + (this.state.open ? 'show in' : 'fade hide') }>
+      <div className={ `modal modal-claim-interest modal-3d-sign ${this.state.className}` }>
         <div
           onClick={ this.closeModal }
           className="modal-close-overlay"></div>
@@ -190,7 +192,7 @@ export const ClaimInterestModalRender = function() {
           </div>
         </div>
       </div>
-      <div className={ 'modal-backdrop ' + (this.state.open ? 'show in' : 'fade hide') }></div>
+      <div className={ `modal-backdrop ${this.state.className}` }></div>
     </span>
   );
 };

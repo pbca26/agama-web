@@ -45,8 +45,7 @@ class AddCoin extends React.Component {
     if (addCoinProps &&
         addCoinProps.display !== this.state.display) {
       this.setState(Object.assign({}, this.state, {
-        display: addCoinProps.display,
-        modalClassName: 'show fade',
+        modalClassName: addCoinProps.display ? 'show fade' : 'show out',
       }));
 
       setTimeout(() => {
@@ -54,7 +53,7 @@ class AddCoin extends React.Component {
           display: addCoinProps.display,
           modalClassName: addCoinProps.display ? 'show in' : 'hide',
         }));
-      }, 100);
+      }, addCoinProps.display ? 50 : 300);
     }
   }
 

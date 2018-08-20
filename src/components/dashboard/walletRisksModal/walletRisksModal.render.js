@@ -5,9 +5,7 @@ import Config from '../../../config';
 const WalletRisksModalRender = function() {
   return (
     <div>
-      <div
-        className={ 'modal modal-3d-sign wallet-risks-modal ' + (this.state.display ? 'show in' : 'fade hide') }
-        id="AddCoinDilogModel-login">
+      <div className={ `modal modal-3d-sign wallet-risks-modal ${this.state.className}` }>
         <div
           onClick={ this.dismiss }
           className="modal-close-overlay"></div>
@@ -52,7 +50,7 @@ const WalletRisksModalRender = function() {
           </div>
         </div>
       </div>
-      <div className={ 'modal-backdrop ' + (this.state.display ? 'show in' : 'fade hide') }></div>
+      <div className={ `modal-backdrop ${this.state.className}` }></div>
     </div>
   );
 };

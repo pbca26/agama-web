@@ -504,3 +504,8 @@ select{
 .register-form {
   margin: 0 auto;
 }
+
+.modal-backdrop {
+  transition: opacity 0.3s;
+  opacity: 0.5;
+}

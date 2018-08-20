@@ -35,7 +35,7 @@ const AddCoinRender = function() {
           </div>
         </div>
       </div>
-      <div className={ 'modal-backdrop ' + (this.state.display ? 'show in' : 'fade hide') }></div>
+      <div className={ `modal-backdrop ${this.state.modalClassName}` }></div>
     </div>
   )
 };
