@@ -27,8 +27,6 @@ import {
 
 const SPV_MAX_LOCAL_TIMESTAMP_DEVIATION = 60; // seconds
 
-// TODO: promises
-
 class ClaimInterestModal extends React.Component {
   constructor() {
     super();
@@ -41,43 +39,16 @@ class ClaimInterestModal extends React.Component {
       totalInterest: 0,
       spvPreflightSendInProgress: false,
       spvVerificationWarning: false,
-      addressses: {},
-      addressSelectorOpen: false,
-      selectedAddress: null,
       loading: false,
+      className: 'hide',
     };
     this.claimInterestTableRender = this.claimInterestTableRender.bind(this);
     this.toggleZeroInterest = this.toggleZeroInterest.bind(this);
     this.loadListUnspent = this.loadListUnspent.bind(this);
     this.checkTransactionsListLength = this.checkTransactionsListLength.bind(this);
     this.cancelClaimInterest = this.cancelClaimInterest.bind(this);
-    this.openDropMenu = this.openDropMenu.bind(this);
-    this.closeDropMenu = this.closeDropMenu.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.confirmClaimInterest = this.confirmClaimInterest.bind(this);
-  }
-
-  openDropMenu() {
-    this.setState(Object.assign({}, this.state, {
-      addressSelectorOpen: !this.state.addressSelectorOpen,
-    }));
-  }
-
-  closeDropMenu() {
-    if (this.state.addressSelectorOpen) {
-      setTimeout(() => {
-        this.setState(Object.assign({}, this.state, {
-          addressSelectorOpen: false,
-        }));
-      }, 100);
-    }
-  }
-
-  updateAddressSelection(address) {
-    this.setState(Object.assign({}, this.state, {
-      selectedAddress: address,
-      addressSelectorOpen: !this.state.addressSelectorOpen,
-    }));
   }
 
   loadListUnspent() {
@@ -176,18 +147,21 @@ class ClaimInterestModal extends React.Component {
   }
 
   claimInterest() {
-    if (this.props.ActiveCoin.coin.toUpperCase() === 'KMD') {
+    const _coin = this.props.ActiveCoin.coin;
+    const _pub = this.props.Dashboard.electrumCoins[_coin].pub;
+
+    if (this.props.ActiveCoin.coin === 'kmd') {
       this.setState(Object.assign({}, this.state, {
         spvVerificationWarning: false,
         spvPreflightSendInProgress: true,
       }));
 
       shepherdElectrumSendPromise(
-        this.props.ActiveCoin.coin,
+        _coin,
         this.props.ActiveCoin.balance.balanceSats,
-        this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub,
-        this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub,
-        electrumServers[this.props.ActiveCoin.coin].txfee
+        _pub,
+        _pub,
+        electrumServers[_coin].txfee
       )
       .then((sendPreflight) => {
         if (sendPreflight &&
@@ -242,44 +216,6 @@ class ClaimInterestModal extends React.Component {
     return _ClaimInterestTableRender.call(this);
   }
 
-  addressDropdownRender() {
-    let _items = [];
-
-    for (let key in this.state.addressses) {
-      _items.push(
-        <li
-          className="selected"
-          key={ key }>
-          <a onClick={ () => this.updateAddressSelection(key) }>
-            <span className="text">{ key }</span>
-            <span
-              className="icon fa-check check-mark pull-right"
-              style={{ display: this.state.selectedAddress === key ? 'inline-block' : 'none' }}></span>
-          </a>
-        </li>
-      );
-    }
-
-    return (
-      <div className={ `btn-group bootstrap-select form-control form-material showkmdwalletaddrs show-tick ${(this.state.addressSelectorOpen ? 'open' : '')}` }>
-        <button
-          type="button"
-          className="btn dropdown-toggle btn-info disabled"
-          onClick={ this.openDropMenu }>
-          <span className="filter-option pull-left">{ this.state.selectedAddress }</span>
-          <span className="bs-caret inline">
-            <span className="caret"></span>
-          </span>
-        </button>
-        <div className="dropdown-menu open">
-          <ul className="dropdown-menu inner">
-            { _items }
-          </ul>
-        </div>
-      </div>
-    );
-  }
-
   componentWillReceiveProps(props) {
     if (props.Dashboard.displayClaimInterestModal !== this.state.open) {
       this.setState({
@@ -317,9 +253,6 @@ class ClaimInterestModal extends React.Component {
       totalInterest: 0,
       spvPreflightSendInProgress: false,
       spvVerificationWarning: false,
-      addressses: {},
-      addressSelectorOpen: false,
-      selectedAddress: null,
     });
     Store.dispatch(toggleClaimInterestModal(false));
   }
@@ -327,7 +260,7 @@ class ClaimInterestModal extends React.Component {
   render() {
     if (this.props.ActiveCoin &&
         this.props.ActiveCoin.coin &&
-        this.props.ActiveCoin.coin.toUpperCase() === 'KMD') {
+        this.props.ActiveCoin.coin === 'kmd') {
       return ClaimInterestModalRender.call(this);
     } else {
       return null;
