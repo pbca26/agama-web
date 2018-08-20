@@ -12,10 +12,8 @@ export const QRModalRender = function() {
         onClick={ this.openModal }>
         <i className="icon fa-qrcode margin-right-5"></i> { translate('DASHBOARD.GENERATE_SM') } { translate('INDEX.QR_CODE') }
       </span>
-      <div
-        className={ 'modal modal-3d-sign ' + (this.state.modalIsOpen ? 'show in' : 'fade hide') }
-        id="QRModal">
-        <div className={ `modal-dialog modal-center modal-${this.props.modalSize || 'sm' }` }>
+      <div className={ `modal modal-3d-sign ${this.state.className}` }>
+        <div className="modal-dialog modal-center modal-sm">
           <div className="modal-content">
             <div className="modal-header bg-orange-a400 wallet-send-header">
               <button
@@ -53,7 +51,7 @@ export const QRModalRender = function() {
           </div>
         </div>
       </div>
-      <div className={ 'modal-backdrop ' + (this.state.modalIsOpen ? 'show in' : 'fade hide') }></div>
+      <div className={ `modal-backdrop ${this.state.className}` }></div>
     </span>
   );
 };
@@ -68,9 +66,7 @@ export const QRModalReaderRender = function() {
           <i className="icon fa-qrcode"></i>
           { translate('INDEX.SCAN_QR_CODE') }
         </button>
-        <div
-          className={ 'modal modal-3d-sign ' + (this.state.modalIsOpen ? 'show in' : 'fade hide') }
-          id="QRReadModal">
+        <div className={ `modal modal-3d-sign ${this.state.className}` }>
           <div
             onClick={ this.closeModal }
             className="modal-close-overlay"></div>
@@ -105,7 +101,7 @@ export const QRModalReaderRender = function() {
               </div>
             </div>
           </div>
-        <div className={ 'modal-backdrop ' + (this.state.modalIsOpen ? 'show in' : 'fade hide') }></div>
+        <div className={ `modal-backdrop ${this.state.className}` }></div>
       </span>
     );
   } else {
