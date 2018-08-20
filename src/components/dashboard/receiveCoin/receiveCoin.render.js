@@ -16,32 +16,19 @@ export const AddressActionsRender = function(address) {
       <ReactTooltip
         effect="solid"
         className="text-left" />
-      { this.state.toggledAddressMenu &&
-        this.state.toggledAddressMenu === address &&
-        <div className="receive-address-context-menu">
+        <div className={ this.state.toggledAddressMenu && this.state.toggledAddressMenu === address ? 'receive-address-context-menu' : 'hide' }>
           <ul>
             <li onClick={ () => this._copyCoinAddress(address) }>
               <i className="icon fa-copy margin-right-5"></i> { `${translate('INDEX.COPY')} ${translate('INDEX.PUB_KEY')}` }
             </li>
             <li className="receive-address-context-menu-get-qr">
-              <QRModal content={ address } />
+              <QRModal
+                cbOnClose={ this.toggleAddressMenu }
+                content={ address } />
             </li>
           </ul>
         </div>
-      }
     </td>
-  );
-};
-
-export const AddressItemRender = function(address) {
-  return (
-    <tr key={ address.address }>
-      { this.renderAddressActions(address.address) }
-      <td className="selectable">{ address.address }</td>
-      <td>
-        <span>{ address.amount }</span>
-      </td>
-    </tr>
   );
 };
 

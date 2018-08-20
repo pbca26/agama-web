@@ -86,7 +86,7 @@ export const QRModalReaderRender = function() {
                 </div>
                 <div className="modal-body">
                   <div className="vertical-align">
-                    <div className="page-content vertical-align-middle webcam-frame">
+                    <div className="page-content vertical-align-middle">
                       { !this.state.error &&
                         <QrReader
                         delay={ 50 }

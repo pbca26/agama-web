@@ -57,15 +57,17 @@ class QRModal extends React.Component {
       className: 'show out',
     });
 
-    if (this.state) {
-      setTimeout(() => {
-        this.setState(Object.assign({}, this.state, {
-          errorShown: this.state.error ? true : false,
-          modalIsOpen: false,
-          className: 'hide',
-        }));
-      }, 300);
-    }
+    setTimeout(() => {
+      this.setState(Object.assign({}, this.state, {
+        errorShown: this.state.error ? true : false,
+        modalIsOpen: false,
+        className: 'hide',
+      }));
+
+      if (this.props.cbOnClose) {
+        this.props.cbOnClose();
+      }
+    }, 300);
   }
 
   componentWillUnmount() {
