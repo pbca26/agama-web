@@ -2,6 +2,7 @@ import React from 'react';
 import translate from '../../../translate/translate';
 import ReactTooltip from 'react-tooltip';
 import Config from '../../../config';
+import assetsPath from '../../../util/assetsPath';
 
 const NavbarRender = function() {
   let _imagePath;
@@ -10,10 +11,10 @@ const NavbarRender = function() {
     if (Config.wlConfig.coin.logo.indexOf('http') > -1) {
       _imagePath = Config.wlConfig.coin.logo;
     } else {
-      _imagePath = 'assets/images/' + Config.wlConfig.coin.logo;
+      _imagePath = `${assetsPath.root}/${Config.wlConfig.coin.logo}`;
     }
   } else {
-    _imagePath = 'assets/images/';
+    _imagePath = assetsPath.root + '/';
   }
 
   return (
@@ -78,7 +79,7 @@ const NavbarRender = function() {
                   onClick={ this.toggleAddCoinModal }>
                   <span>
                     <img
-                      src="assets/images/icons/activatecoin.png"
+                      src={ `${assetsPath.icons}/activatecoin.png` }
                       alt={ translate('INDEX.ADD_COIN') } />
                   </span>
                 </a>

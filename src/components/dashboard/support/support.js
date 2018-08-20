@@ -1,6 +1,7 @@
 import React from 'react';
 import translate from '../../../translate/translate';
 import Config from '../../../config';
+import assetsPath from '../../../util/assetsPath';
 
 class Support extends React.Component {
   constructor() {
@@ -20,7 +21,7 @@ class Support extends React.Component {
                   className="support-box"
                   href={ Config.whitelabel ? Config.wlConfig.support.ticketsLink.url : 'http://support.komodoplatform.com' }>
                   <img
-                    src="assets/images/cryptologo/supernet.png"
+                    src={ `${assetsPath.cryptoLogo}/supernet.png` }
                     alt={ translate('SETTINGS.SUPPORT_TICKETS') } />
                   <div className="support-box-title">{ translate('SETTINGS.SUPPORT_TICKETS') }</div>
                   <div className="support-box-link selectable">{ Config.whitelabel ? Config.wlConfig.support.ticketsLink.title : 'support.komodoplatform.com' }</div>
@@ -32,7 +33,7 @@ class Support extends React.Component {
                   className="support-box"
                   href={ Config.whitelabel ? Config.wlConfig.support.chatApp.url : 'https://discordapp.com/channels/412898016371015680/453204571393622027' }>
                   <img
-                    src={ 'assets/images/support/discord-icon.png'.replace('discord', Config.whitelabel ? Config.wlConfig.support.chatApp.name.toLowerCase() : 'discord') }
+                    src={ `${assetsPath.support}/discord-icon.png`.replace('discord', Config.whitelabel ? Config.wlConfig.support.chatApp.name.toLowerCase() : 'discord') }
                     alt={ Config.whitelabel ? Config.wlConfig.support.chatApp.name : 'Discord' } />
                   <div className="support-box-title">{ Config.whitelabel ? Config.wlConfig.support.chatApp.name : 'Discord' }</div>
                   <div className="support-box-link">{ Config.whitelabel ? Config.wlConfig.support.chatApp.channel : '#agama-wallet' }</div>
@@ -44,7 +45,7 @@ class Support extends React.Component {
                   className="support-box"
                   href={ Config.whitelabel ? Config.wlConfig.support.chatApp.inviteUrl : 'https://komodoplatform.com/discord' }>
                   <img
-                    src={ 'assets/images/support/discord-invite-icon.png'.replace('discord', Config.whitelabel ? Config.wlConfig.support.chatApp.name.toLowerCase() : 'discord') }
+                    src={ `${assetsPath.support}/discord-invite-icon.png`.replace('discord', Config.whitelabel ? Config.wlConfig.support.chatApp.name.toLowerCase() : 'discord') }
                     alt={ translate('SETTINGS.GET_DISCORD_INVITE').replace('Discord', Config.whitelabel ? Config.wlConfig.support.chatApp.name : 'Discord') } />
                   <div className="support-box-title">{ translate('SETTINGS.GET_DISCORD_INVITE').replace('Discord', Config.whitelabel ? Config.wlConfig.support.chatApp.name : 'Discord') }</div>
                   <div className="support-box-link selectable">{ Config.whitelabel ? Config.wlConfig.support.chatApp.inviteUrl : 'https://komodoplatform.com/discord' }</div>
@@ -56,7 +57,7 @@ class Support extends React.Component {
                   className="support-box"
                   href={ Config.whitelabel ? Config.wlConfig.support.gitLink.url : 'https://github.com/pbca26/agama-web' }>
                   <img
-                    src="assets/images/support/github-icon.png"
+                    src={ `${assetsPath.support}/github-icon.png` }
                     alt="Github" />
                   <div className="support-box-title">Github</div>
                   <div className="support-box-link selectable">{ Config.whitelabel ? Config.wlConfig.support.gitLink.title : 'github.com/pbca26/agama-web' }</div>

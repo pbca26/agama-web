@@ -8,7 +8,7 @@ import {
   triggerToaster,
 } from '../../actions/actionCreators';
 import Store from '../../store';
-
+import assetsPath from '../../util/assetsPath';
 import CoinSelectorsRender from './coin-selectors.render';
 import AddCoinRender from './addcoin.render';
 
@@ -61,7 +61,7 @@ class AddCoin extends React.Component {
     return (
       <div>
         <img
-          src={ `assets/images/cryptologo/${option.icon.toLowerCase()}.png` }
+          src={ `${assetsPath.coinLogo}/${option.icon.toLowerCase()}.png` }
           alt={ option.label }
           width="30px"
           height="30px" />

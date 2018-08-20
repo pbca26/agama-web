@@ -5,6 +5,7 @@ import Select from 'react-select';
 import ReactTooltip from 'react-tooltip';
 import WalletRisksModal from '../dashboard/walletRisksModal/walletRisksModal';
 import Config from '../../config';
+import assetsPath from '../../util/assetsPath';
 
 const _shortcutOptions = [
   'kmd',
@@ -35,7 +36,7 @@ const LoginRender = function() {
             { !Config.whitelabel &&
               <img
                 className="brand-img"
-                src="assets/images/agama-login-logo.svg"
+                src={ `${assetsPath.root}/agama-login-logo.svg` }
                 width="200"
                 height="160"
                 alt="SuperNET Agama" />
@@ -43,7 +44,7 @@ const LoginRender = function() {
             { Config.whitelabel &&
               <img
                 className="brand-img"
-                src={ Config.wlConfig.mainLogo.indexOf('http') > -1 ? Config.wlConfig.mainLogo : 'assets/images/' + Config.wlConfig.mainLogo }
+                src={ Config.wlConfig.mainLogo.indexOf('http') > -1 ? Config.wlConfig.mainLogo : `${assetsPath.root}/${Config.wlConfig.mainLogo}` }
                 alt={ Config.wlConfig.title } />
             }
           </div>

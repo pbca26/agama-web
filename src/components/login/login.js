@@ -25,6 +25,7 @@ import LoginRender from './login.render';
 import translate from '../../translate/translate';
 import passphraseGenerator from 'agama-wallet-lib/src/crypto/passphrasegenerator';
 import md5 from 'agama-wallet-lib/src/crypto/md5';
+import assetsPath from '../../util/assetsPath';
 
 const SEED_TRIM_TIMEOUT = 5000;
 
@@ -579,7 +580,7 @@ class Login extends React.Component {
         _items.push(
           <span key={ `addcoin-shortcut-icons-${i}` }>
             <img
-              src={ `assets/images/cryptologo/${_comps[i].toLowerCase()}.png` }
+              src={ `${assetsPath.coinLogo}/${_comps[i].toLowerCase()}.png` }
               alt={ _comps[i].toUpperCase() }
               width="30px"
               height="30px" />
@@ -595,7 +596,7 @@ class Login extends React.Component {
       return (
         <div>
           <img
-            src={ `assets/images/cryptologo/${option.value.toLowerCase()}.png` }
+            src={ `${assetsPath.coinLogo}/${option.value.toLowerCase()}.png` }
             alt={ option.value.toUpperCase() }
             width="30px"
             height="30px" />

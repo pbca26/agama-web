@@ -8,6 +8,7 @@ import { getCoinTitle } from '../../../util/coinHelper';
 import Config from '../../../config';
 import translate from '../../../translate/translate';
 import { isKomodoCoin } from 'agama-wallet-lib/src/coin-helpers';
+import assetsPath from '../../../util/assetsPath';
 
 const WalletsMainRender = function() {
   const _coin = this.props.ActiveCoin.coin;
@@ -30,7 +31,7 @@ const WalletsMainRender = function() {
               { _coin === 'kmd' &&
                 <img
                   className="kmd-mobile-icon"
-                  src="assets/images/cryptologo/kmd.png" />
+                  src={ `${assetsPath.coinLogo}/kmd.png` } />
               }
               <span className={ `margin-left-20 easydex-section-image ${(isNativeLogoWide ? 'hide' : '')}` }>
                 { translate((isKomodoCoin(_coin) && _coin !== 'kmd' && _coin !== 'chips' ? 'ASSETCHAINS.' : 'CRYPTO.') + _coin.toUpperCase()) }
