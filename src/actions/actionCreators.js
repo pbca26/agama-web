@@ -30,10 +30,7 @@ import {
 } from './storeType';
 import appData from './actions/appData';
 
-export * from './actions/coinList';
-export * from './actions/addCoin';
 export * from './actions/copyAddress';
-export * from './actions/dexCoins';
 export * from './actions/atomicexplorer';
 export * from './actions/logout';
 export * from './actions/cache';
