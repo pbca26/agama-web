@@ -33,8 +33,15 @@ export * from './actions/coinList';
 export * from './actions/addCoin';
 export * from './actions/copyAddress';
 export * from './actions/dexCoins';
-export * from './actions/electrum';
 export * from './actions/atomicexplorer';
+export * from './actions/logout';
+export * from './actions/cache';
+export * from './actions/servers';
+export * from './actions/balance';
+export * from './actions/listunspent';
+export * from './actions/createTx';
+export * from './actions/listtransactions';
+export * from './actions/coins';
 // export * from './actions/tools';
 
 export const changeActiveAddress = (address) => {
