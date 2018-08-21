@@ -36,7 +36,7 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
     })
     .then(response => response.json())
     .then(json => {
-      if (window.activeCoin === coin) {
+      if (appData.activeCoin === coin) {
         let result = json;
 
         if (result.msg === 'error') {

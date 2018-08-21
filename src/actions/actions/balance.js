@@ -43,7 +43,7 @@ export const shepherdElectrumBalance = (coin, address) => {
     })
     .then(response => response.json())
     .then(json => {
-      if (window.activeCoin === coin) {
+      if (appData.activeCoin === coin) {
         json = json.result;
 
         if (json &&

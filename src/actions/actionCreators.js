@@ -28,6 +28,7 @@ import {
   DASHBOARD_ACTIVE_COIN_SENDTO,
   DISPLAY_WALLET_RISKS_MODAL,
 } from './storeType';
+import appData from './actions/appData';
 
 export * from './actions/coinList';
 export * from './actions/addCoin';
@@ -157,7 +158,7 @@ export const dashboardChangeActiveCoinState = (coin, mode, skipCoinsArrayUpdate)
 }
 
 export const dashboardChangeActiveCoin = (coin, mode, skipCoinsArrayUpdate) => {
-  window.activeCoin = coin;
+  appData.activeCoin = coin;
 
   return dispatch => {
     dispatch(dashboardChangeActiveCoinState(coin, mode, skipCoinsArrayUpdate));

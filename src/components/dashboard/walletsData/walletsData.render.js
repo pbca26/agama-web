@@ -7,6 +7,7 @@ import { formatValue } from 'agama-wallet-lib/src/utils';
 import Config from '../../../config';
 import Spinner from '../spinner/spinner';
 import tableSorting from '../../../util/tableSorting'
+import appData from '../../../actions/actions/appData';
 
 export const TxConfsRender = function(confs) {
   if (Number(confs) > -1) {
@@ -177,10 +178,10 @@ export const TxAmountRender = function(tx) {
 export const TxHistoryListRender = function() {
   let _data;
 
-  if (this.props.ActiveCoin.coins[window.activeCoin] &&
-      this.props.ActiveCoin.coins[window.activeCoin].txhistory &&
+  if (this.props.ActiveCoin.coins[appData.activeCoin] &&
+      this.props.ActiveCoin.coins[appData.activeCoin].txhistory &&
       !this.state.searchTerm) {
-    _data = this.props.ActiveCoin.coins[window.activeCoin].txhistory;
+    _data = this.props.ActiveCoin.coins[appData.activeCoin].txhistory;
   }
 
   _data = _data || this.state.filteredItemsList;

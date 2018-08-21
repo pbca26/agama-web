@@ -9,8 +9,6 @@ import {
   toggleLoginSettingsModal,
   stopInterval,
   dashboardChangeActiveCoin,
-  toggleZcparamsFetchModal,
-  toggleNotaryElectionsModal,
   toggleWalletRisksModal,
   shepherdElectrumLogout,
   dashboardRemoveCoin,
@@ -26,16 +24,9 @@ import translate from '../../translate/translate';
 import passphraseGenerator from 'agama-wallet-lib/src/crypto/passphrasegenerator';
 import md5 from 'agama-wallet-lib/src/crypto/md5';
 import assetsPath from '../../util/assetsPath';
+import appData from '../../actions/actions/appData';
 
 const SEED_TRIM_TIMEOUT = 5000;
-
-window.createSeed = {
-  triggered: false,
-  firstLoginPH: null,
-  secondaryLoginPH: null,
-};
-
-window.activeCoin = null;
 
 class Login extends React.Component {
   constructor() {
@@ -340,7 +331,7 @@ class Login extends React.Component {
   }
 
   loginSeed() {
-    window.createSeed.secondaryLoginPH = md5(this.state.loginPassphrase);
+    appData.createSeed.secondaryLoginPH = md5(this.state.loginPassphrase);
 
     // reset the login pass phrase values so that when the user logs out, the values are clear
     this.setState({
@@ -433,8 +424,8 @@ class Login extends React.Component {
   }
 
   execWalletCreate() {
-    window.createSeed.triggered = true;
-    window.createSeed.firstLoginPH = md5(this.state.randomSeed);
+    appData.createSeed.triggered = true;
+    appData.createSeed.firstLoginPH = md5(this.state.randomSeed);
 
     Store.dispatch(
       shepherdElectrumAuth(this.state.randomSeedConfirm)
