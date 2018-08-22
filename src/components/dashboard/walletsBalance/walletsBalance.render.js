@@ -14,7 +14,7 @@ const WalletsBalanceRender = function() {
           <div className={
             this.props.ActiveCoin.coin.toUpperCase() !== 'KMD' ||
             this.renderBalance('total') === this.renderBalance('transparent') ||
-            this.renderBalance('total') === 0 ? 'col-lg-12 col-xs-12 balance-placeholder--bold' : 'col-lg-3 col-xs-12'
+            this.renderBalance('total') === 0 ? 'col-lg-12 col-xs-12 balance-placeholder--bold' : 'col-lg-4 col-xs-12'
           }>
             <div className="widget widget-shadow">
               <div className="widget-content">
@@ -58,7 +58,7 @@ const WalletsBalanceRender = function() {
 
           { (this.props.ActiveCoin.coin.toUpperCase() === 'KMD' &&
               Number(this.renderBalance('interest')) > 0) &&
-            <div className="col-lg-3 col-xs-12">
+            <div className="col-lg-4 col-xs-12">
               <div className="widget widget-shadow">
                 <div className="widget-content">
                   <div className="padding-20 padding-top-10">
@@ -85,7 +85,7 @@ const WalletsBalanceRender = function() {
           { !(this.props.ActiveCoin.coin.toUpperCase() !== 'KMD' ||
               Number(this.renderBalance('total')) === 0 ||
               this.renderBalance('total') === this.renderBalance('transparent')) &&
-            <div className="col-lg-3 col-xs-12">
+            <div className="col-lg-4 col-xs-12">
               <div className="widget widget-shadow">
                 <div className="widget-content">
                   <div className="padding-20 padding-top-10">
