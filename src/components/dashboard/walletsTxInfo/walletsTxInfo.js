@@ -15,16 +15,23 @@ class WalletsTxInfo extends React.Component {
       activeTab: 0,
       txDetails: null,
       rawTxDetails: null,
+      className: 'hide',
     };
     this.toggleTxInfoModal = this.toggleTxInfoModal.bind(this);
   }
 
   toggleTxInfoModal() {
-    Store.dispatch(toggleDashboardTxInfoModal(false));
-
     this.setState(Object.assign({}, this.state, {
-      activeTab: 0,
+      className: 'show out',
     }));
+
+    setTimeout(() => {
+      Store.dispatch(toggleDashboardTxInfoModal(false));
+
+      this.setState(Object.assign({}, this.state, {
+        activeTab: 0,
+      }));
+    }, 300);
   }
 
   capitalizeFirstLetter(string) {
@@ -32,11 +39,21 @@ class WalletsTxInfo extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.ActiveCoin) {
+    if (nextProps.ActiveCoin &&
+        nextProps.ActiveCoin.showTransactionInfo &&
+        nextProps.ActiveCoin.showTransactionInfoTxIndex &&
+        nextProps.ActiveCoin.showTransactionInfoTxIndex !== this.state.txDetails) {
       this.setState(Object.assign({}, this.state, {
         txDetails: nextProps.ActiveCoin.showTransactionInfoTxIndex,
         rawTxDetails: nextProps.ActiveCoin.showTransactionInfoTxIndex,
+        className: nextProps.ActiveCoin.showTransactionInfo ? 'show fade' : 'show out',
       }));
+
+      setTimeout(() => {
+        this.setState(Object.assign({}, this.state, {
+          className: nextProps.ActiveCoin.showTransactionInfo ? 'show in' : 'hide',
+        }));
+      }, nextProps.ActiveCoin.showTransactionInfo ? 50 : 300);
     }
   }
 

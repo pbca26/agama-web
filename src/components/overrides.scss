@@ -509,3 +509,9 @@ select{
   transition: opacity 0.3s;
   opacity: 0.5;
 }
+
+.tx-details-modal {
+  .panel-body {
+    padding: 0;
+  }
+}

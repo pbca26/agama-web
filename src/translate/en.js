@@ -52,6 +52,7 @@ const LANG_EN = {
     COULDNT_COPY_ADDRESS: 'Couldn\'t copy address to clipboard',
   },
   INDEX: {
+    TX_DETAILS: 'Transaction details',
     AMOUNT_IN: 'Amount in',
     FOR_GUIDES_AND_FAQ: 'For guides & FAQ please go to',
     TO_SEND_FEEDBACK: 'To send feedback please open a ticket at',

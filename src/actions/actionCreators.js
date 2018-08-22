@@ -60,7 +60,7 @@ export const toggleDashboardTxInfoModal = (display, txIndex) => {
   return {
     type: DASHBOARD_ACTIVE_TXINFO_MODAL,
     showTransactionInfo: display,
-    showTransactionInfoTxIndex: txIndex,
+    showTransactionInfoTxIndex: !display ? null : txIndex,
   }
 }
 
