@@ -13,7 +13,10 @@ import {
   toSats,
 } from 'agama-wallet-lib/src/utils';
 import urlParams from '../../util/url';
-import getCache from './cache';
+import {
+  getCache,
+  getCachePromise,
+} from './cache';
 
 export const shepherdElectrumTransactions = (coin, address, full = true, verify = false) => {
   const _serverEndpoint = `${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}`;
@@ -92,33 +95,8 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
                 let _rawtx = [];
 
                 Promise.all(json.map((transaction, index) => {
-                  _urlParams = {
-                    ip: appData.servers[coin].ip,
-                    port: appData.servers[coin].port,
-                    proto: appData.servers[coin].proto,
-                    address,
-                    height: transaction.height,
-                  };
-
                   return new Promise((resolve, reject) => {
-                    fetch(`${_serverEndpoint}/api/getblockinfo${urlParams(_urlParams)}`, {
-                      method: 'GET',
-                      headers: {
-                        'Content-Type': 'application/json',
-                      },
-                    })
-                    .catch((error) => {
-                      console.log(error);
-                      Store.dispatch(
-                        triggerToaster(
-                          translate('API.shepherdElectrumTransactions+getblockinfo'),
-                          'Error',
-                          'error'
-                        )
-                      );
-                    })
-                    .then(response => response.json())
-                    .then(json => {
+                    const _processHistory = (json) => {
                       result = json;
 
                       Config.log('getblock =>');
@@ -126,6 +104,7 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
 
                       if (result.msg !== 'error') {
                         const blockInfo = result.result;
+                        getCache(coin, 'blocks', transaction.height, blockInfo);
 
                         Config.log('electrum gettransaction ==>');
                         Config.log(`${index} | ${(transaction.raw.length - 1)}`);
@@ -284,6 +263,43 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
                         const formattedTx = transactionType(_parsedTx, address, coin === 'kmd' ? true : false);
                         _rawtx.push(formattedTx);
                         resolve(true);
+                      }
+                    };
+
+                    getCachePromise(coin, 'blocks', transaction.height)
+                    .then((res) => {
+                      if (res) {
+                        _processHistory({
+                          msg: 'success',
+                          result: res,
+                        });
+                      } else {
+                        _urlParams = {
+                          ip: appData.servers[coin].ip,
+                          port: appData.servers[coin].port,
+                          proto: appData.servers[coin].proto,
+                          height: transaction.height,
+                        };
+                        fetch(`${_serverEndpoint}/api/getblockinfo${urlParams(_urlParams)}`, {
+                          method: 'GET',
+                          headers: {
+                            'Content-Type': 'application/json',
+                          },
+                        })
+                        .catch((error) => {
+                          console.log(error);
+                          Store.dispatch(
+                            triggerToaster(
+                              translate('API.shepherdElectrumTransactions+getblockinfo'),
+                              'Error',
+                              'error'
+                            )
+                          );
+                        })
+                        .then(response => response.json())
+                        .then(json => {
+                          _processHistory(json);
+                        });
                       }
                     });
                   });

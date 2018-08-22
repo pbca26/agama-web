@@ -14,7 +14,7 @@ import {
   toSats,
 } from 'agama-wallet-lib/src/utils';
 import urlParams from '../../util/url';
-import getCache from './cache';
+import { getCache } from './cache';
 import { triggerToaster } from '../actionCreators';
 
 export const shepherdElectrumListunspent = (coin, address, full = true, verify = false) => {
