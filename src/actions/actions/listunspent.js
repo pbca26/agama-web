@@ -113,7 +113,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                         if (_cachedTx) {
                           // decode tx
                           const _network = isKomodoCoin(coin) ? btcNetworks.kmd : btcNetworks[coin];
-                          const decodedTx = transactionDecoder(_cachedTx, _network);
+                          const decodedTx = getCache(coin, 'decodedTxs', _utxoItem.tx_hash) ? getCache(coin, 'decodedTxs', _utxoItem.tx_hash) : transactionDecoder(_cachedTx, _network);
 
                           Config.log('decoded tx =>');
                           Config.log(decodedTx);
@@ -235,7 +235,6 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
 
                               Config.log('gettransaction =>');
 
-                              getCache(coin, 'txs', _utxoItem.tx_hash, _rawtxJSON);
 
                               Config.log('electrum gettransaction ==>');
                               Config.log(`${index} | ${(_rawtxJSON.length - 1)}`);
@@ -244,6 +243,8 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                               // decode tx
                               const _network = isKomodoCoin(coin) || (Config.whitelabel && Config.wlConfig.coin.ticker.toLowerCase() === coin) ? btcNetworks.kmd : btcNetworks[coin];
                               const decodedTx = transactionDecoder(_rawtxJSON, _network);
+                              getCache(coin, 'txs', _utxoItem.tx_hash, _rawtxJSON);
+                              getCache(coin, 'decodedTxs', _utxoItem.tx_hash, decodedTx);
 
                               Config.log('decoded tx =>');
                               Config.log(decodedTx);

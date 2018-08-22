@@ -149,7 +149,7 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
                                 const _cachedTx = getCache(coin, 'txs', _decodedInput.txid);
 
                                 if (_cachedTx) {
-                                  const decodedVinVout = transactionDecoder(_cachedTx, _network);
+                                  const decodedVinVout = getCache(coin, 'decodedTxs', _decodedInput.txid) ? getCache(coin, 'decodedTxs', _decodedInput.txid) : transactionDecoder(_cachedTx, _network);
 
                                   Config.log('electrum raw input tx ==>');
 
@@ -196,6 +196,7 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
                                       const decodedVinVout = transactionDecoder(result.result, _network);
 
                                       getCache(coin, 'txs', _decodedInput.txid, result.result);
+                                      getCache(coin, 'decodedTxs', _decodedInput.txid, decodedVinVout);
                                       Config.log('electrum raw input tx ==>');
 
                                       if (decodedVinVout) {

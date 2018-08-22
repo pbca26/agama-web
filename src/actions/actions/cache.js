@@ -6,8 +6,11 @@ const getCache = (coin, type, key, data) => {
     appData.cache[coin] = {
       blocks: {},
       txs: {},
+      decodedTxs: {},
     };
   }
+
+  console.warn('cache', appData.cache[coin]);
 
   if (!appData.cache[coin][type][key]) {
     Config.log(`not cached ${coin} ${type} ${key}`);
