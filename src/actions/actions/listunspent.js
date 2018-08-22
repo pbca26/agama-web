@@ -20,10 +20,18 @@ import { triggerToaster } from '../actionCreators';
 export const shepherdElectrumListunspent = (coin, address, full = true, verify = false) => {
   const CONNECTION_ERROR_OR_INCOMPLETE_DATA = 'connection error or incomplete data';
   let _atLeastOneDecodeTxFailed = false;
+  let _urlParams = {
+    ip: appData.servers[coin].ip,
+    port: appData.servers[coin].port,
+    proto: appData.servers[coin].proto,
+    address,
+  };
 
   if (full) {
+    const _serverEndpoint = `${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}`;
+
     return new Promise((resolve, reject) => {
-      fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/listunspent?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}&address=${address}`, {
+      fetch(`${_serverEndpoint}/api/listunspent${urlParams(_urlParams)}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -54,8 +62,13 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
               _utxoJSON.length) {
             let formattedUtxoList = [];
             let _utxo = [];
+            _urlParams = {
+              ip: appData.servers[coin].ip,
+              port: appData.servers[coin].port,
+              proto: appData.servers[coin].proto,
+            };
 
-            fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/getcurrentblock?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}`, {
+            fetch(`${_serverEndpoint}/api/getcurrentblock${urlParams(_urlParams)}`, {
               method: 'GET',
               headers: {
                 'Content-Type': 'application/json',
@@ -95,7 +108,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                   } else {
                     Promise.all(_utxo.map((_utxoItem, index) => {
                       return new Promise((resolve, reject) => {
-                        const _cachedTx = getCache(coin, 'txs', _utxoItem['tx_hash']);
+                        const _cachedTx = getCache(coin, 'txs', _utxoItem.tx_hash);
 
                         if (_cachedTx) {
                           // decode tx
@@ -119,8 +132,8 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                               }
 
                               let _resolveObj = {
-                                txid: _utxoItem['tx_hash'],
-                                vout: _utxoItem['tx_pos'],
+                                txid: _utxoItem.tx_hash,
+                                vout: _utxoItem.tx_pos,
                                 address,
                                 amount: Number(fromSats(_utxoItem.value)),
                                 amountSats: _utxoItem.value,
@@ -135,7 +148,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                               // merkle root verification agains another electrum server
                               if (verify) {
                                 verifyMerkleByCoin(
-                                  _utxoItem['tx_hash'],
+                                  _utxoItem.tx_hash,
                                   _utxoItem.height,
                                   electrumServer,
                                   proxyServer
@@ -154,8 +167,8 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                               }
                             } else {
                               let _resolveObj = {
-                                txid: _utxoItem['tx_hash'],
-                                vout: _utxoItem['tx_pos'],
+                                txid: _utxoItem.tx_hash,
+                                vout: _utxoItem.tx_pos,
                                 address,
                                 amount: Number(fromSats(_utxoItem.value)),
                                 amountSats: _utxoItem.value,
@@ -167,7 +180,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                               // merkle root verification agains another electrum server
                               if (verify) {
                                 verifyMerkleByCoin(
-                                  _utxoItem['tx_hash'],
+                                  _utxoItem.tx_hash,
                                   _utxoItem.height,
                                   electrumServer,
                                   proxyServer
@@ -187,7 +200,15 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                             }
                           }
                         } else {
-                          fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/gettransaction?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}&address=${address}&txid=${_utxoItem['tx_hash']}`, {
+                          _urlParams = {
+                            ip: appData.servers[coin].ip,
+                            port: appData.servers[coin].port,
+                            proto: appData.servers[coin].proto,
+                            address,
+                            txid: _utxoItem.tx_hash,
+                          };
+
+                          fetch(`${_serverEndpoint}/api/gettransaction${urlParams(_urlParams)}`, {
                             method: 'GET',
                             headers: {
                               'Content-Type': 'application/json',
@@ -214,7 +235,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
 
                               Config.log('gettransaction =>');
 
-                              getCache(coin, 'txs', _utxoItem['tx_hash'], _rawtxJSON);
+                              getCache(coin, 'txs', _utxoItem.tx_hash, _rawtxJSON);
 
                               Config.log('electrum gettransaction ==>');
                               Config.log(`${index} | ${(_rawtxJSON.length - 1)}`);
@@ -241,8 +262,8 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                                   }
 
                                   let _resolveObj = {
-                                    txid: _utxoItem['tx_hash'],
-                                    vout: _utxoItem['tx_pos'],
+                                    txid: _utxoItem.tx_hash,
+                                    vout: _utxoItem.tx_pos,
                                     address,
                                     amount: Number(fromSats(_utxoItem.value)),
                                     amountSats: _utxoItem.value,
@@ -257,7 +278,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                                   // merkle root verification agains another electrum server
                                   if (verify) {
                                     verifyMerkleByCoin(
-                                      _utxoItem['tx_hash'],
+                                      _utxoItem.tx_hash,
                                       _utxoItem.height,
                                       electrumServer,
                                       proxyServer
@@ -276,8 +297,8 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                                   }
                                 } else {
                                   let _resolveObj = {
-                                    txid: _utxoItem['tx_hash'],
-                                    vout: _utxoItem['tx_pos'],
+                                    txid: _utxoItem.tx_hash,
+                                    vout: _utxoItem.tx_pos,
                                     address,
                                     amount: Number(fromSats(_utxoItem.value)),
                                     amountSats: _utxoItem.value,
@@ -340,7 +361,14 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
     });
   } else {
     return new Promise((resolve, reject) => {
-      fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/listunspent?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}&address=${address}`, {
+      _urlParams = {
+        ip: appData.servers[coin].ip,
+        port: appData.servers[coin].port,
+        proto: appData.servers[coin].proto,
+        address,
+      };
+
+      fetch(`${_serverEndpoint}/api/listunspent${urlParams(_urlParams)}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

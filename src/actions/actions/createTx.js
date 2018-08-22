@@ -10,35 +10,8 @@ import {
   sendToAddressState,
 } from '../actionCreators';
 
-// value in sats
-export const shepherdElectrumSend = (coin, value, sendToAddress, changeAddress, btcFee) => {
-  value = Math.floor(value);
-
-  return dispatch => {
-    return fetch(`http://127.0.0.1:${Config.agamaPort}/shepherd/electrum/createrawtx?coin=${coin}&address=${sendToAddress}&value=${value}&change=${changeAddress}${btcFee ? '&btcfee=' + btcFee : ''}&gui=true&push=true&verify=true&token=${Config.token}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-    .catch((error) => {
-      console.log(error);
-      dispatch(
-        triggerToaster(
-          translate('API.shepherdElectrumSend'),
-          'Error',
-          'error'
-        )
-      );
-    })
-    .then(response => response.json())
-    .then(json => {
-      dispatch(sendToAddressState(json.msg === 'error' ? json : json.result));
-    });
-  }
-}
-
 export const shepherdElectrumSendPromise = (coin, value, sendToAddress, changeAddress, fee, push) => {
+  const _serverEndpoint = `${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}`;
   value = Math.floor(value);
 
   return new Promise((resolve, reject) => {
@@ -78,7 +51,7 @@ export const shepherdElectrumSendPromise = (coin, value, sendToAddress, changeAd
       Config.log('send tx', _tx);
 
       if (push) {
-        fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/pushtx`, {
+        fetch(`${_serverEndpoint}/api/pushtx`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

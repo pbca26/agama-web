@@ -35,7 +35,14 @@ export const shepherdSelectRandomCoinServer = (coin) => {
 
 export const shepherdElectrumCheckServerConnection = (ip, port, proto) => {
   return new Promise((resolve, reject) => {
-    fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/server/version?port=${port}&ip=${ip}&proto=${proto}`, {
+    const _serverEndpoint = `${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}`;
+    const _urlParams = {
+      port,
+      ip,
+      proto,
+    };
+
+    fetch(`${_serverEndpoint}/api/server/version${urlParams(_urlParams)}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

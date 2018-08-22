@@ -304,7 +304,7 @@ const LANG_EN = {
     MODE: 'Mode',
     LOOKS_LIKE: 'Looks like',
     ALREADY_RUNNING: 'already running',
-    STARTED_IN: 'started in',
+    STARTED_IN: 'started in Lite mode',
     COIN_STARTED: 'coin started',
     ADDED_TO: 'added to',
     SUCCESSFULLY: 'Successfully',

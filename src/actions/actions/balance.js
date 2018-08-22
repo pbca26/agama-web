@@ -7,6 +7,7 @@ import {
 } from 'agama-wallet-lib/src/utils';
 import Config from '../../config';
 import appData from './appData';
+import urlParams from '../../util/url';
 
 export const shepherdElectrumBalance = (coin, address) => {
   // proxyConErr = true;
@@ -23,9 +24,16 @@ export const shepherdElectrumBalance = (coin, address) => {
       );
     }
   }, 20000);*/
+  const _serverEndpoint = `${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}`;
+  const _urlParams = {
+    ip: appData.servers[coin].ip,
+    port: appData.servers[coin].port,
+    proto: appData.servers[coin].proto,
+    address,
+  };
 
   return dispatch => {
-    fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/getbalance?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}&address=${address}`, {
+    fetch(`${_serverEndpoint}/api/getbalance${urlParams(_urlParams)}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

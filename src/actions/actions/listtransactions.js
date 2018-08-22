@@ -16,9 +16,16 @@ import urlParams from '../../util/url';
 import getCache from './cache';
 
 export const shepherdElectrumTransactions = (coin, address, full = true, verify = false) => {
+  const _serverEndpoint = `${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}`;
+  let _urlParams = {
+    ip: appData.servers[coin].ip,
+    port: appData.servers[coin].port,
+    proto: appData.servers[coin].proto,
+  };
+
   return dispatch => {
     // get current height
-    fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/getcurrentblock?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}`, {
+    fetch(`${_serverEndpoint}/api/getcurrentblock${urlParams(_urlParams)}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -47,7 +54,15 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
           Config.log('currentHeight =>');
           Config.log(currentHeight);
 
-          fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/listtransactions?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}&address=${address}&raw=true`, {
+          let _urlParams = {
+            ip: appData.servers[coin].ip,
+            port: appData.servers[coin].port,
+            proto: appData.servers[coin].proto,
+            address,
+            raw: true,
+          };
+
+          fetch(`${_serverEndpoint}/api/listtransactions${urlParams(_urlParams)}`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -77,8 +92,16 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
                 let _rawtx = [];
 
                 Promise.all(json.map((transaction, index) => {
+                  _urlParams = {
+                    ip: appData.servers[coin].ip,
+                    port: appData.servers[coin].port,
+                    proto: appData.servers[coin].proto,
+                    address,
+                    height: transaction.height,
+                  };
+
                   return new Promise((resolve, reject) => {
-                    fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/getblockinfo?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}&address=${address}&height=${transaction.height}`, {
+                    fetch(`${_serverEndpoint}/api/getblockinfo${urlParams(_urlParams)}`, {
                       method: 'GET',
                       headers: {
                         'Content-Type': 'application/json',
@@ -138,7 +161,15 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
                                     _resolve(true);
                                   }
                                 } else {
-                                  fetch(`${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}/api/gettransaction?port=${appData.servers[coin].port}&ip=${appData.servers[coin].ip}&proto=${appData.servers[coin].proto}&address=${address}&txid=${_decodedInput.txid}`, {
+                                  _urlParams = {
+                                    ip: appData.servers[coin].ip,
+                                    port: appData.servers[coin].port,
+                                    proto: appData.servers[coin].proto,
+                                    address,
+                                    txid: _decodedInput.txid,
+                                  };
+
+                                  fetch(`${_serverEndpoint}/api/gettransaction${urlParams(_urlParams)}`, {
                                     method: 'GET',
                                     headers: {
                                       'Content-Type': 'application/json',
