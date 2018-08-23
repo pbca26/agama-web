@@ -50,7 +50,11 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
         let result = json;
 
         if (result.msg === 'error') {
-          Store.dispatch(shepherdElectrumTransactionsState({ error: 'error' }));
+          Store.dispatch(shepherdElectrumTransactionsState({
+            result: {
+              error: 'error',
+            },
+          }));
         } else {
           const currentHeight = result.result;
 
@@ -312,7 +316,11 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
                 Store.dispatch(shepherdElectrumTransactionsState({ result: [] }));
               }
             } else {
-              Store.dispatch(shepherdElectrumTransactionsState({ error: 'error' }));
+              Store.dispatch(shepherdElectrumTransactionsState({
+                result: {
+                  error: 'error',
+                },
+              }));
             }
           });
         }
@@ -322,11 +330,12 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
 }
 
 export const shepherdElectrumTransactionsState = (json) => {
+  console.warn('shepherdElectrumTransactionsState', json);
   json = json.result;
 
   if (json &&
       json.error) {
-    json = null;
+    json = 'connection error or incomplete data';
   } else if (!json || !json.length) {
     json = 'no data';
   }

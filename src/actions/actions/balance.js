@@ -10,20 +10,6 @@ import appData from './appData';
 import urlParams from '../../util/url';
 
 export const shepherdElectrumBalance = (coin, address) => {
-  // proxyConErr = true;
-
-  /*setTimeout(() => {
-    if (proxyConErr) {
-      Store.dispatch(
-        triggerToaster(
-          translate('INDEX.PROXY_CON_ERR'),
-          translate('INDEX.ERROR'),
-          'error',
-          false
-        )
-      );
-    }
-  }, 20000);*/
   const _serverEndpoint = `${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}`;
   const _urlParams = {
     ip: appData.servers[coin].ip,
@@ -68,7 +54,6 @@ export const shepherdElectrumBalance = (coin, address) => {
                 }
               }
 
-              // proxyConErr = false;
               json = {
                 msg: 'success',
                 result: {
@@ -85,7 +70,6 @@ export const shepherdElectrumBalance = (coin, address) => {
               dispatch(shepherdElectrumBalanceState(json));
             });
           } else {
-            // proxyConErr = false;
             json = {
               msg: 'success',
               result: {
@@ -98,7 +82,6 @@ export const shepherdElectrumBalance = (coin, address) => {
             dispatch(shepherdElectrumBalanceState(json));
           }
         } else {
-          // proxyConErr = false;
           json = {
             msg: 'error',
             result: 'error',

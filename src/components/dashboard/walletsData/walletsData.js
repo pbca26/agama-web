@@ -278,7 +278,7 @@ class WalletsData extends React.Component {
 
         Store.dispatch(
           triggerToaster(
-            `${_coin} ${translate('INDEX.LITE')} ${translate('DASHBOARD.SERVER_SET_TO')} ${_newServer}`,
+            `${_coin.toUpperCase()} SPV ${translate('DASHBOARD.SERVER_SET_TO')} ${_newServer}`,
             translate('TOASTR.WALLET_NOTIFICATION'),
             'success'
           )
@@ -286,7 +286,7 @@ class WalletsData extends React.Component {
       } else {
         Store.dispatch(
           triggerToaster(
-            `${_coin} ${translate('INDEX.LITE')} ${translate('DASHBOARD.SERVER_SM')} ${_newServer} ${translate('DASHBOARD.IS_UNREACHABLE')}!`,
+            `${_coin.toUpperCase()} SPV ${translate('DASHBOARD.SERVER_SM')} ${_newServer} ${translate('DASHBOARD.IS_UNREACHABLE')}!`,
             translate('TOASTR.WALLET_NOTIFICATION'),
             'error'
           )
@@ -306,7 +306,7 @@ class WalletsData extends React.Component {
       );
     } else if (this.state.itemsList === 'connection error') {
       return (
-        <div className="padding-left-15">>
+        <div className="padding-left-15">
           <div className="color-warning">
             { translate('DASHBOARD.SPV_CONN_ERROR') }
           </div>

@@ -62,6 +62,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
               _utxoJSON.length) {
             let formattedUtxoList = [];
             let _utxo = [];
+
             _urlParams = {
               ip: appData.servers[coin].ip,
               port: appData.servers[coin].port,
@@ -311,7 +312,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                                   // merkle root verification agains another electrum server
                                   if (verify) {
                                     verifyMerkleByCoin(
-                                      _utxoItem['tx_hash'],
+                                      _utxoItem.tx_hash,
                                       _utxoItem.height,
                                       electrumServer,
                                       proxyServer

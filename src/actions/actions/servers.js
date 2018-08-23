@@ -5,6 +5,7 @@ import electrumServers from 'agama-wallet-lib/src/electrum-servers';
 import proxyServers from '../../util/proxyServers';
 import translate from '../../translate/translate';
 import Store from '../../store';
+import urlParams from '../../util/url';
 
 export const shepherdSelectProxy = () => {
   // pick a random proxy server
