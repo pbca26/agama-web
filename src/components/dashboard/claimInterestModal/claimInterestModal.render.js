@@ -140,8 +140,6 @@ export const _ClaimInterestTableRender = function() {
 };
 
 export const ClaimInterestModalRender = function() {
-  // fade hide
-  // show in
   return (
     <span onClick={ this.closeDropMenu }>
       <div className={ `modal modal-claim-interest modal-3d-sign ${this.state.className}` }>

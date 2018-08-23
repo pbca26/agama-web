@@ -31,17 +31,23 @@ const WalletsTxInfoRender = function(txInfo) {
               <div className="panel nav-tabs-horizontal">
                 <ul className="nav nav-tabs nav-tabs-line">
                   <li className={ this.state.activeTab === 0 ? 'active' : '' }>
-                    <a onClick={ () => this.openTab(0) }>
+                    <a
+                      className="pointer"
+                      onClick={ () => this.openTab(0) }>
                       <i className="icon fa-info"></i>{ translate('TX_INFO.TXID_INFO') }
                     </a>
                   </li>
                   <li className={ this.state.activeTab === 2 ? 'active' : '' }>
-                    <a onClick={ () => this.openTab(2) }>
+                    <a
+                      className="pointer"
+                      onClick={ () => this.openTab(2) }>
                       <i className="icon fa-code"></i>{ translate('TX_INFO.HEX') }
                     </a>
                   </li>
                   <li className={ this.state.activeTab === 3 ? 'active' : '' }>
-                    <a onClick={ () => this.openTab(3) }>
+                    <a
+                      className="pointer"
+                      onClick={ () => this.openTab(3) }>
                       <i className="icon fa-file"></i>{ translate('TX_INFO.RAW_INFO') }
                     </a>
                   </li>

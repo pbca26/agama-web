@@ -23,6 +23,9 @@
 @import '../components/login/login.scss';
 @import '../components/overrides.scss';
 @import '../components/switch.scss';
+@import '../components/select.scss';
+@import '../components/modal.scss';
+@import '../components/rcSlider.scss';
 @import '../components/contextMenu.scss';
 @import '../components/responsive.scss';
 @import '../components/dashboard/walletsInfo/walletsInfo.scss';
@@ -36,6 +39,9 @@
 @import '../components/dashboard/claimInterestModal/claimInterestModal.scss';
 @import '../components/dashboard/qrModal/qrModal.scss';
 @import '../components/dashboard/walletRisksModal/walletRisksModal.scss';
+@import '../components/dashboard/walletsTxInfo/walletsTxInfo.scss';
+@import '../components/dashboard/support/support.scss';
 @import '../components/dashboard/spinner/spinner.scss';
+@import '../components/dashboard/receiveCoin/receiveCoin.scss';
 /*@import '../components/dashboard/tools/tools.scss';*/
 @import '../components/toaster/toaster.scss';

@@ -58,3 +58,44 @@
     color: #757575;
   }
 }
+
+.navbar-default {
+  .navbar-collapse,
+  .navbar-form {
+    border: none;
+    padding: 0;
+  }
+}
+
+.site-navbar {
+  .navbar-brand-logo {
+    height: 32px;
+    width: 110px;
+
+    &.whitelabel {
+      width: inherit;
+      height: 45px;
+      margin-top: -10px;
+    }
+    &.hidden-lg {
+      display: none;
+    }
+  }
+}
+
+.navbar-brand {
+  padding: 22px 15px;
+}
+
+.navbar-toolbar {
+  > li {
+    > a {
+      &.padding-top-16 {
+        padding-top: 16px;
+      }
+    }
+  }
+  .dropdown-menu:not(.dropdown-menu-media) {
+    overflow-y: auto;
+  }
+}

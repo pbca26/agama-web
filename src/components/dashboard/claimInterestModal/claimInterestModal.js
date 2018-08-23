@@ -113,14 +113,15 @@ class ClaimInterestModal extends React.Component {
   }
 
   confirmClaimInterest() {
-    const _pub = this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub
+    const _coin = this.props.ActiveCoin.coin;
+    const _pub = this.props.Dashboard.electrumCoins[_coin].pub
 
     shepherdElectrumSendPromise(
-      this.props.ActiveCoin.coin,
+      _coin,
       this.props.ActiveCoin.balance.balanceSats,
       _pub,
       _pub,
-      electrumServers[this.props.ActiveCoin.coin].txfee,
+      electrumServers[_coin].txfee,
       true
     )
     .then((res) => {

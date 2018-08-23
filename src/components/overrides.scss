@@ -1,3 +1,7 @@
+body {
+  padding-top: 44px;
+}
+
 #app {
   height: 100%;
 
@@ -8,11 +12,9 @@
 
 .page-main {
   background: #f3f4f5;
-}
 
-#kmd_header_button {
-  button {
-    margin-right: 5px;
+  .page-content .receive-coin-block .panel-body {
+    padding-bottom: 0 !important;
   }
 }
 
@@ -22,10 +24,6 @@
       box-shadow: inset 1px 1px 10px #ccc;
     }
   }
-}
-
-body {
-  padding-top: 44px;
 }
 
 #section-dashboard {
@@ -57,7 +55,7 @@ body {
 
 .seed-toggle {
   position: absolute;
-  right: 0;
+  right: 10px;
   top: 6px;
   cursor: pointer;
   cursor: hand;
@@ -78,17 +76,6 @@ body {
 .collapse-active,
 .panel>:not(.panel-loading):not(.collapsing) {
   transition: height 0.3s ease-out;
-}
-
-.page-aside {
-  position: fixed;
-}
-
-.page-aside-inner {
-  .wallet-widgets-list {
-    overflow-y: auto;
-    height: 100%;
-  }
 }
 
 .btn-outline-primary {
@@ -115,44 +102,10 @@ body {
   text-align: center;
 }
 
-.coin-logo {
-  &.breadcrumb {
-    z-index: 99;
-  }
-}
-.breadcrumb > li + li:before {
-  display: none;
-}
-
 #js-copytextarea {
   opacity: 0;
   height: 10px;
   width: 200px;
-}
-
-.bootstrap-select {
-  > .dropdown-toggle {
-    z-index: 0;
-  }
-}
-
-select{
-  &.form-control {
-    &.form-material {
-      color: #757575;
-    }
-  }
-}
-
-.site-navbar {
-  .navbar-brand-logo {
-    height: 32px;
-    width: 110px;
-  }
-}
-
-.navbar-brand {
-  padding: 22px 15px;
 }
 
 .panel-actions {
@@ -200,38 +153,8 @@ select{
   font-weight: bold;
 }
 
-.modal {
-  .modal-content {
-    .modal-header {
-      .close {
-        font-size: 28px;
-        position: absolute;
-        z-index: 100;
-        right: 20px;
-        opacity: 0.5;
-
-        &:hover {
-          opacity: 1;
-        }
-      }
-    }
-  }
-}
-
-.tx-interest {
-  display: block;
-  color: #4caf50;
-  font-size: 13px;
-  padding-top: 5px;
-}
-
 .color-warning {
   color: #FF6600;
-}
-
-.link {
-  cursor: hand;
-  cursor: pointer;
 }
 
 .dropdown-toggle {
@@ -261,20 +184,6 @@ select{
   color: #f96868;
 }
 
-.modal-close-overlay {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-#section-iguana-wallet-settings {
-  > .row {
-    background: #f3f4f5;
-  }
-}
-
 .inline {
   display: inline-block;
 }
@@ -295,46 +204,6 @@ select{
   margin: 0 !important;
 }
 
-.Select {
-  cursor: pointer;
-  text-align: left;
-
-  img {
-    border-radius: 50%;
-  }
-
-  * { color: #757575 !important; }
-
-  .Select-clear {
-    display: none;
-  }
-  .Select-control {
-    height: 40px !important;
-
-    .Select-placeholder,
-    .Select-value {
-      line-height: 36px !important;
-    }
-  }
-}
-.Select-menu-outer {
-  max-height: 253px !important;
-}
-.Select-menu {
-  max-height: 250px !important;
-}
-.Select.is-open,
-.Select.is-focused {
-  .Select-control {
-    border-color: #FF6600 !important;
-    box-shadow: none !important;
-  }
-  .Select-menu-outer {
-    border-color: #FF6600 !important;
-    border-top-color: #d9d9d9 !important;
-  }
-}
-
 .__react_component_tooltip {
   &.type-dark {
     background-color: #000;
@@ -345,121 +214,6 @@ select{
   cursor: default;
 }
 
-.rc-slider {
-  .rc-slider-handle {
-    position: absolute;
-    margin-left: -10px;
-    margin-top: -7px;
-    width: 20px;
-    height: 20px;
-  }
-
-  .rc-slider-mark {
-    top: 23px;
-    font-size: 14px;
-  }
-
-  .rc-slider-rail,
-  .rc-slider-track {
-    height: 6px;
-  }
-
-  .rc-slider-rail {
-    background-color: #dcdcdc;
-  }
-
-  .rc-slider-track {
-    background-color: #51c4f9;
-  }
-
-  .rc-slider-handle {
-    border-color: #51c4f9;
-  }
-
-  .rc-slider-dot {
-    bottom: -5px;
-    width: 12px;
-    height: 12px;
-  }
-
-  .rc-slider-dot-active {
-    border-color: #51c4f9 !important;
-  }
-
-  .rc-slider-dot {
-    border-color: #dcdcdc;
-  }
-}
-
-.navbar-toolbar .dropdown-menu:not(.dropdown-menu-media) {
-  overflow-y: auto;
-}
-
-.kmd-mobile-icon {
-  display: none;
-}
-
-.site-navbar .navbar-brand-logo.hidden-lg {
-  display: none;
-}
-
-.support-box-wrapper {
-  .support-box {
-    color: #757575;
-  }
-}
-
-.native-coin-logo .header-easydex-section img {
-  width: inherit !important;
-}
-
-#section-iguana-wallet-settings .panel-title:before {
-  display: none;
-}
-
-#section-iguana-wallet-settings .panel-title:after {
-  content: '\f067';
-  font-family: FontAwesome;
-  opacity: 0.8;
-}
-
-#section-iguana-wallet-settings .active .panel-title:after {
-  content: '\f068';
-  font-family: FontAwesome;
-  opacity: 0.8;
-}
-
-.seed-toggle {
-  right: 10px;
-}
-
-.navbar-default .navbar-collapse,
-.navbar-default .navbar-form {
-  border: none;
-  padding: 0;
-}
-
-.page-main .page-content .receive-coin-block .panel-body {
-  padding: 0 0 40px 12px !important;
-}
-
-.modal-claim-interest .modal-dialog .table-scroll {
-  overflow-x: auto;
-}
-
-.site-navbar .navbar-brand-logo.whitelabel {
-  width: inherit;
-  height: 45px;
-  margin-top: -10px;
-}
-
-.whitelabel-icon-title {
-  position: relative;
-  left: 15px;
-  top: -2px;
-  color: #757575;
-}
-
 .font-size-18 {
   font-size: 18px;
 }
@@ -467,51 +221,9 @@ select{
   font-size: 24px;
 }
 
-.page-aside.padding-top-80 {
-  padding-top: 68px !important;
-}
-
-.wallet-widgets-list {
-  .list-group {
-    padding-right: 0;
-  }
-}
-
-.receive-address-context-menu {
-  ul {
-    padding: 0;
-  }
-}
-
-.modal {
-  .modal-body {
-    color: #545454;
-  }
-}
-
-.page-main .page-content .receive-coin-block .panel-body {
-  padding-bottom: 0 !important;
-}
-
 .nbsp {
   margin-right: 3px;
 }
 .nbsp-l {
   margin-left: 3px;
-}
-
-.login-form,
-.register-form {
-  margin: 0 auto;
-}
-
-.modal-backdrop {
-  transition: opacity 0.3s;
-  opacity: 0.5;
-}
-
-.tx-details-modal {
-  .panel-body {
-    padding: 0;
-  }
 }
