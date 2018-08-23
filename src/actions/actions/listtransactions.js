@@ -330,7 +330,6 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
 }
 
 export const shepherdElectrumTransactionsState = (json) => {
-  console.warn('shepherdElectrumTransactionsState', json);
   json = json.result;
 
   if (json &&
