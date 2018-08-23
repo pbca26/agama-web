@@ -31,6 +31,7 @@ import {
 } from  './walletsData.render';
 import { secondsToString } from 'agama-wallet-lib/src/time';
 import DoubleScrollbar from 'react-double-scrollbar';
+import appData from '../../../actions/actions/appData';
 
 const BOTTOM_BAR_DISPLAY_THRESHOLD = 15;
 
@@ -40,11 +41,6 @@ class WalletsData extends React.Component {
     this.state = {
       itemsList: [],
       filteredItemsList: [],
-      currentAddress: null,
-      addressSelectorOpen: false,
-      currentStackLength: 0,
-      totalStackLength: 0,
-      useCache: true,
       itemsListColumns: this.generateItemsListColumns(),
       defaultPageSize: 20,
       pageSize: 20,
@@ -55,28 +51,10 @@ class WalletsData extends React.Component {
       loading: false,
       reconnectInProgress: false,
     };
-    this.openDropMenu = this.openDropMenu.bind(this);
-    this.handleClickOutside = this.handleClickOutside.bind(this);
     this.refreshTxHistory = this.refreshTxHistory.bind(this);
     this.openClaimInterestModal = this.openClaimInterestModal.bind(this);
     this.displayClaimInterestUI = this.displayClaimInterestUI.bind(this);
     this.spvAutoReconnect = this.spvAutoReconnect.bind(this);
-  }
-
-  componentWillMount() {
-    document.addEventListener(
-      'click',
-      this.handleClickOutside,
-      false
-    );
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener(
-      'click',
-      this.handleClickOutside,
-      false
-    );
   }
 
   displayClaimInterestUI() {
@@ -87,8 +65,8 @@ class WalletsData extends React.Component {
           this.props.ActiveCoin.balance.interest > 0) {
         return 777;
       } else if (
-        (this.props.ActiveCoin.balance.transparent && this.props.ActiveCoin.balance.transparent >= 10) ||
-        (this.props.ActiveCoin.balance.balance && this.props.ActiveCoin.balance.balance >= 10)
+        this.props.ActiveCoin.balance.balance &&
+        this.props.ActiveCoin.balance.balance >= 10
       ) {
         return -777;
       }
@@ -99,29 +77,15 @@ class WalletsData extends React.Component {
     Store.dispatch(toggleClaimInterestModal(true));
   }
 
-  // https://react-table.js.org/#/custom-sorting
-  tableSorting(a, b) { // ugly workaround, override default sort
-    if (Date.parse(a)) { // convert date to timestamp
-      a = Date.parse(a);
+  isOutValue(tx) {
+    if ((tx.category === 'send' || tx.category === 'sent') ||
+        (tx.type === 'send' || tx.type === 'sent') &&
+        tx.amount > 0) {
+      tx.amount = tx.amount * -1;
+      return tx;
+    } else {
+      return tx;
     }
-    if (Date.parse(b)) {
-      b = Date.parse(b);
-    }
-    // force null and undefined to the bottom
-    a = (a === null || a === undefined) ? -Infinity : a;
-    b = (b === null || b === undefined) ? -Infinity : b;
-    // force any string values to lowercase
-    a = typeof a === 'string' ? a.toLowerCase() : a;
-    b = typeof b === 'string' ? b.toLowerCase() : b;
-    // Return either 1 or -1 to indicate a sort priority
-    if (a > b) {
-      return 1;
-    }
-    if (a < b) {
-      return -1;
-    }
-    // returning 0 or undefined will use any subsequent column sorting methods or the row index as a tiebreaker
-    return 0;
   }
 
   generateItemsListColumns(itemsCount) {
@@ -135,7 +99,8 @@ class WalletsData extends React.Component {
       className: 'colum--direction',
       headerClassName: 'colum--direction',
       footerClassName: 'colum--direction',
-      accessor: (tx) => TxTypeRender.call(this, tx.category || tx.type),
+      Cell: row => TxTypeRender.call(this, row.value),
+      accessor: (tx) => tx.category || tx.type,
     },
     {
       id: 'confirmations',
@@ -144,13 +109,24 @@ class WalletsData extends React.Component {
       headerClassName: 'hidden-xs hidden-sm',
       footerClassName: 'hidden-xs hidden-sm',
       className: 'hidden-xs hidden-sm',
-      accessor: (tx) => TxConfsRender.call(this, tx.confirmations),
+      Cell: row => TxConfsRender.call(this, row.value),
+      accessor: (tx) => tx.confirmations,
     },
     {
       id: 'amount',
       Header: translate('INDEX.AMOUNT'),
       Footer: translate('INDEX.AMOUNT'),
-      accessor: (tx) => TxAmountRender.call(this, tx),
+      Cell: row => TxAmountRender.call(this, this.isOutValue(row.value)),
+      accessor: (tx) => tx,
+      sortMethod: (a, b) => {
+        if (a.amount > b.amount) {
+          return 1;
+        }
+        if (a.amount < b.amount) {
+          return -1;
+        }
+        return 0;
+      },
     },
     {
       id: 'timestamp',
@@ -190,6 +166,8 @@ class WalletsData extends React.Component {
       headerClassName: 'colum--txinfo',
       footerClassName: 'colum--txinfo',
       accessor: (tx) => TransactionDetailRender.call(this, tx),
+      sortable: false,
+      filterable: false,
     };
 
     if (itemsCount <= BOTTOM_BAR_DISPLAY_THRESHOLD) {
@@ -199,20 +177,6 @@ class WalletsData extends React.Component {
     columns.push(_col);
 
     return columns;
-  }
-
-  handleClickOutside(e) {
-    if (e &&
-        e.srcElement &&
-        e.srcElement.className !== 'btn dropdown-toggle btn-info' &&
-        (e.srcElement.offsetParent && e.srcElement.offsetParent.className !== 'btn dropdown-toggle btn-info') &&
-        (e.path && e.path[4] && e.path[4].className.indexOf('showkmdwalletaddrs') === -1) &&
-        (e.srcElement.offsetParent && e.srcElement.offsetParent.className.indexOf('dropdown') === -1) &&
-        e.srcElement.className !== 'dropdown-toggle btn-xs btn-default') {
-      this.setState({
-        addressSelectorOpen: false,
-      });
-    }
   }
 
   refreshTxHistory() {
@@ -238,42 +202,43 @@ class WalletsData extends React.Component {
   }
 
   componentWillReceiveProps(props) {
+    const _txhistory = this.props.ActiveCoin.txhistory;
     let _stateChange = {};
 
     // TODO: figure out why changing ActiveCoin props doesn't trigger comp update
-    if (this.props.ActiveCoin.txhistory &&
-        this.props.ActiveCoin.txhistory !== 'loading' &&
-        this.props.ActiveCoin.txhistory !== 'no data' &&
-        this.props.ActiveCoin.txhistory !== 'connection error or incomplete data' &&
-        this.props.ActiveCoin.txhistory !== 'cant get current height' &&
-        this.props.ActiveCoin.txhistory.length) {
+    if (_txhistory &&
+        _txhistory !== 'loading' &&
+        _txhistory !== 'no data' &&
+        _txhistory !== 'connection error or incomplete data' &&
+        _txhistory !== 'cant get current height' &&
+        _txhistory.length) {
       _stateChange = Object.assign({}, _stateChange, {
-        itemsList: this.props.ActiveCoin.txhistory,
-        filteredItemsList: this.filterTransactions(this.props.ActiveCoin.txhistory, this.state.searchTerm),
-        txhistory: this.props.ActiveCoin.txhistory,
-        showPagination: this.props.ActiveCoin.txhistory && this.props.ActiveCoin.txhistory.length >= this.state.defaultPageSize,
-        itemsListColumns: this.generateItemsListColumns(this.props.ActiveCoin.txhistory.length),
+        itemsList: _txhistory,
+        filteredItemsList: this.filterTransactions(_txhistory, this.state.searchTerm),
+        txhistory: _txhistory,
+        showPagination: _txhistory && _txhistory.length >= this.state.defaultPageSize,
+        itemsListColumns: this.generateItemsListColumns(_txhistory.length),
         reconnectInProgress: false,
       });
     }
 
-    if (this.props.ActiveCoin.txhistory &&
-        this.props.ActiveCoin.txhistory === 'no data') {
+    if (_txhistory &&
+        _txhistory === 'no data') {
       _stateChange = Object.assign({}, _stateChange, {
         itemsList: 'no data',
         reconnectInProgress: false,
       });
     } else if (
-      this.props.ActiveCoin.txhistory &&
-      this.props.ActiveCoin.txhistory === 'loading'
+      _txhistory &&
+      _txhistory === 'loading'
     ) {
       _stateChange = Object.assign({}, _stateChange, {
         itemsList: 'loading',
         reconnectInProgress: false,
       });
     } else if (
-      (this.props.ActiveCoin.txhistory && this.props.ActiveCoin.txhistory === 'connection error or incomplete data') ||
-      (this.props.ActiveCoin.txhistory && this.props.ActiveCoin.txhistory === 'cant get current height')
+      (_txhistory && _txhistory === 'connection error or incomplete data') ||
+      (_txhistory && _txhistory === 'cant get current height')
     ) {
       _stateChange = Object.assign({}, _stateChange, {
         itemsList: 'connection error',
@@ -289,11 +254,13 @@ class WalletsData extends React.Component {
   }
 
   spvAutoReconnect() {
-    let _spvServers = window.servers[this.props.ActiveCoin.coin].serverList;
-    let _server = [
-      window.servers[this.props.ActiveCoin.coin].ip,
-      window.servers[this.props.ActiveCoin.coin].port,
-      window.servers[this.props.ActiveCoin.coin].proto
+    const _coin = this.props.ActiveCoin.coin;
+    const _coinServers = appData.servers[_coin];
+    const _spvServers = _coinServers.serverList;
+    const _server = [
+      _coinServers.ip,
+      _coinServers.port,
+      _coinServers.proto
     ];
     const _randomServer = getRandomElectrumServer(_spvServers, _server.join(':'));
 
@@ -304,13 +271,14 @@ class WalletsData extends React.Component {
     )
     .then((res) => {
       if (res.result) {
-        window.servers[this.props.ActiveCoin.coin].ip = _server[0];
-        window.servers[this.props.ActiveCoin.coin].port = _server[1];
-        window.servers[this.props.ActiveCoin.coin].proto = _server[2];
+        const _newServer = `${_randomServer.ip}:${_randomServer.port}:${_randomServer.proto}`;
+        _coinServers.ip = _server[0];
+        _coinServers.port = _server[1];
+        _coinServers.proto = _server[2];
 
         Store.dispatch(
           triggerToaster(
-            `${this.props.ActiveCoin.coin} ${translate('INDEX.LITE')} ${translate('DASHBOARD.SERVER_SET_TO')} ${_randomServer.ip}:${_randomServer.port}:${_randomServer.proto}`,
+            `${_coin.toUpperCase()} SPV ${translate('DASHBOARD.SERVER_SET_TO')} ${_newServer}`,
             translate('TOASTR.WALLET_NOTIFICATION'),
             'success'
           )
@@ -318,7 +286,7 @@ class WalletsData extends React.Component {
       } else {
         Store.dispatch(
           triggerToaster(
-            `${this.props.ActiveCoin.coin} ${translate('INDEX.LITE')} ${translate('DASHBOARD.SERVER_SM')} ${_randomServer.ip}:${_randomServer.port}:${_randomServer.proto} ${translate('DASHBOARD.IS_UNREACHABLE')}!`,
+            `${_coin.toUpperCase()} SPV ${translate('DASHBOARD.SERVER_SM')} ${_newServer} ${translate('DASHBOARD.IS_UNREACHABLE')}!`,
             translate('TOASTR.WALLET_NOTIFICATION'),
             'error'
           )
@@ -330,37 +298,26 @@ class WalletsData extends React.Component {
   renderTxHistoryList() {
     if (this.state.itemsList === 'loading') {
       return (
-        <tr className="hover--none">
-          <td
-            colSpan="7"
-            className="table-cell-offset-16">{ translate('INDEX.SYNC_IN_PROGRESS') }...</td>
-        </tr>
+        <div className="padding-left-15">{ translate('INDEX.SYNC_IN_PROGRESS') }...</div>
       );
     } else if (this.state.itemsList === 'no data') {
       return (
-        <tr className="hover--none">
-          <td
-            colSpan="7"
-            className="table-cell-offset-16">{ translate('INDEX.NO_DATA') }</td>
-        </tr>
+        <div className="padding-left-15">{ translate('INDEX.NO_DATA') }</div>
       );
     } else if (this.state.itemsList === 'connection error') {
       return (
-        <tr className="hover--none">
-          <td
-            colSpan="7"
-            className="table-cell-offset-16">
-            <div className="color-warning">
-              { translate('DASHBOARD.SPV_CONN_ERROR') }
-            </div>
-            <div className={ this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].serverList !== 'none' ? '' : 'hide' }>
-              <div className="color-warning">{ translate('DASHBOARD.SPV_AUTO_SWITCH') }...</div>
-              <br />
+        <div className="padding-left-15">
+          <div className="color-warning">
+            { translate('DASHBOARD.SPV_CONN_ERROR') }
+          </div>
+          { this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].serverList !== 'none' &&
+            <div>
+              <div className="color-warning padding-bottom-10">{ translate('DASHBOARD.SPV_AUTO_SWITCH') }...</div>
               <strong>{ translate('DASHBOARD.HOW_TO_SWITCH_MANUALLY') }:</strong>
-              <br/>{ translate('DASHBOARD.SPV_CONN_ERROR_P1') }
+              <div className="padding-top-10">{ translate('DASHBOARD.SPV_CONN_ERROR_P1') }</div>
             </div>
-          </td>
-        </tr>
+          }
+        </div>
       );
     } else if (
       this.state.itemsList &&
@@ -381,108 +338,6 @@ class WalletsData extends React.Component {
       pageSize: pageSize,
       showPagination: this.state.itemsList && this.state.itemsList.length >= this.state.defaultPageSize,
     }));
-  }
-
-  updateAddressSelection(address) {
-    Store.dispatch(changeActiveAddress(address));
-
-    this.setState(Object.assign({}, this.state, {
-      currentAddress: address,
-      addressSelectorOpen: false,
-    }));
-  }
-
-  openDropMenu() {
-    this.setState(Object.assign({}, this.state, {
-      addressSelectorOpen: !this.state.addressSelectorOpen,
-    }));
-  }
-
-  renderAddressByType(type) {
-    const _addresses = this.props.ActiveCoin.addresses;
-    const _coin = this.props.ActiveCoin.coin;
-
-    if (_addresses &&
-        _addresses[type] &&
-        _addresses[type].length) {
-      let items = [];
-
-      for (let i = 0; i < _addresses[type].length; i++) {
-        const address = _addresses[type][i].address;
-        let _amount = _addresses[type][i].amount;
-
-        if (_amount !== 'N/A') {
-          _amount = formatValue(_amount);
-        }
-
-        items.push(
-          AddressItemRender.call(this, address, type, _amount, _coin)
-        );
-      }
-
-      return items;
-    }
-
-    return null;
-  }
-
-  hasPublicAddresses() {
-    return this.props.ActiveCoin.addresses &&
-      this.props.ActiveCoin.addresses.public &&
-      this.props.ActiveCoin.addresses.public.length;
-  }
-
-  renderAddressAmount() {
-    if (this.hasPublicAddresses()) {
-      const _addresses = this.props.ActiveCoin.addresses;
-      const _coin = this.props.ActiveCoin.coin;
-
-      for (let i = 0; i < _addresses.public.length; i++) {
-        if (_addresses.public[i].address === this.state.currentAddress) {
-          if (_addresses.public[i].amount &&
-              _addresses.public[i].amount !== 'N/A') {
-            let _amount = _addresses.public[i].amount;
-
-            if (_amount !== 'N/A') {
-              _amount = formatValue(_amount);
-            }
-
-            return _amount;
-          } else {
-            const address = _addresses.public[i].address;
-            let _amount = _addresses.public[i].amount;
-
-            if (_amount !== 'N/A') {
-              _amount = formatValue(_amount);
-            }
-
-            return _amount;
-          }
-        }
-      }
-    } else {
-      return 0;
-    }
-  }
-
-  renderSelectorCurrentLabel() {
-    const _currentAddress = this.state.currentAddress;
-
-    if (_currentAddress) {
-      return (
-        <span>
-          <i className={ 'icon fa-eye' + (this.state.addressType === 'public' ? '' : '-slash') }></i>&nbsp;&nbsp;
-          <span className="text">
-            [ { this.renderAddressAmount() } { this.props.ActiveCoin.coin } ]&nbsp;&nbsp;
-            { _currentAddress }
-          </span>
-        </span>
-      );
-    } else {
-      return (
-        <span>{ translate('INDEX.FILTER_BY_ADDRESS') }</span>
-      );
-    }
   }
 
   onSearchTermChange(newSearchTerm) {

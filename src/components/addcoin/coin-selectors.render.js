@@ -7,14 +7,11 @@ import Select from 'react-select';
 const CoinSelectorsRender = function(item, coin, i) {
   return (
     <div
-      className={ this.hasMoreThanOneCoin() ? 'multi' : 'single' }
+      className="single"
       key={ `add-coin-${i}` }>
-      <div
-        className={ this.hasMoreThanOneCoin() ? 'col-sm-10' : 'col-sm-8' }
-        style={{ paddingLeft: !this.hasMoreThanOneCoin() ? '0' : '15px' }}>
+      <div className="col-sm-7">
         <div
-          className={ this.hasMoreThanOneCoin() && (item.mode === '-1' || item.mode === -1) ? 'col-sm-6 form-group' : 'form-group' }
-          style={{ paddingLeft: this.hasMoreThanOneCoin() ? '0' : '15px' }}>
+          className="col-sm-12 form-group no-padding-left">
           <Select
             name="selectedCoin"
             value={ coin }
@@ -24,21 +21,13 @@ const CoinSelectorsRender = function(item, coin, i) {
             options={ addCoinOptionsCrypto().concat(addCoinOptionsAC()) } />
         </div>
       </div>
-      <div className={ this.hasMoreThanOneCoin() ? 'hide' : 'col-sm-4' }>
+      <div className="col-sm-2">
         <button
           type="button"
           className="btn btn-primary"
-          onClick={ () => this.activateCoin(i) }
-          disabled={ item.mode === -2 }>
+          disabled={ !this.state.coins[0].selectedCoin }
+          onClick={ () => this.activateCoin(i) }>
           { translate('INDEX.ACTIVATE_COIN') }
-        </button>
-      </div>
-      <div className={ this.hasMoreThanOneCoin() && i !== 0 ? 'col-sm-1' : 'hide' }>
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick={ () => this.removeCoin(i) }>
-          <i className="fa fa-trash-o"></i>
         </button>
       </div>
     </div>

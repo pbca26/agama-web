@@ -6,11 +6,12 @@ import appData from '../../../actions/actions/appData';
 import electrumServers from 'agama-wallet-lib/src/electrum-servers';
 
 const WalletsInfoRender = function() {
+  const _coin = this.props.ActiveCoin.coin;
   const _balance = this.props.ActiveCoin.balance;
-  const _server = window.servers[this.props.ActiveCoin.coin];
+  const _server = appData.servers[_coin];
 
   return (
-    <div className="unselectable">
+    <div>
       <div className="col-xlg-6 col-md-6">
         <div className="panel">
           <div className="panel-heading">
@@ -40,7 +41,7 @@ const WalletsInfoRender = function() {
                 <tr>
                   <td>{ translate('INDEX.PAY_TX_FEE') }</td>
                   <td className="selectable">
-                    { electrumServers[this.props.ActiveCoin.coin].txfee }
+                    { electrumServers[_coin].txfee }
                   </td>
                 </tr>
                 <tr>

@@ -8,7 +8,7 @@ import {
   triggerToaster,
 } from '../../actions/actionCreators';
 import Store from '../../store';
-
+import assetsPath from '../../util/assetsPath';
 import CoinSelectorsRender from './coin-selectors.render';
 import AddCoinRender from './addcoin.render';
 
@@ -16,35 +16,25 @@ class AddCoin extends React.Component {
   constructor() {
     super();
     this.state = {
-      coins: [],
-      defaultCoinState: {
+      coins: [{
         selectedCoin: null,
         spvMode: {
           disabled: true,
           checked: false,
         },
         mode: 0,
-      },
+      }],
       display: false,
-      actionsMenu: false,
       modalClassName: 'hide',
     };
+    this.defaultState = JSON.parse(JSON.stringify(this.state));
     this.existingCoins = null;
     this.activateCoin = this.activateCoin.bind(this);
     this.dismiss = this.dismiss.bind(this);
-    this.addNewItem = this.addNewItem.bind(this);
-    this.activateAllCoins = this.activateAllCoins.bind(this);
-    this.toggleActionsMenu = this.toggleActionsMenu.bind(this);
-  }
-
-  toggleActionsMenu() {
-    this.setState(Object.assign({}, this.state, {
-      actionsMenu: !this.state.actionsMenu,
-    }));
   }
 
   componentWillMount() {
-    this.addNewItem();
+    this.setState(this.defaultState);
   }
 
   componentWillReceiveProps(props) {
@@ -55,8 +45,7 @@ class AddCoin extends React.Component {
     if (addCoinProps &&
         addCoinProps.display !== this.state.display) {
       this.setState(Object.assign({}, this.state, {
-        display: addCoinProps.display,
-        modalClassName: 'show fade',
+        modalClassName: addCoinProps.display ? 'show fade' : 'show out',
       }));
 
       setTimeout(() => {
@@ -64,7 +53,7 @@ class AddCoin extends React.Component {
           display: addCoinProps.display,
           modalClassName: addCoinProps.display ? 'show in' : 'hide',
         }));
-      }, 100);
+      }, addCoinProps.display ? 50 : 300);
     }
   }
 
@@ -72,7 +61,7 @@ class AddCoin extends React.Component {
     return (
       <div>
         <img
-          src={ `assets/images/cryptologo/${option.icon.toLowerCase()}.png` }
+          src={ `${assetsPath.coinLogo}/${option.icon.toLowerCase()}.png` }
           alt={ option.label }
           width="30px"
           height="30px" />
@@ -87,7 +76,7 @@ class AddCoin extends React.Component {
         e.value.indexOf('|')) {
       const coin = e.value.split('|');
       const defaultMode = coin[1];
-      const modeToValue = { // TODO: move to utils
+      const modeToValue = {
         spv: 0,
       };
       const _value = e.value;
@@ -100,7 +89,7 @@ class AddCoin extends React.Component {
           checked: defaultMode === 'spv' ? true : false,
         },
         mode: modeToValue[defaultMode] !== undefined ? modeToValue[defaultMode] : -2,
-      }
+      };
 
       this.setState(Object.assign({}, this.state, {
         coins: _coins,
@@ -114,7 +103,6 @@ class AddCoin extends React.Component {
 
     _coins[index] = {
       selectedCoin: _selectedCoin,
-
       spvMode: {
         disabled: _selectedCoin.indexOf('spv') > -1 ? false : true,
         checked: _value === '0' ? true : false,
@@ -137,86 +125,17 @@ class AddCoin extends React.Component {
     const coin = this.state.coins[0].selectedCoin.split('|')[0];
     const _coin = this.state.coins[0];
 
-    if (this.isCoinAlreadyAdded(coin)) {
-      this.dismiss();
-      return;
-    }
-
     Store.dispatch(addCoin(
       coin,
       _coin.mode,
     ));
 
-    this.removeCoin();
-    this.addNewItem();
-
+    this.setState(this.defaultState);
     Store.dispatch(toggleAddcoinModal(false, false));
   }
 
   dismiss() {
     Store.dispatch(toggleAddcoinModal(false, false));
-  }
-
-  addNewItem() {
-    let _coins = this.state.coins;
-    _coins.push(this.state.defaultCoinState);
-
-    this.setState(Object.assign({}, this.state, {
-      coins: _coins,
-    }));
-  }
-
-  removeCoin(index) {
-    let _coins = this.state.coins;
-    _coins.splice(index, 1);
-
-    this.setState(Object.assign({}, this.state, {
-      coins: _coins,
-    }));
-  }
-
-  hasMoreThanOneCoin() {
-    return this.state.coins.length > 1;
-  }
-
-  activateAllCoins() {
-    const coin = this.state.coins[0].selectedCoin.split('|')[0];
-
-    if (!this.isCoinAlreadyAdded(coin)) {
-      Store.dispatch(
-        addCoin(
-          coin,
-          this.state.coins[0].mode,
-        )
-      );
-    }
-
-    for (let i = 1; i < this.state.coins.length; i++) {
-      const _item = this.state.coins[i];
-      const itemCoin = _item.selectedCoin.split('|')[0];
-
-      setTimeout(() => {
-        if (!this.isCoinAlreadyAdded(itemCoin)) {
-          Store.dispatch(
-            addCoin(
-              itemCoin,
-              _item.mode,
-            )
-          );
-        }
-
-        if (i === this.state.coins.length - 1) {
-          let _coins = [];
-          _coins.push(this.state.defaultCoinState);
-
-          this.setState(Object.assign({}, this.state, {
-            coins: _coins,
-          }));
-
-          Store.dispatch(toggleAddcoinModal(false, false));
-        }
-      }, 2000 * i);
-    }
   }
 
   renderCoinSelectors() {
@@ -244,26 +163,6 @@ class AddCoin extends React.Component {
     return (
       AddCoinRender.call(this)
     );
-  }
-
-  isCoinAlreadyAdded(coin) {
-    if (this.existingCoins &&
-        this.existingCoins.spv &&
-        this.existingCoins.spv.indexOf(coin.toLowerCase()) !== -1) {
-      const message = `${coin} ${translate('ADD_COIN.ALREADY_ADDED')} ${translate('ADD_COIN.IN')} ${translate('INDEX.LITE')} ${translate('ADD_COIN.MODE')}`;
-
-      Store.dispatch(
-        triggerToaster(
-          message,
-          translate('ADD_COIN.COIN_ALREADY_ADDED'),
-          'error'
-        )
-      );
-
-      return true;
-    }
-
-    return false;
   }
 }
 

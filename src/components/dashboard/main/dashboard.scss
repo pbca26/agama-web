@@ -15,31 +15,9 @@
   margin-top: 30px;
 }
 
-//  jumblr.js
-.jumblr-header {
-  font-size: 24px;
-  text-align: center;
-}
-
-//  loginModal.js
+// loginModal.js
 .color-white {
   color: #fff;
-}
-
-// navbar.js
-.navbar-toolbar {
-  > li {
-    > a {
-      &.padding-top-16 {
-        padding-top: 16px;
-      }
-    }
-  }
-}
-
-// notifications.js
-.modal-body-container {
-  height: 590px;
 }
 
 .panel-body-container {
@@ -120,11 +98,6 @@
   vertical-align: middle;
 }
 
-// walletsNativeSyncProgress.js
-.sync-progress-container {
-  margin: -20px 0px 10px 0px;
-}
-
 // walletsNativeTxInfo.js
 .height-170 {
   height: 170px;
@@ -140,34 +113,36 @@
   display: none;
 }
 
-.ReactTable .rt-tfoot .rt-td {
-  text-align: center;
-}
-
-.ReactTable .rt-thead .rt-th.-sort-asc,
-.ReactTable .rt-thead .rt-td.-sort-asc,
-.ReactTable .rt-thead .rt-th.-sort-desc,
-.ReactTable .rt-thead .rt-td.-sort-desc{
-  box-shadow: none;
-}
-
-.ReactTable .rt-thead .rt-th.-sort-asc div:nth-child(1):after {
-  font-family: FontAwesome;
-  padding-left: 5px;
-  content: "\f106";
-}
-.ReactTable .rt-thead .rt-th.-sort-desc div:nth-child(1):after {
-  font-family: FontAwesome;
-  padding-left: 5px;
-  content: "\f107";
-}
-
 .rt-tr.-padRow {
   display: none;
 }
 
-.ReactTable .-pagination,
-.ReactTable .rt-thead.-header,
-.ReactTable .rt-tfoot{
-  box-shadow: none;
+.ReactTable {
+  .-pagination,
+  .rt-thead.-header,
+  .rt-tfoot{
+    box-shadow: none;
+  }
+
+  .rt-tfoot .rt-td {
+    text-align: center;
+  }
+
+  .rt-thead .rt-th.-sort-asc,
+  .rt-thead .rt-td.-sort-asc,
+  .rt-thead .rt-th.-sort-desc,
+  .rt-thead .rt-td.-sort-desc{
+    box-shadow: none;
+  }
+
+  .rt-thead .rt-th.-sort-asc div:nth-child(1):after {
+    font-family: FontAwesome;
+    padding-left: 5px;
+    content: "\f106";
+  }
+  .rt-thead .rt-th.-sort-desc div:nth-child(1):after {
+    font-family: FontAwesome;
+    padding-left: 5px;
+    content: "\f107";
+  }
 }

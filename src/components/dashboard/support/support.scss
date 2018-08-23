@@ -1,0 +1,33 @@
+.support-box {
+  padding: 15px 20px;
+  width: 220px;
+  display: inline-block;
+  cursor: pointer;
+
+  &:hover {
+    .support-box-link {
+      color: #5683ad;
+      font-weight: 500;
+    }
+  }
+  &-title {
+    font-weight: bold;
+    padding-top: 12px;
+    padding-bottom: 3px;
+  }
+  img {
+    height: 50px;
+  }
+}
+
+.support-box-wrapper {
+  display: inline-block;
+  margin-right: 50px;
+
+  &:last-child, {
+    margin-right: 0;
+  }
+  .support-box {
+    color: #757575;
+  }
+}

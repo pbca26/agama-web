@@ -2,10 +2,6 @@
   opacity: 1;
 }
 
-.display-block {
-  display: block;
-}
-
 .swal2-modal-container {
   display: block;
   width: 500px;
@@ -46,10 +42,6 @@ button {
 .horizontal-padding-0 {
   padding-left: 0;
   padding-right: 0;
-}
-
-.browser-usage-container {
-  color: #424242;
 }
 
 .width-540 {
@@ -162,7 +154,7 @@ option.login-option {
 .login-form,
 .register-form {
   width: 540px;
-  margin: 30px 0;
+  margin: 0 auto;
 }
 
 .form-material .form-control.focus~.floating-label,

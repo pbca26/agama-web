@@ -7,8 +7,7 @@ import {
 } from '../../../actions/actionCreators';
 import Store from '../../../store';
 import {
-  AddressActionsNonBasiliskModeRender,
-  AddressItemRender,
+  AddressActionsRender,
   ReceiveCoinRender,
   _ReceiveCoinTableRender,
 } from './receiveCoin.render';
@@ -21,13 +20,9 @@ class ReceiveCoin extends React.Component {
     super();
     this.state = {
       openDropMenu: false,
-      hideZeroAdresses: false,
       toggledAddressMenu: null,
-      toggleIsMine: false,
     };
-    this.openDropMenu = this.openDropMenu.bind(this);
     this.handleClickOutside = this.handleClickOutside.bind(this);
-    this.checkTotalBalance = this.checkTotalBalance.bind(this);
     this.ReceiveCoinTableRender = _ReceiveCoinTableRender.bind(this);
     this.toggleAddressMenu = this.toggleAddressMenu.bind(this);
   }
@@ -70,7 +65,7 @@ class ReceiveCoin extends React.Component {
           e.srcElement.className.indexOf('receive-address-context-menu-trigger') === -1 &&
           e.srcElement.className.indexOf('fa-qrcode') === -1 &&
           e.srcElement.className.indexOf('receive-address-context-menu-get-qr') === -1 &&
-          e.srcElement.className.indexOf('qrcode-modal') === -1 ? null : this.state.toggledAddressMenu,
+          e.srcElement.className.indexOf('qrcode-modal') === -1 && e.srcElement.offsetParent.className.indexOf('modal') && e.srcElement.offsetParent.className.indexOf('close') ? null : this.state.toggledAddressMenu,
       });
     }
   }
@@ -86,80 +81,28 @@ class ReceiveCoin extends React.Component {
     Store.dispatch(copyCoinAddress(address));
   }
 
-  renderAddressActions(address, type) {
-    return AddressActionsNonBasiliskModeRender.call(this, address, type);
+  renderAddressActions(address) {
+    return AddressActionsRender.call(this, address);
   }
 
-  hasNoAmount(address) {
-    return address.amount === 'N/A' || address.amount === 0;
-  }
+  renderAddressList() {
+    const _address = this.props.electrumCoins[this.props.coin].pub;
+    let _items = [];
 
-  hasNoInterest(address) {
-    return address.interest === 'N/A' || address.interest === 0 || !address.interest;
-  }
+    _items.push(
+      <tr key={ _address }>
+        { this.renderAddressActions(_address) }
+        <td className="selectable">{ _address }</td>
+        <td>
+          <span>{ this.props.balance.balance }</span>
+        </td>
+      </tr>
+    );
 
-  checkTotalBalance() {
-    let _balance = '0';
-
-    if (this.props.balance &&
-        this.props.balance.total) {
-      _balance = this.props.balance.total;
-    }
-
-    return _balance;
-  }
-
-  renderAddressList(type) {
-    const _addresses = this.props.addresses;
-
-    if (_addresses &&
-        _addresses[type] &&
-        _addresses[type].length) {
-      let items = [];
-
-      for (let i = 0; i < _addresses[type].length; i++) {
-        let address = _addresses[type][i];
-
-        if (this.state.hideZeroAddresses) {
-          if (!this.hasNoAmount(address)) {
-            items.push(
-              AddressItemRender.call(this, address, type)
-            );
-          }
-        } else {
-          items.push(
-            AddressItemRender.call(this, address, type)
-          );
-        }
-      }
-
-      return items;
-    } else {
-      if (this.props.electrumCoins &&
-          type === 'public') {
-        let items = [];
-
-        items.push(
-          AddressItemRender.call(
-            this,
-            {
-              address: this.props.electrumCoins[this.props.coin].pub,
-              amount: this.props.balance.balance
-            },
-            'public'
-          )
-        );
-
-        return items;
-      } else {
-        return null;
-      }
-    }
+    return _items;
   }
 
   render() {
-    // TODO activeSection === 'receive' should be removed when native mode is fully merged
-    // into the rest of the components
     if (this.props &&
        (this.props.receive || this.props.activeSection === 'receive')) {
       return ReceiveCoinRender.call(this);

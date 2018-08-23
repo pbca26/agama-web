@@ -26,14 +26,6 @@ const AddCoinRender = function() {
             </div>
             <div className="modal-body">
               { this.renderCoinSelectors() }
-              <div className={ 'text-align-center vertical-margin-20 horizontal-margin-0 padding-bottom-20 ' + (this.hasMoreThanOneCoin() ? 'col-sm-12' : 'hide') }>
-                <button
-                  type="button"
-                  className="btn btn-primary col-sm-4 float-none"
-                  onClick={ this.activateAllCoins }>
-                  { translate('ADD_COIN.ACTIVATE_ALL') }
-                </button>
-              </div>
               <div className="col-sm-12">
                 <p>
                   <strong>{ translate('INDEX.SPV_MODE') }:</strong> { translate('ADD_COIN.LITE_MODE_DESC') }.
@@ -43,7 +35,7 @@ const AddCoinRender = function() {
           </div>
         </div>
       </div>
-      <div className={ 'modal-backdrop ' + (this.state.display ? 'show in' : 'fade hide') }></div>
+      <div className={ `modal-backdrop ${this.state.modalClassName}` }></div>
     </div>
   )
 };

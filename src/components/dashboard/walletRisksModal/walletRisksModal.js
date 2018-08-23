@@ -11,6 +11,7 @@ class WalletRisksModal extends React.Component {
     super();
     this.state = {
       display: false,
+      className: 'hide',
     };
     this.dismiss = this.dismiss.bind(this);
   }
@@ -20,19 +21,23 @@ class WalletRisksModal extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.displayWalletRisksModal !== nextProps.displayWalletRisksModal) {
+    if (nextProps &&
+        this.props.displayWalletRisksModal !== nextProps.displayWalletRisksModal) {
       this.setState(Object.assign({}, this.state, {
-        display: nextProps.displayWalletRisksModal,
+        className: nextProps.displayWalletRisksModal ? 'show fade' : 'show out',
       }));
+
+      setTimeout(() => {
+        this.setState(Object.assign({}, this.state, {
+          display: nextProps.displayWalletRisksModal,
+          className: nextProps.displayWalletRisksModal ? 'show in' : 'hide',
+        }));
+      }, nextProps.displayWalletRisksModal ? 50 : 300);
     }
   }
 
   render() {
-    if (this.state.display) {
-      return WalletRisksModalRender.call(this);
-    }
-
-    return null;
+    return WalletRisksModalRender.call(this);
   }
 }
 

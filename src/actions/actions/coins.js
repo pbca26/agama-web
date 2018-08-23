@@ -1,18 +1,16 @@
-import { ACTIVE_HANDLE } from '../storeType';
+import {
+  ACTIVE_HANDLE,
+  DASHBOARD_ELECTRUM_COINS,
+} from '../storeType';
 import translate from '../../translate/translate';
 import Config from '../../config';
 import appData from './appData';
 import {
   triggerToaster,
   toggleAddcoinModal,
-  getDexCoins,
-  shepherdElectrumCoins,
   shepherdSelectRandomCoinServer,
+  dashboardCoinsState,
 } from '../actionCreators';
-import {
-  checkCoinType,
-  checkAC,
-} from '../../components/addcoin/payload';
 import { isKomodoCoin } from 'agama-wallet-lib/src/coin-helpers';
 import btcNetworks from 'agama-wallet-lib/src/bitcoinjs-networks';
 import { stringToWif } from 'agama-wallet-lib/src/keys';
@@ -86,7 +84,7 @@ export const addCoinResult = (coin, mode) => {
         (Config.whitelabel && coin !== Config.wlConfig.coin.ticker.toLowerCase())) {
       dispatch(
         triggerToaster(
-          `${coin.toUpperCase()} ${translate('TOASTR.STARTED_IN')} ${translate('INDEX.LITE')} ${translate('TOASTR.MODE')}`,
+          `${coin.toUpperCase()} ${translate('TOASTR.STARTED_IN')}`,
           translate('TOASTR.COIN_NOTIFICATION'),
           'success'
         )
@@ -98,5 +96,68 @@ export const addCoinResult = (coin, mode) => {
     dispatch(activeHandle());
     dispatch(shepherdElectrumCoins());
     dispatch(getDexCoins());
+  }
+}
+
+export const shepherdRemoveCoin = (coin, mode) => {
+  return new Promise((resolve, reject, dispatch) => {
+    delete appData.keys[coin];
+    appData.coins = appData.coins.filter(item => item !== coin);
+    appData.allcoins = {
+      spv: appData.coins,
+      total: appData.coins.length,
+    };
+    delete appData.servers[coin];
+
+    if (!appData.coins ||
+        !appData.coins.length) {
+      appData.auth.status = 'locked';
+    }
+    resolve();
+  });
+}
+
+export const shepherdElectrumKeys = (seed) => {
+  return new Promise((resolve, reject) => {
+    const keys = stringToWif(seed, (Config.whitelabel && Config.wlConfig.coin.ticker.toLowerCase() === Object.keys(appData.keys)[0]) ? btcNetworks.kmd : btcNetworks[Object.keys(appData.keys)[0]], true);
+
+    if (keys.priv === appData.keys[Object.keys(appData.keys)[0]].priv) {
+      resolve({ result: appData.keys });
+    } else {
+      resolve('error');
+    }
+  });
+}
+
+export const shepherdElectrumCoins = () => {
+  let _coins = {};
+
+  for (let i = 0; i < appData.coins.length; i++) {
+    if (appData.keys[appData.coins[i]]) {
+      _coins[appData.coins[i]] = {
+        pub: appData.keys[appData.coins[i]].pub,
+      };
+    } else {
+      _coins[appData.coins[i]] = {};
+    }
+  }
+
+  return dispatch => {
+    return dispatch(shepherdElectrumCoinsState({ result: _coins }));
+  }
+}
+
+export const shepherdElectrumCoinsState = (json) => {
+  return {
+    type: DASHBOARD_ELECTRUM_COINS,
+    electrumCoins: json.result,
+  }
+}
+
+export const getDexCoins = () => {
+  return dispatch => {
+    return dispatch(
+      dashboardCoinsState(appData.allcoins)
+    );
   }
 }

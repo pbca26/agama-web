@@ -47,33 +47,35 @@ class WalletsBalance extends React.Component {
 
   renderBalance(type, returnFiatPrice) {
     const _mode = this.props.ActiveCoin.mode;
+    const _balanceProps = this.props.ActiveCoin.balance;
+    const _coin = this.props.ActiveCoin.coin.toUpperCase();
     let _balance = 0;
 
-    if (this.props.ActiveCoin.balance === 'connection error or incomplete data') {
+    if (_balanceProps === 'connection error or incomplete data') {
       _balance = '-777';
     }
 
-    if (this.props.ActiveCoin.balance.balance) {
-      if (this.props.ActiveCoin.coin.toUpperCase() === 'KMD') {
+    if (_balanceProps.balance) {
+      if (_coin === 'KMD') {
         if (type === 'total' &&
-            this.props.ActiveCoin.balance &&
-            this.props.ActiveCoin.balance.total) {
-          _balance = Number(this.props.ActiveCoin.balance.total) - Number(Math.abs(this.props.ActiveCoin.balance.unconfirmed));
+            _balanceProps &&
+            _balanceProps.total) {
+          _balance = Number(_balanceProps.total) - Number(Math.abs(_balanceProps.unconfirmed));
         }
 
         if (type === 'interest' &&
-            this.props.ActiveCoin.balance &&
-            this.props.ActiveCoin.balance.interest) {
-          _balance = this.props.ActiveCoin.balance.interest;
+            _balanceProps &&
+            _balanceProps.interest) {
+          _balance = _balanceProps.interest;
         }
 
         if (type === 'transparent' &&
-            this.props.ActiveCoin.balance &&
-            this.props.ActiveCoin.balance.balance) {
-          _balance = Number(this.props.ActiveCoin.balance.balance) - Number(Math.abs(this.props.ActiveCoin.balance.unconfirmed));
+            _balanceProps &&
+            _balanceProps.balance) {
+          _balance = Number(_balanceProps.balance) - Number(Math.abs(_balanceProps.unconfirmed));
         }
       } else {
-        _balance = Number(this.props.ActiveCoin.balance.balance) - Number(Math.abs(this.props.ActiveCoin.balance.unconfirmed));
+        _balance = Number(_balanceProps.balance) - Number(Math.abs(_balanceProps.unconfirmed));
       }
     }
 
@@ -86,7 +88,7 @@ class WalletsBalance extends React.Component {
       let _fiatPriceTotal = 0;
       let _fiatPricePerCoin = 0;
 
-      if (this.props.ActiveCoin.coin.toUpperCase() === 'KMD') {
+      if (_coin === 'KMD') {
         if (_prices.fiat &&
             _prices.fiat.USD) {
           _fiatPriceTotal = formatValue(_balance * _prices.fiat.USD);
@@ -95,10 +97,10 @@ class WalletsBalance extends React.Component {
       } else {
         if (_prices.fiat &&
             _prices.fiat.USD &&
-            _prices[`${this.props.ActiveCoin.coin.toUpperCase()}/KMD`] &&
-            _prices[`${this.props.ActiveCoin.coin.toUpperCase()}/KMD`].low) {
-          _fiatPriceTotal = _balance * _prices.fiat.USD * _prices[`${this.props.ActiveCoin.coin.toUpperCase()}/KMD`].low;
-          _fiatPricePerCoin = _prices.fiat.USD * _prices[`${this.props.ActiveCoin.coin.toUpperCase()}/KMD`].low;
+            _prices[`${_coin}/KMD`] &&
+            _prices[`${_coin}/KMD`].low) {
+          _fiatPriceTotal = _balance * _prices.fiat.USD * _prices[`${_coin}/KMD`].low;
+          _fiatPricePerCoin = _prices.fiat.USD * _prices[`${_coin}/KMD`].low;
         }
       }
 
@@ -108,7 +110,7 @@ class WalletsBalance extends React.Component {
           { _fiatPriceTotal > 0 &&
             _fiatPricePerCoin > 0 &&
             <div
-              data-tip={ `${translate('INDEX.PRICE_PER')} ${this.props.ActiveCoin.coin.toUpperCase()} ~ $${formatValue(_fiatPricePerCoin)}` }
+              data-tip={ `${translate('INDEX.PRICE_PER')} ${_coin} ~ $${formatValue(_fiatPricePerCoin)}` }
               className="text-right">${ formatValue(_fiatPriceTotal) }</div>
           }
         </div>
@@ -130,7 +132,9 @@ class WalletsBalance extends React.Component {
     const _translationComponents = translate(_translationID).split('<br>');
 
     return _translationComponents.map((_translation) =>
-      <span key={ `translate-${Math.random(0, 9) * 10}` }>
+      <span
+        className="display--block"
+        key={ `translate-${Math.random(0, 9) * 10}` }>
         {_translation}
         <br />
       </span>

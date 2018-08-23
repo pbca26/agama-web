@@ -14,6 +14,7 @@ class QRModal extends React.Component {
       modalIsOpen: false,
       error: null,
       errorShown: false,
+      className: 'hide',
     };
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
@@ -34,21 +35,46 @@ class QRModal extends React.Component {
 
   handleError(err) {
     this.setState({
-      error: err.name === 'NoVideoInputDevicesError' ? translate('DASHBOARD.QR_ERR_NO_VIDEO_DEVICE') : translate('DASHBOARD.QR_ERR_UNKNOWN'),
+      error: translate('DASHBOARD.' + (err.name === 'NoVideoInputDevicesError' ? 'QR_ERR_NO_VIDEO_DEVICE' : 'QR_ERR_UNKNOWN')),
     });
   }
 
   openModal() {
     this.setState({
-      modalIsOpen: true,
+      className: 'show fade',
     });
+
+    setTimeout(() => {
+      this.setState(Object.assign({}, this.state, {
+        modalIsOpen: true,
+        className: 'show in',
+      }));
+    }, 50);
   }
 
   closeModal() {
     this.setState({
-      modalIsOpen: false,
-      errorShown: this.state.error ? true : false,
+      className: 'show out',
     });
+
+    setTimeout(() => {
+      this.setState(Object.assign({}, this.state, {
+        errorShown: this.state.error ? true : false,
+        modalIsOpen: false,
+        className: 'hide',
+      }));
+
+      if (this.props.cbOnClose) {
+        this.props.cbOnClose();
+      }
+    }, 300);
+  }
+
+  componentWillUnmount() {
+    this.setState(Object.assign({}, this.state, {
+      modalIsOpen: false,
+      className: 'hide',
+    }));
   }
 
   saveAsImage(e) {

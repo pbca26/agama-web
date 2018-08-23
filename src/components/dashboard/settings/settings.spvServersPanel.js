@@ -7,6 +7,7 @@ import {
   triggerToaster,
 } from '../../../actions/actionCreators';
 import Store from '../../../store';
+import appData from '../../../actions/actions/appData';
 
 class SPVServersPanel extends React.Component {
   constructor() {
@@ -25,9 +26,9 @@ class SPVServersPanel extends React.Component {
 
   setElectrumServer(coin) {
     let _server = [
-      window.servers[coin].ip,
-      window.servers[coin].port,
-      window.servers[coin].proto
+      appData.servers[coin].ip,
+      appData.servers[coin].port,
+      appData.servers[coin].proto
     ];
 
     if (this.state &&
@@ -38,22 +39,22 @@ class SPVServersPanel extends React.Component {
     shepherdElectrumCheckServerConnection(_server[0], _server[1], _server[2])
     .then((res) => {
       if (res.result) {
-        window.servers[coin].ip = _server[0];
-        window.servers[coin].port = _server[1];
-        window.servers[coin].proto = _server[2];
+        const _newServer = `${_server[0]}:${_server[1]}:${_server[2]}`;
+        appData.servers[coin].ip = _server[0];
+        appData.servers[coin].port = _server[1];
+        appData.servers[coin].proto = _server[2];
 
         Store.dispatch(
           triggerToaster(
-            `${coin.toUpperCase()} ${translate('SETTINGS.SPV_SERVER_SET')} ${_server[0]}:${_server[1]}:${_server[2]}`,
+            `${coin.toUpperCase()} ${translate('SETTINGS.SPV_SERVER_SET')} ${_newServer}`,
             translate('TOASTR.WALLET_NOTIFICATION'),
             'success'
           )
         );
-        console.warn(window.servers);
       } else {
         Store.dispatch(
           triggerToaster(
-            `${coin.toUpperCase()} ${translate('SETTINGS.SPV_SERVER')} ${_server[0]}:${_server[1]}:${_server[2]} ${translate('DASHBOARD.IS_UNREACHABLE')}!`,
+            `${coin.toUpperCase()} ${translate('SETTINGS.SPV_SERVER')} ${_newServer} ${translate('DASHBOARD.IS_UNREACHABLE')}!`,
             translate('TOASTR.WALLET_NOTIFICATION'),
             'error'
           )
@@ -70,7 +71,7 @@ class SPVServersPanel extends React.Component {
 
   renderServerListSelectorOptions(coin) {
     let _items = [];
-    let _spvServers = window.servers[coin].serverList;
+    let _spvServers = appData.servers[coin].serverList;
 
     for (let i = 0; i < _spvServers.length; i++) {
       _items.push(
@@ -88,9 +89,11 @@ class SPVServersPanel extends React.Component {
     let _spvCoins = this.props.Main.coins.spv;
 
     for (let i = 0; i < _spvCoins.length; i++) {
-      if (window.servers[_spvCoins[i]] &&
-          window.servers[_spvCoins[i]].serverList &&
-          window.servers[_spvCoins[i]].serverList !== 'none') {
+      if (appData.servers[_spvCoins[i]] &&
+          appData.servers[_spvCoins[i]].serverList &&
+          appData.servers[_spvCoins[i]].serverList !== 'none') {
+        const _activeServer = `${appData.servers[_spvCoins[i]].ip}:${appData.servers[_spvCoins[i]].port}:${appData.servers[_spvCoins[i]].proto}`;
+
         _items.push(
           <div
             className={ 'row' + (_spvCoins.length > 1 ? ' padding-bottom-30' : '') }
@@ -101,7 +104,7 @@ class SPVServersPanel extends React.Component {
                 <select
                   className="form-control form-material"
                   name={ _spvCoins[i] }
-                  value={ (this.state && this.state[_spvCoins[i]]) || window.servers[_spvCoins[i]].ip + ':' + window.servers[_spvCoins[i]].port + ':' + window.servers[_spvCoins[i]].proto }
+                  value={ (this.state && this.state[_spvCoins[i]]) || _activeServer }
                   onChange={ (event) => this.updateInput(event) }
                   autoFocus>
                   { this.renderServerListSelectorOptions(_spvCoins[i]) }

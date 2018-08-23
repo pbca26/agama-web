@@ -1,6 +1,7 @@
 import React from 'react';
 import translate from '../../../translate/translate';
 import ReactTooltip from 'react-tooltip';
+import assetsPath from '../../../util/assetsPath';
 
 const CoinTileItemRender = function() {
   const { item } = this.props;
@@ -14,11 +15,16 @@ const CoinTileItemRender = function() {
           <a className="avatar margin-bottom-5">
             <img
               className="img-responsive"
-              src={ `assets/images/cryptologo/${item.coinlogo.toLowerCase()}.png` }
+              src={ `${assetsPath.coinLogo}/${item.coinlogo.toLowerCase()}.png` }
               alt={ item.coinname }/>
           </a>
           <div className="coin-name">
-            { item.coinname } { item.coinlogo !== 'BEER' && item.coinlogo !== 'PIZZA' && item.coinlogo !== 'VOTE2018' && <span>({ item.coinlogo.toUpperCase() })</span> }
+            { item.coinname }
+            { item.coinlogo !== 'BEER' &&
+              item.coinlogo !== 'PIZZA' &&
+              item.coinlogo !== 'VOTE2018' &&
+              <span className="nbsp-l">({ item.coinlogo.toUpperCase() })</span>
+            }
           </div>
         </div>
       </div>
