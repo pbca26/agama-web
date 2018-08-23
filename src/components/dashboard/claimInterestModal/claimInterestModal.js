@@ -18,6 +18,9 @@ import translate from '../../../translate/translate';
 import {
   ClaimInterestModalRender,
   _ClaimInterestTableRender,
+  TxLocktimeRender,
+  TxAmountRender,
+  TxIdRender,
 } from './claimInterestModal.render';
 import electrumServers from 'agama-wallet-lib/src/electrum-servers';
 import {
@@ -26,6 +29,7 @@ import {
 } from 'agama-wallet-lib/src/time';
 
 const SPV_MAX_LOCAL_TIMESTAMP_DEVIATION = 60; // seconds
+const BOTTOM_BAR_DISPLAY_THRESHOLD = 15;
 
 class ClaimInterestModal extends React.Component {
   constructor() {
@@ -41,6 +45,11 @@ class ClaimInterestModal extends React.Component {
       spvVerificationWarning: false,
       loading: false,
       className: 'hide',
+      itemsListColumns: this.generateItemsListColumns(),
+      defaultPageSize: 20,
+      pageSize: 20,
+      showPagination: true,
+      searchTerm: null,
     };
     this.claimInterestTableRender = this.claimInterestTableRender.bind(this);
     this.toggleZeroInterest = this.toggleZeroInterest.bind(this);
@@ -49,6 +58,66 @@ class ClaimInterestModal extends React.Component {
     this.cancelClaimInterest = this.cancelClaimInterest.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.confirmClaimInterest = this.confirmClaimInterest.bind(this);
+  }
+
+  generateItemsListColumns(itemsCount) {
+    let _col;
+
+    _col = [{
+      id: 'txid',
+      Header: '',
+      Footer: '',
+      Cell: row => TxIdRender.call(this, row.value),
+      accessor: (tx) => tx.txid,
+      sortable: false,
+      filterable: false,
+    },{
+      id: 'locktime',
+      Header: 'Locktime',
+      Footer: 'Locktime',
+      Cell: row => TxLocktimeRender.call(this, row.value),
+      accessor: (tx) => tx.locktime,
+      sortMethod: (a, b) => {
+        if (a > b) {
+          return 1;
+        }
+        if (a < b) {
+          return -1;
+        }
+        return 0;
+      },
+    },
+    {
+      id: 'amount',
+      Header: translate('INDEX.AMOUNT'),
+      Footer: translate('INDEX.AMOUNT'),
+      Cell: row => TxAmountRender.call(this, row.value),
+      accessor: (tx) => tx,
+      sortMethod: (a, b) => {
+        if (a.amount > b.amount) {
+          return 1;
+        }
+        if (a.amount < b.amount) {
+          return -1;
+        }
+        return 0;
+      },
+    },{
+      id: 'interest',
+      Header: translate('INDEX.INTEREST'),
+      Footer: translate('INDEX.INTEREST'),
+      Cell: row => row.value,
+      accessor: (tx) => tx.interest,
+    }];
+
+    if (itemsCount <= BOTTOM_BAR_DISPLAY_THRESHOLD) {
+      delete _col[0].Footer;
+      delete _col[1].Footer;
+      delete _col[2].Footer;
+      delete _col[3].Footer;
+    }
+
+    return _col;
   }
 
   loadListUnspent() {
@@ -94,12 +163,16 @@ class ClaimInterestModal extends React.Component {
           isLoading: false,
           totalInterest: _totalInterest,
           displayShowZeroInterestToggle: _zeroInterestUtxo,
+          itemsListColumns: this.generateItemsListColumns(_transactionsList.length),
+          showPagination: _transactionsList && _transactionsList.length >= this.state.defaultPageSize,
         });
       } else {
         this.setState({
+          itemsListColumns: this.generateItemsListColumns(),
           transactionsList: [],
           isLoading: false,
           totalInterest: 0,
+          showPagination: false,
         });
       }
     });
