@@ -51,11 +51,13 @@ export default class TablePaginationRenderer extends Component {
       _items.push(
         <option
           key={ i }
-          value={ option }>
-          { option } { this.props.rowsText }
+          value={ pageSizeOptions[i] }>
+          { pageSizeOptions[i] } { this.props.rowsText }
         </option>
       );
     }
+
+    return _items;
   }
 
   render() {
