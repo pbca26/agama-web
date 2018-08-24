@@ -7,6 +7,7 @@ import {
 } from '../../../actions/actionCreators';
 import Store from '../../../store';
 import { SettingsRender } from './settings.render';
+import appData from '../../../actions/actions/appData';
 
 class Settings extends React.Component {
   constructor(props) {
@@ -21,7 +22,7 @@ class Settings extends React.Component {
         this.props.Main.coins &&
         this.props.Main.coins.spv) {
       for (let i = 0; i < this.props.Main.coins.spv.length; i++) {
-        if (this.props.Dashboard.electrumCoins[this.props.Main.coins.spv[i]].serverList) {
+        if (appData.servers[this.props.Main.coins.spv[i]].serverList) {
           return true;
         }
       }
@@ -29,7 +30,9 @@ class Settings extends React.Component {
   }
 
   componentDidMount(props) {
-    document.getElementById('section-iguana-wallet-settings').setAttribute('style', 'height:auto; min-height: 100%');
+    document.getElementById('section-iguana-wallet-settings').setAttribute('style',
+      'height: auto;' +
+      'min-height: 100%');
   }
 
   render() {

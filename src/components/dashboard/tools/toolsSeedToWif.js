@@ -15,6 +15,7 @@ import {
   shepherdElectrumSplitUtxoPromise,
 } from '../../../actions/actionCreators';
 import Store from '../../../store';
+import assetsPath from '../../../util/assetsPath';
 
 class ToolsSeedToWif extends React.Component {
   constructor() {
@@ -68,7 +69,7 @@ class ToolsSeedToWif extends React.Component {
     return (
       <div>
         <img
-          src={ `assets/images/cryptologo/${option.icon.toLowerCase()}.png` }
+          src={ `${assetsPath.coinLogo}/${option.icon.toLowerCase()}.png` }
           alt={ option.label }
           width="30px"
           height="30px" />

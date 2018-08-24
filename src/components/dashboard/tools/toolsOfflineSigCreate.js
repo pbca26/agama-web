@@ -17,6 +17,7 @@ import {
 import Store from '../../../store';
 import QRCode from 'qrcode.react';
 import QRModal from '../qrModal/qrModal';
+import assetsPath from '../../../util/assetsPath';
 
 class ToolsOfflineSigCreate extends React.Component {
   constructor() {
@@ -108,7 +109,7 @@ class ToolsOfflineSigCreate extends React.Component {
     return (
       <div>
         <img
-          src={ `assets/images/cryptologo/${option.icon.toLowerCase()}.png` }
+          src={ `${assetsPath.coinLogo}/${option.icon.toLowerCase()}.png` }
           alt={ option.label }
           width="30px"
           height="30px" />

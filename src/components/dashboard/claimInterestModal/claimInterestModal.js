@@ -18,6 +18,9 @@ import translate from '../../../translate/translate';
 import {
   ClaimInterestModalRender,
   _ClaimInterestTableRender,
+  TxLocktimeRender,
+  TxAmountRender,
+  TxIdRender,
 } from './claimInterestModal.render';
 import electrumServers from 'agama-wallet-lib/src/electrum-servers';
 import {
@@ -25,9 +28,8 @@ import {
   checkTimestamp,
 } from 'agama-wallet-lib/src/time';
 
-const SPV_MAX_LOCAL_TIMESTAMP_DEVIATION = 60; // seconds    if (this.props.ActiveCoin.mode === 'spv') {
-
-// TODO: promises
+const SPV_MAX_LOCAL_TIMESTAMP_DEVIATION = 60; // seconds
+const BOTTOM_BAR_DISPLAY_THRESHOLD = 15;
 
 class ClaimInterestModal extends React.Component {
   constructor() {
@@ -41,43 +43,81 @@ class ClaimInterestModal extends React.Component {
       totalInterest: 0,
       spvPreflightSendInProgress: false,
       spvVerificationWarning: false,
-      addressses: {},
-      addressSelectorOpen: false,
-      selectedAddress: null,
       loading: false,
+      className: 'hide',
+      itemsListColumns: this.generateItemsListColumns(),
+      defaultPageSize: 20,
+      pageSize: 20,
+      showPagination: true,
+      searchTerm: null,
     };
     this.claimInterestTableRender = this.claimInterestTableRender.bind(this);
     this.toggleZeroInterest = this.toggleZeroInterest.bind(this);
     this.loadListUnspent = this.loadListUnspent.bind(this);
     this.checkTransactionsListLength = this.checkTransactionsListLength.bind(this);
     this.cancelClaimInterest = this.cancelClaimInterest.bind(this);
-    this.openDropMenu = this.openDropMenu.bind(this);
-    this.closeDropMenu = this.closeDropMenu.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.confirmClaimInterest = this.confirmClaimInterest.bind(this);
   }
 
-  openDropMenu() {
-    this.setState(Object.assign({}, this.state, {
-      addressSelectorOpen: !this.state.addressSelectorOpen,
-    }));
-  }
+  generateItemsListColumns(itemsCount) {
+    let _col;
 
-  closeDropMenu() {
-    if (this.state.addressSelectorOpen) {
-      setTimeout(() => {
-        this.setState(Object.assign({}, this.state, {
-          addressSelectorOpen: false,
-        }));
-      }, 100);
+    _col = [{
+      id: 'txid',
+      Header: '',
+      Footer: '',
+      Cell: row => TxIdRender.call(this, row.value),
+      accessor: (tx) => tx.txid,
+      sortable: false,
+      filterable: false,
+    },{
+      id: 'locktime',
+      Header: 'Locktime',
+      Footer: 'Locktime',
+      Cell: row => TxLocktimeRender.call(this, row.value),
+      accessor: (tx) => tx.locktime,
+      sortMethod: (a, b) => {
+        if (a > b) {
+          return 1;
+        }
+        if (a < b) {
+          return -1;
+        }
+        return 0;
+      },
+    },
+    {
+      id: 'amount',
+      Header: translate('INDEX.AMOUNT'),
+      Footer: translate('INDEX.AMOUNT'),
+      Cell: row => TxAmountRender.call(this, row.value),
+      accessor: (tx) => tx,
+      sortMethod: (a, b) => {
+        if (a.amount > b.amount) {
+          return 1;
+        }
+        if (a.amount < b.amount) {
+          return -1;
+        }
+        return 0;
+      },
+    },{
+      id: 'interest',
+      Header: translate('INDEX.INTEREST'),
+      Footer: translate('INDEX.INTEREST'),
+      Cell: row => row.value,
+      accessor: (tx) => tx.interest,
+    }];
+
+    if (itemsCount <= BOTTOM_BAR_DISPLAY_THRESHOLD) {
+      delete _col[0].Footer;
+      delete _col[1].Footer;
+      delete _col[2].Footer;
+      delete _col[3].Footer;
     }
-  }
 
-  updateAddressSelection(address) {
-    this.setState(Object.assign({}, this.state, {
-      selectedAddress: address,
-      addressSelectorOpen: !this.state.addressSelectorOpen,
-    }));
+    return _col;
   }
 
   loadListUnspent() {
@@ -123,12 +163,16 @@ class ClaimInterestModal extends React.Component {
           isLoading: false,
           totalInterest: _totalInterest,
           displayShowZeroInterestToggle: _zeroInterestUtxo,
+          itemsListColumns: this.generateItemsListColumns(_transactionsList.length),
+          showPagination: _transactionsList && _transactionsList.length >= this.state.defaultPageSize,
         });
       } else {
         this.setState({
+          itemsListColumns: this.generateItemsListColumns(),
           transactionsList: [],
           isLoading: false,
           totalInterest: 0,
+          showPagination: false,
         });
       }
     });
@@ -142,12 +186,15 @@ class ClaimInterestModal extends React.Component {
   }
 
   confirmClaimInterest() {
+    const _coin = this.props.ActiveCoin.coin;
+    const _pub = this.props.Dashboard.electrumCoins[_coin].pub
+
     shepherdElectrumSendPromise(
-      this.props.ActiveCoin.coin,
+      _coin,
       this.props.ActiveCoin.balance.balanceSats,
-      this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub,
-      this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub,
-      electrumServers[this.props.ActiveCoin.coin].txfee,
+      _pub,
+      _pub,
+      electrumServers[_coin].txfee,
       true
     )
     .then((res) => {
@@ -162,7 +209,7 @@ class ClaimInterestModal extends React.Component {
       } else {
         Store.dispatch(
           triggerToaster(
-            `${translate('TOASTR.CLAIM_INTEREST_BALANCE_SENT_P1')} ${this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub}. ${translate('TOASTR.CLAIM_INTEREST_BALANCE_SENT_P2')}`,
+            `${translate('TOASTR.CLAIM_INTEREST_BALANCE_SENT_P1')} ${_pub}. ${translate('TOASTR.CLAIM_INTEREST_BALANCE_SENT_P2')}`,
             translate('TOASTR.WALLET_NOTIFICATION'),
             'success',
             false
@@ -174,18 +221,21 @@ class ClaimInterestModal extends React.Component {
   }
 
   claimInterest() {
-    if (this.props.ActiveCoin.coin.toUpperCase() === 'KMD') {
+    const _coin = this.props.ActiveCoin.coin;
+    const _pub = this.props.Dashboard.electrumCoins[_coin].pub;
+
+    if (this.props.ActiveCoin.coin === 'kmd') {
       this.setState(Object.assign({}, this.state, {
         spvVerificationWarning: false,
         spvPreflightSendInProgress: true,
       }));
 
       shepherdElectrumSendPromise(
-        this.props.ActiveCoin.coin,
+        _coin,
         this.props.ActiveCoin.balance.balanceSats,
-        this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub,
-        this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub,
-        electrumServers[this.props.ActiveCoin.coin].txfee
+        _pub,
+        _pub,
+        electrumServers[_coin].txfee
       )
       .then((sendPreflight) => {
         if (sendPreflight &&
@@ -240,49 +290,18 @@ class ClaimInterestModal extends React.Component {
     return _ClaimInterestTableRender.call(this);
   }
 
-  addressDropdownRender() {
-    let _items = [];
-
-    for (let key in this.state.addressses) {
-      _items.push(
-        <li
-          className="selected"
-          key={ key }>
-          <a onClick={ () => this.updateAddressSelection(key) }>
-            <span className="text">{ key }</span>
-            <span
-              className="glyphicon glyphicon-ok check-mark pull-right"
-              style={{ display: this.state.selectedAddress === key ? 'inline-block' : 'none' }}></span>
-          </a>
-        </li>
-      );
-    }
-
-    return (
-      <div className={ `btn-group bootstrap-select form-control form-material showkmdwalletaddrs show-tick ${(this.state.addressSelectorOpen ? 'open' : '')}` }>
-        <button
-          type="button"
-          className="btn dropdown-toggle btn-info disabled"
-          onClick={ this.openDropMenu }>
-          <span className="filter-option pull-left">{ this.state.selectedAddress }</span>
-          <span className="bs-caret inline">
-            <span className="caret"></span>
-          </span>
-        </button>
-        <div className="dropdown-menu open">
-          <ul className="dropdown-menu inner">
-            { _items }
-          </ul>
-        </div>
-      </div>
-    );
-  }
-
   componentWillReceiveProps(props) {
     if (props.Dashboard.displayClaimInterestModal !== this.state.open) {
       this.setState({
-        open: props.Dashboard.displayClaimInterestModal,
+        className: props.Dashboard.displayClaimInterestModal ? 'show fade' : 'show out',
       });
+
+      setTimeout(() => {
+        this.setState(Object.assign({}, this.state, {
+          open: props.Dashboard.displayClaimInterestModal,
+          className: props.Dashboard.displayClaimInterestModal ? 'show in' : 'hide',
+        }));
+      }, props.Dashboard.displayClaimInterestModal ? 50 : 300);
     }
 
     if (!this.state.open &&
@@ -315,9 +334,6 @@ class ClaimInterestModal extends React.Component {
       totalInterest: 0,
       spvPreflightSendInProgress: false,
       spvVerificationWarning: false,
-      addressses: {},
-      addressSelectorOpen: false,
-      selectedAddress: null,
     });
     Store.dispatch(toggleClaimInterestModal(false));
   }
@@ -325,7 +341,7 @@ class ClaimInterestModal extends React.Component {
   render() {
     if (this.props.ActiveCoin &&
         this.props.ActiveCoin.coin &&
-        this.props.ActiveCoin.coin.toUpperCase() === 'KMD') {
+        this.props.ActiveCoin.coin === 'kmd') {
       return ClaimInterestModalRender.call(this);
     } else {
       return null;

@@ -4,7 +4,7 @@ import Config from '../../config';
 
 const fiatRates = (pricesJson) => {
   return dispatch => {
-    return fetch(`https://www.atomicexplorer.com/api/rates/kmd`, {
+    return fetch('https://www.atomicexplorer.com/api/rates/kmd', {
       method: 'GET',
     })
     .catch((error) => {
@@ -22,7 +22,7 @@ const fiatRates = (pricesJson) => {
 
 export const prices = () => {
   return dispatch => {
-    return fetch(`https://www.atomicexplorer.com/api/mm/prices`, {
+    return fetch('https://www.atomicexplorer.com/api/mm/prices', {
       method: 'GET',
     })
     .catch((error) => {
@@ -42,10 +42,9 @@ const pricesState = (json) => {
   }
 }
 
-// src: atomicexplorer
 export const shepherdGetRemoteBTCFees = () => {
   return new Promise((resolve, reject) => {
-    fetch(`https://www.atomicexplorer.com/api/btc/fees`, {
+    fetch('https://www.atomicexplorer.com/api/btc/fees', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -68,10 +67,9 @@ export const shepherdGetRemoteBTCFees = () => {
   });
 }
 
-// src: atomicexplorer
 export const shepherdGetRemoteTimestamp = () => {
   return new Promise((resolve, reject) => {
-    fetch(`https://www.atomicexplorer.com/api/timestamp/now`, {
+    fetch('https://www.atomicexplorer.com/api/timestamp/now', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

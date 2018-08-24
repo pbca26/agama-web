@@ -6,6 +6,8 @@ import TablePaginationRenderer from './pagination';
 import { formatValue } from 'agama-wallet-lib/src/utils';
 import Config from '../../../config';
 import Spinner from '../spinner/spinner';
+import tableSorting from '../../../util/tableSorting'
+import appData from '../../../actions/actions/appData';
 
 export const TxConfsRender = function(confs) {
   if (Number(confs) > -1) {
@@ -30,7 +32,7 @@ export const AddressTypeRender = function() {
   return (
     <span>
       <span className="label label-default">
-        <i className="icon fa-eye"></i>&nbsp;
+        <i className="icon fa-eye nbsp"></i>
         { translate('IAPI.PUBLIC_SM') }
       </span>
     </span>
@@ -66,12 +68,15 @@ export const AddressRender = function(tx) {
 export const AddressItemRender = function(address, type, amount, coin) {
   return (
     <li
-      key={address}
+      key={ address }
       className={ address === this.state.currentAddress ? 'selected' : '' }>
       <a onClick={ () => this.updateAddressSelection(address) }>
-        <i className={ 'icon fa-eye' + (type === 'public' ? '' : '-slash') }></i>&nbsp;&nbsp;
-        <span className="text">[ { amount } { coin } ]  { address }</span>
-        <span className="glyphicon glyphicon-ok check-mark"></span>
+        <i className="padding-right-5 icon fa-eye-slash"></i>
+        <span className="text">
+          [ { amount } { coin } ]
+          <span className="padding-left-10">{ address }</span>
+        </span>
+        <span className="icon fa-check check-mark"></span>
       </a>
     </li>
   );
@@ -82,7 +87,7 @@ export const TxTypeRender = function(category) {
       category === 'sent') {
     return (
       <span className="label label-danger">
-        <i className="icon fa-arrow-circle-left"></i> <span>{ translate('DASHBOARD.OUT') }</span>
+        <i className="icon fa-arrow-circle-left"></i> { translate('DASHBOARD.OUT') }
       </span>
     );
   } else if (
@@ -91,7 +96,7 @@ export const TxTypeRender = function(category) {
   ) {
     return (
       <span className="label label-success">
-        <i className="icon fa-arrow-circle-right"></i> <span>{ translate('DASHBOARD.IN') } &nbsp; &nbsp;</span>
+        <i className="icon fa-arrow-circle-right"></i> { translate('DASHBOARD.IN') }
       </span>
     );
   } else if (category === 'generate') {
@@ -122,26 +127,19 @@ export const TxTypeRender = function(category) {
 };
 
 export const TxAmountRender = function(tx) {
-  let _amountNegative;
-
-  if ((tx.category === 'send' ||
-      tx.category === 'sent') ||
-      (tx.type === 'send' ||
-      tx.type === 'sent')) {
-    _amountNegative = -1;
-  } else {
-    _amountNegative = 1;
-  }
-
   if (Config.roundValues) {
     return (
       <span>
-        <span data-tip={ tx.amount * _amountNegative }>
-          { Math.abs(tx.interest) !== Math.abs(tx.amount) ? (formatValue(tx.amount) * _amountNegative || translate('DASHBOARD.UNKNOWN')) : '' }
+        <span data-tip={ tx.amount }>
+          { Math.abs(tx.interest) !== Math.abs(tx.amount) &&
+            <span>{ formatValue(tx.amount) || translate('DASHBOARD.UNKNOWN') }</span>
+          }
           { tx.interest &&
             <span
               className="tx-interest"
-              data-tip={ `${translate('DASHBOARD.SPV_CLAIMED_INTEREST')} ${formatValue(Math.abs(tx.interest))}` }>+{ formatValue(Math.abs(tx.interest)) }</span>
+              data-tip={ `${translate('DASHBOARD.SPV_CLAIMED_INTEREST')} ${formatValue(Math.abs(tx.interest))}` }>
+              +{ formatValue(Math.abs(tx.interest)) }
+            </span>
           }
           { tx.interest &&
             <ReactTooltip
@@ -158,11 +156,15 @@ export const TxAmountRender = function(tx) {
 
   return (
     <span>
-      { Math.abs(tx.interest) !== Math.abs(tx.amount) ? (tx.amount * _amountNegative || translate('DASHBOARD.UNKNOWN')) : '' }
+      { Math.abs(tx.interest) !== Math.abs(tx.amount) &&
+        <span>{ Number(tx.amount) || translate('DASHBOARD.UNKNOWN') }</span>
+      }
       { tx.interest &&
         <span
           className="tx-interest"
-          data-tip={ `${translate('DASHBOARD.SPV_CLAIMED_INTEREST')} ${Math.abs(tx.interest)}` }>+{ Math.abs(tx.interest) }</span>
+          data-tip={ `${translate('DASHBOARD.SPV_CLAIMED_INTEREST')} ${Math.abs(tx.interest)}` }>
+          +{ Math.abs(tx.interest) }
+        </span>
       }
       { tx.interest &&
         <ReactTooltip
@@ -174,9 +176,19 @@ export const TxAmountRender = function(tx) {
 };
 
 export const TxHistoryListRender = function() {
+  let _data;
+
+  if (this.props.ActiveCoin.coins[appData.activeCoin] &&
+      this.props.ActiveCoin.coins[appData.activeCoin].txhistory &&
+      !this.state.searchTerm) {
+    _data = this.props.ActiveCoin.coins[appData.activeCoin].txhistory;
+  }
+
+  _data = _data || this.state.filteredItemsList;
+
   return (
     <ReactTable
-      data={ this.state.filteredItemsList }
+      data={ _data }
       columns={ this.state.itemsListColumns }
       minRows="0"
       sortable={ true }
@@ -186,7 +198,7 @@ export const TxHistoryListRender = function() {
       previousText={ translate('INDEX.PREVIOUS_PAGE') }
       showPaginationBottom={ this.state.showPagination }
       pageSize={ this.state.pageSize }
-      defaultSortMethod={ this.tableSorting }
+      defaultSortMethod={ tableSorting }
       defaultSorted={[{ // default sort
         id: 'timestamp',
         desc: true,
@@ -197,7 +209,7 @@ export const TxHistoryListRender = function() {
 
 export const WalletsDataRender = function() {
   return (
-    <span>
+    <div>
       <div id="edexcoin_dashboardinfo">
         { (this.displayClaimInterestUI() === 777 || this.displayClaimInterestUI() === -777) &&
           <div className="col-xs-12 margin-top-20 backround-gray">
@@ -207,7 +219,9 @@ export const WalletsDataRender = function() {
                   <div className="panel no-margin padding-top-10 padding-bottom-10 center">
                     { this.displayClaimInterestUI() === 777 &&
                       <div>
-                        { translate('DASHBOARD.CLAIM_INTEREST_HELPER_BAR_P1') } <strong>{ this.props.ActiveCoin.balance.interest }</strong> KMD { translate('DASHBOARD.CLAIM_INTEREST_HELPER_BAR_P2') }.
+                        { translate('DASHBOARD.CLAIM_INTEREST_HELPER_BAR_P1') }
+                        <strong className="padding-left-5">{ this.props.ActiveCoin.balance.interest }</strong> KMD
+                        <span className="padding-left-5">{ translate('DASHBOARD.CLAIM_INTEREST_HELPER_BAR_P2') }</span>.
                         <button
                           type="button"
                           className="btn btn-success waves-effect waves-light dashboard-claim-interest-btn"
@@ -266,7 +280,7 @@ export const WalletsDataRender = function() {
                         </div>
                       }
                     </div>
-                    <div className="row">
+                    <div className="row txhistory-table">
                       { this.renderTxHistoryList() }
                     </div>
                   </div>
@@ -276,6 +290,6 @@ export const WalletsDataRender = function() {
           </div>
         </div>
       </div>
-    </span>
+    </div>
   );
 };

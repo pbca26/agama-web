@@ -28,13 +28,18 @@ import {
   DASHBOARD_ACTIVE_COIN_SENDTO,
   DISPLAY_WALLET_RISKS_MODAL,
 } from './storeType';
+import appData from './actions/appData';
 
-export * from './actions/coinList';
-export * from './actions/addCoin';
 export * from './actions/copyAddress';
-export * from './actions/dexCoins';
-export * from './actions/electrum';
 export * from './actions/atomicexplorer';
+export * from './actions/logout';
+export * from './actions/cache';
+export * from './actions/servers';
+export * from './actions/balance';
+export * from './actions/listunspent';
+export * from './actions/createTx';
+export * from './actions/listtransactions';
+export * from './actions/coins';
 // export * from './actions/tools';
 
 export const changeActiveAddress = (address) => {
@@ -55,7 +60,7 @@ export const toggleDashboardTxInfoModal = (display, txIndex) => {
   return {
     type: DASHBOARD_ACTIVE_TXINFO_MODAL,
     showTransactionInfo: display,
-    showTransactionInfoTxIndex: txIndex,
+    showTransactionInfoTxIndex: !display ? null : txIndex,
   }
 }
 
@@ -70,14 +75,6 @@ export const toggleReceiveCoinFormState = (display) => {
   return {
     type: DASHBOARD_ACTIVE_COIN_RECEIVE_FORM,
     receive: display,
-  }
-}
-
-export const toggleSendReceiveCoinFormsState = () => {
-  return {
-    type: DASHBOARD_ACTIVE_COIN_RESET_FORMS,
-    send: false,
-    receive: false,
   }
 }
 
@@ -135,12 +132,6 @@ export const toggleReceiveCoinForm = (display) => {
   }
 }
 
-export const toggleSendReceiveCoinForms = () => {
-  return dispatch => {
-    dispatch(toggleSendReceiveCoinFormsState());
-  }
-}
-
 export const dashboardChangeSectionState = (sectionName) => {
   return {
     type: DASHBOARD_SECTION_CHANGE,
@@ -164,6 +155,8 @@ export const dashboardChangeActiveCoinState = (coin, mode, skipCoinsArrayUpdate)
 }
 
 export const dashboardChangeActiveCoin = (coin, mode, skipCoinsArrayUpdate) => {
+  appData.activeCoin = coin;
+
   return dispatch => {
     dispatch(dashboardChangeActiveCoinState(coin, mode, skipCoinsArrayUpdate));
   }

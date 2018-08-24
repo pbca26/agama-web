@@ -7,9 +7,7 @@ import { explorerList } from 'agama-wallet-lib/src/coin-helpers';
 const WalletsTxInfoRender = function(txInfo) {
   return (
     <div onKeyDown={ (event) => this.handleKeydown(event) }>
-      <div
-        className="modal show"
-        id="kmd_txid_info_mdl">
+      <div className={ `modal modal-3d-sign tx-details-modal ${this.state.className}` }>
         <div
           onClick={ this.toggleTxInfoModal }
           className="modal-close-overlay"></div>
@@ -18,22 +16,39 @@ const WalletsTxInfoRender = function(txInfo) {
             onClick={ this.toggleTxInfoModal }
             className="modal-close-overlay"></div>
           <div className="modal-content">
+            <div className="modal-header bg-orange-a400 wallet-send-header">
+              <button
+                type="button"
+                className="close white"
+                onClick={ this.toggleTxInfoModal }>
+                <span>×</span>
+              </button>
+              <h4 className="modal-title white">
+                { translate('INDEX.TX_DETAILS') }
+              </h4>
+            </div>
             <div className="modal-body modal-body-container">
               <div className="panel nav-tabs-horizontal">
                 <ul className="nav nav-tabs nav-tabs-line">
                   <li className={ this.state.activeTab === 0 ? 'active' : '' }>
-                    <a onClick={ () => this.openTab(0) }>
-                      <i className="icon md-balance-wallet"></i>{ translate('TX_INFO.TXID_INFO') }
+                    <a
+                      className="pointer"
+                      onClick={ () => this.openTab(0) }>
+                      <i className="icon fa-info"></i>{ translate('TX_INFO.TXID_INFO') }
                     </a>
                   </li>
                   <li className={ this.state.activeTab === 2 ? 'active' : '' }>
-                    <a onClick={ () => this.openTab(2) }>
-                      <i className="icon wb-briefcase"></i>{ translate('TX_INFO.HEX') }
+                    <a
+                      className="pointer"
+                      onClick={ () => this.openTab(2) }>
+                      <i className="icon fa-code"></i>{ translate('TX_INFO.HEX') }
                     </a>
                   </li>
                   <li className={ this.state.activeTab === 3 ? 'active' : '' }>
-                    <a onClick={ () => this.openTab(3) }>
-                      <i className="icon wb-file"></i>{ translate('TX_INFO.RAW_INFO') }
+                    <a
+                      className="pointer"
+                      onClick={ () => this.openTab(3) }>
+                      <i className="icon fa-file"></i>{ translate('TX_INFO.RAW_INFO') }
                     </a>
                   </li>
                 </ul>
@@ -46,14 +61,14 @@ const WalletsTxInfoRender = function(txInfo) {
                             <tbody>
                               <tr>
                                 <td>{ this.capitalizeFirstLetter(translate('TX_INFO.ADDRESS')) }</td>
-                                <td>
+                                <td className="selectable">
                                   { this.state.txDetails.address }
                                 </td>
                               </tr>
                               <tr>
                                 <td>{ this.capitalizeFirstLetter(translate('TX_INFO.AMOUNT')) }</td>
                                 <td>
-                                  { this.state.txDetails.amount }
+                                  { Number(this.state.txDetails.amount) === 0 ? translate('DASHBOARD.UNKNOWN') : Number(this.state.txDetails.amount) }
                                 </td>
                               </tr>
                               <tr>
@@ -94,7 +109,7 @@ const WalletsTxInfoRender = function(txInfo) {
                               }
                               <tr>
                                 <td>{ this.capitalizeFirstLetter('txid') }</td>
-                                <td>
+                                <td className="selectable">
                                   { this.state.txDetails.txid }
                                 </td>
                               </tr>
@@ -123,7 +138,7 @@ const WalletsTxInfoRender = function(txInfo) {
                         </div>
                       }
                       { this.state.activeTab === 2 &&
-                        <div className="tab-pane active">
+                        <div className="tab-pane active selectable">
                           <textarea
                             className="full-width height-400"
                             rows="20"
@@ -133,7 +148,7 @@ const WalletsTxInfoRender = function(txInfo) {
                         </div>
                       }
                       { this.state.activeTab === 3 &&
-                        <div className="tab-pane active">
+                        <div className="tab-pane active selectable">
                           <textarea
                             className="full-width height-400"
                             rows="40"
@@ -154,7 +169,7 @@ const WalletsTxInfoRender = function(txInfo) {
               { this.state.txDetails &&
                 (explorerList[this.props.ActiveCoin.coin.toUpperCase()] || Config.whitelabel) &&
                 <a
-                  href={ this.openExplorerWindow(this.state.txDetails.txid) }
+                  href={ this.openExplorerWindow() }
                   target="_blank">
                   <button
                     type="button"
@@ -163,15 +178,11 @@ const WalletsTxInfoRender = function(txInfo) {
                   </button>
                 </a>
               }
-              <button
-                type="button"
-                className="btn btn-default"
-                onClick={ this.toggleTxInfoModal }>{ translate('INDEX.CLOSE') }</button>
             </div>
           </div>
         </div>
       </div>
-      <div className="modal-backdrop show in"></div>
+      <div className={ `modal-backdrop ${this.state.className}` }></div>
     </div>
   );
 };

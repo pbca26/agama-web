@@ -22,13 +22,15 @@ const DashboardRender = function() {
         className={ this.isSectionActive('wallets') ? 'page-main' : '' }
         id="section-dashboard">
         <Navbar />
-        <div className={ this.isSectionActive('wallets') ? 'show' : 'hide' }>
-          <CoinTile />
-          <WalletsNav />
-          <WalletsTxInfo />
-          <WalletsMain />
-          <ClaimInterestModal />
-        </div>
+        { this.isSectionActive('wallets') &&
+          <div>
+            <CoinTile />
+            <WalletsNav />
+            <WalletsTxInfo />
+            <WalletsMain />
+            <ClaimInterestModal />
+          </div>
+        }
         { this.isSectionActive('settings') &&
           <Settings disableWalletSpecificUI={ false } />
         }

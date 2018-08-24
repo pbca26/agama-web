@@ -1,0 +1,15 @@
+.tx-details-modal {
+  .panel-body {
+    padding: 0;
+  }
+  textarea {
+    padding: 10px;
+  }
+  .height-400 {
+    height: inherit;
+    max-height: 400px;
+  }
+  .modal-body {
+    height: 560px;
+  }
+}

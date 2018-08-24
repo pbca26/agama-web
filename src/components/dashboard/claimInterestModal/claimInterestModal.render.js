@@ -2,47 +2,48 @@ import React from 'react';
 import translate from '../../../translate/translate';
 import Spinner from '../spinner/spinner';
 import ReactTooltip from 'react-tooltip';
+import ReactTable from 'react-table';
+import TablePaginationRenderer from '../walletsData/pagination';
+import tableSorting from '../../../util/tableSorting'
+
+export const TxLocktimeRender = function(locktime) {
+  return (
+    <span className="locktime">
+      { locktime &&
+        <i
+          data-tip={ `${translate('CLAIM_INTEREST.LOCKTIME_IS_SET_TO')} ${locktime}` }
+          className="fa-check-circle green"></i>
+      }
+      { !locktime &&
+        <i
+          data-tip={ translate('CLAIM_INTEREST.LOCKTIME_IS_UNSET') }
+          className="fa-exclamation-circle red"></i>
+      }
+      <ReactTooltip
+        effect="solid"
+        className="text-left" />
+    </span>
+  );
+};
+
+export const TxAmountRender = function(tx) {
+  return (
+    <span className={ tx.locktime ? 'green bold' : '' }>{ tx.amount }</span>
+  );
+};
+
+export const TxIdRender = function(txid) {
+  return (
+    <button
+      className="btn btn-default btn-xs clipboard-edexaddr copy-string-btn"
+      title={ translate('INDEX.COPY_TO_CLIPBOARD') }
+      onClick={ () => this.copyTxId(txid) }>
+      <i className="icon fa-copy"></i> { translate('INDEX.COPY') + ' TXID' }
+    </button>
+  );
+};
 
 export const _ClaimInterestTableRender = function() {
-  const _transactionsList = this.state.transactionsList;
-  let _items = [];
-
-  for (let i = 0; i < _transactionsList.length; i++) {
-    if ((_transactionsList[i].interest === 0 && this.state.showZeroInterest) ||
-        (_transactionsList[i].amount > 0 && _transactionsList[i].interest > 0)) {
-      _items.push(
-        <tr key={ `${_transactionsList[i].txid}-${_transactionsList[i].address}-${i}` }>
-          <td>
-            <button
-              className="btn btn-default btn-xs clipboard-edexaddr copy-string-btn"
-              title={ translate('INDEX.COPY_TO_CLIPBOARD') }
-              onClick={ () => this.copyTxId(_transactionsList[i].txid) }>
-              <i className="icon wb-copy"></i> { translate('INDEX.COPY') + ' TXID' }
-            </button>
-          </td>
-          <td>{ _transactionsList[i].address }</td>
-          <td className={ _transactionsList[i].amount > 10 ? 'green bold' : '' }>{ _transactionsList[i].amount }</td>
-          <td>{ _transactionsList[i].interest }</td>
-          <td className="locktime center">
-            { _transactionsList[i].locktime &&
-              <i
-                data-tip={ `${translate('CLAIM_INTEREST.LOCKTIME_IS_SET_TO')} ${_transactionsList[i].locktime}` }
-                className="fa-check-circle green"></i>
-            }
-            { !_transactionsList[i].locktime &&
-              <i
-                data-tip={ translate('CLAIM_INTEREST.LOCKTIME_IS_UNSET') }
-                className="fa-exclamation-circle red"></i>
-            }
-            <ReactTooltip
-              effect="solid"
-              className="text-left" />
-          </td>
-        </tr>
-      );
-    }
-  }
-
   return (
     <span>
       <div>
@@ -110,31 +111,23 @@ export const _ClaimInterestTableRender = function() {
           }
         </div>
       }
-      <div className="table-scroll">
-        <table className="table table-hover dataTable table-striped">
-          <thead>
-            <tr>
-              <th></th>
-              <th>{ translate('INDEX.ADDRESS') }</th>
-              <th>{ translate('INDEX.AMOUNT') }</th>
-              <th>{ translate('INDEX.INTEREST') }</th>
-              <th>Locktime</th>
-            </tr>
-          </thead>
-          <tbody>
-          { _items }
-          </tbody>
-          <tfoot>
-            <tr>
-              <th></th>
-              <th>{ translate('INDEX.ADDRESS') }</th>
-              <th>{ translate('INDEX.AMOUNT') }</th>
-              <th>{ translate('INDEX.INTEREST') }</th>
-              <th>Locktime</th>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
+      <ReactTable
+        data={ this.state.transactionsList }
+        columns={ this.state.itemsListColumns }
+        minRows="0"
+        sortable={ true }
+        className="-striped -highlight"
+        PaginationComponent={ TablePaginationRenderer }
+        nextText={ translate('INDEX.NEXT_PAGE') }
+        previousText={ translate('INDEX.PREVIOUS_PAGE') }
+        showPaginationBottom={ this.state.showPagination }
+        pageSize={ this.state.pageSize }
+        defaultSortMethod={ tableSorting }
+        defaultSorted={[{ // default sort
+          id: 'interest',
+          desc: true,
+        }]}
+        onPageSizeChange={ (pageSize, pageIndex) => this.onPageSizeChange(pageSize, pageIndex) } />
     </span>
   );
 };
@@ -142,7 +135,7 @@ export const _ClaimInterestTableRender = function() {
 export const ClaimInterestModalRender = function() {
   return (
     <span onClick={ this.closeDropMenu }>
-      <div className={ 'modal modal-claim-interest modal-3d-sign ' + (this.state.open ? 'show in' : 'fade hide') }>
+      <div className={ `modal modal-claim-interest modal-3d-sign ${this.state.className}` }>
         <div
           onClick={ this.closeModal }
           className="modal-close-overlay"></div>
@@ -171,7 +164,7 @@ export const ClaimInterestModalRender = function() {
                   className="icon fa-refresh pointer refresh-icon"
                   onClick={ this.loadListUnspent }></i>
               }
-              <div className="animsition vertical-align fade-in">
+              <div className="vertical-align">
                 <div className="page-content vertical-align-middle full-width">
                   { this.state.isLoading &&
                     <span>{ translate('INDEX.LOADING') }...</span>
@@ -190,7 +183,7 @@ export const ClaimInterestModalRender = function() {
           </div>
         </div>
       </div>
-      <div className={ 'modal-backdrop ' + (this.state.open ? 'show in' : 'fade hide') }></div>
+      <div className={ `modal-backdrop ${this.state.className}` }></div>
     </span>
   );
 };

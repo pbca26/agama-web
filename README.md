@@ -16,3 +16,8 @@ Agama web relies on Electrum proxy nodes to communicate with Electrum servers. Y
 In order to use your own proxy modify the following file src/util/proxyServers.js
 
 Electrum proxy source code is available here https://github.com/pbca26/electrum-proxy
+
+### How to use whitelabel version
+Make changes in src/config.js
+
+Update app title in www/index.html

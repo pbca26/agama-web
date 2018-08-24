@@ -4,49 +4,31 @@ import QRModal from '../qrModal/qrModal';
 import InvoiceModal from '../invoiceModal/invoiceModal';
 import ReactTooltip from 'react-tooltip';
 
-export const AddressActionsNonBasiliskModeRender = function(address, type) {
+export const AddressActionsRender = function(address) {
   return (
     <td>
       <button
         onClick={ () => this.toggleAddressMenu(address) }
-        data-tip="Toggle address context menu"
+        data-tip={ translate('DASHBOARD.TOGGLE_ADD_MENU') }
         className="btn btn-default btn-xs clipboard-edexaddr margin-left-10 receive-address-context-menu-trigger">
         <i className="fa fa-ellipsis-v receive-address-context-menu-trigger"></i>
       </button>
       <ReactTooltip
         effect="solid"
         className="text-left" />
-      { this.state.toggledAddressMenu &&
-        this.state.toggledAddressMenu === address &&
-        <div className="receive-address-context-menu">
+        <div className={ this.state.toggledAddressMenu && this.state.toggledAddressMenu === address ? 'receive-address-context-menu' : 'hide' }>
           <ul>
             <li onClick={ () => this._copyCoinAddress(address) }>
-              <i className="icon wb-copy margin-right-5"></i> { `${translate('INDEX.COPY')} ${translate('INDEX.PUB_KEY')}` }
+              <i className="icon fa-copy margin-right-5"></i> { `${translate('INDEX.COPY')} ${translate('INDEX.PUB_KEY')}` }
             </li>
             <li className="receive-address-context-menu-get-qr">
-              <QRModal content={ address } />
+              <QRModal
+                cbOnClose={ this.toggleAddressMenu }
+                content={ address } />
             </li>
           </ul>
         </div>
-      }
     </td>
-  );
-};
-
-export const AddressItemRender = function(address, type) {
-  return (
-    <tr key={ address.address }>
-      { this.renderAddressActions(address.address, type) }
-      <td data-tip={ address.address }>
-        <ReactTooltip
-          effect="solid"
-          className="text-left" />
-        { address.address }
-      </td>
-      <td>
-        <span>{ address.amount }</span>
-      </td>
-    </tr>
   );
 };
 
@@ -62,7 +44,7 @@ export const _ReceiveCoinTableRender = function() {
           </tr>
         </thead>
         <tbody>
-          { this.renderAddressList('public') }
+          { this.renderAddressList() }
         </tbody>
         <tfoot>
           <tr>

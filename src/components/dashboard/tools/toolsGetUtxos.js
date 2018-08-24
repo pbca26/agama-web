@@ -15,6 +15,7 @@ import {
   shepherdElectrumSplitUtxoPromise,
 } from '../../../actions/actionCreators';
 import Store from '../../../store';
+import assetsPath from '../../../util/assetsPath';
 
 class ToolsGetUtxos extends React.Component {
   constructor() {
@@ -107,7 +108,7 @@ class ToolsGetUtxos extends React.Component {
     return (
       <div>
         <img
-          src={ `assets/images/cryptologo/${option.icon.toLowerCase()}.png` }
+          src={ `${assetsPath.coinLogo}/${option.icon.toLowerCase()}.png` }
           alt={ option.label }
           width="30px"
           height="30px" />

@@ -7,7 +7,7 @@ class Toaster extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      toasts: []
+      toasts: [],
     };
     this.toastId = 0;
   }

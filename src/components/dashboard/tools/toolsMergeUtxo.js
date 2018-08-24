@@ -17,6 +17,7 @@ import {
 import Store from '../../../store';
 import { isKomodoCoin } from '../../../util/coinHelper';
 import devlog from '../../../util/devlog';
+import assetsPath from '../../../util/assetsPath';
 
 class ToolsMergeUTXO extends React.Component {
   constructor() {
@@ -199,7 +200,7 @@ class ToolsMergeUTXO extends React.Component {
     return (
       <div>
         <img
-          src={ `assets/images/cryptologo/${option.icon.toLowerCase()}.png` }
+          src={ `${assetsPath.coinLogo}/${option.icon.toLowerCase()}.png` }
           alt={ option.label }
           width="30px"
           height="30px" />

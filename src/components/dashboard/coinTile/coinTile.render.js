@@ -9,7 +9,7 @@ const CoinTileRender = function() {
         <div
           onClick={ this.toggleSidebar }
           className="page-aside-switch">
-          <i className={ 'icon md-chevron-' + (this.state.toggledSidebar ? 'left' : 'right') }></i>
+          <i className={ 'icon fa-chevron-' + (this.state.toggledSidebar ? 'left' : 'right') }></i>
         </div>
       }
       <div className="page-aside-inner">

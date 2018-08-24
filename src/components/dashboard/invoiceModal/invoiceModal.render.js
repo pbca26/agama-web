@@ -5,9 +5,7 @@ import QRCode from 'qrcode.react';
 export const InvoiceModalRender = function() {
   return (
     <span>
-      <div
-        className={ 'modal modal-3d-sign ' + (this.state.modalIsOpen ? 'show in' : 'fade hide') }
-        id="QRModal">
+      <div className={ `modal modal-3d-sign ${this.state.className}` }>
         <div
           onClick={ this.closeModal }
           className="modal-close-overlay"></div>
@@ -26,7 +24,7 @@ export const InvoiceModalRender = function() {
               <h4 className="modal-title white text-left">{ translate('INDEX.CREATE_INVOICE_QR') }</h4>
             </div>
             <div className="modal-body">
-              <div className="animsition fade-in">
+              <div>
                 <div className="page-content">
                   <div className="row">
                     <div className="col-lg-8 form-group form-material vertical-align-middle">
@@ -45,12 +43,12 @@ export const InvoiceModalRender = function() {
                           <option value="-1">
                             { translate('INDEX.CHOOSE_RECEIVING_ADDRESS') }
                           </option>
-                          { this.renderAddressList('public') }
+                          { this.renderAddressList() }
                         </select>
                         <label
-                          className="control-label margin-top-20"
+                          className="text-left control-label margin-top-20"
                           htmlFor="qrCoinAmount">
-                          { this.props.ActiveCoin.coin }
+                          { translate('INDEX.AMOUNT_IN') } { this.props.ActiveCoin.coin.toUpperCase() }
                         </label>
                         <input
                           type="number"
@@ -71,12 +69,13 @@ export const InvoiceModalRender = function() {
                         value={ this.state.content }
                         size={ 198 } />
                         <p className="margin-top-10">
-                          <a href=""
+                          <a
+                            href=""
                             id="saveImage"
                             className="btn btn-success waves-effect waves-light save-image-btn margin-right-10"
                             disabled={ this.state.qrAddress === '-1' }
                             onClick={ this.saveAsImage }>
-                            <i className="icon fa-picture-o"></i>&nbsp;
+                            <i className="icon fa-picture-o nbsp"></i>
                             { translate('INDEX.SAVE_AS_IMAGE') }
                           </a>
                         </p>
@@ -85,7 +84,7 @@ export const InvoiceModalRender = function() {
                   <div className="row hide">
                     <div className="col-lg-12">
                       <p className="help-block">
-                        { translate('INDEX.QR_CONTENT') }:<br />
+                        <span className="display--block">{ translate('INDEX.QR_CONTENT') }:</span>
                         { this.state.content }
                       </p>
                     </div>
@@ -96,7 +95,7 @@ export const InvoiceModalRender = function() {
           </div>
         </div>
       </div>
-      <div className={ 'modal-backdrop ' + (this.state.modalIsOpen ? 'show in' : 'fade hide') }></div>
+      <div className={ `modal-backdrop ${this.state.className}` }></div>
     </span>
   );
 };
@@ -108,20 +107,9 @@ export const InvoiceModalButtonRender = function() {
         type="button"
         className="btn btn-success waves-effect waves-light margin-right-10"
         onClick={ this.openModal }>
-          <i className="icon fa-file-text-o"></i>&nbsp;
+          <i className="icon fa-file-text-o nbsp"></i>
           { translate('INDEX.CREATE_INVOICE') }
       </button>
     </span>
-  );
-};
-
-export const AddressItemRender = function(address, type) {
-  return (
-    <option
-      key={ address.address }
-      value={ address.address }>
-      { type === 'public' ? address.address : `${address.address.substring(0, 34)}...` }
-       &nbsp; ({ translate('INDEX.BALANCE') }: { address.amount })
-    </option>
   );
 };
