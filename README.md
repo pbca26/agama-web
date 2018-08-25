@@ -20,4 +20,4 @@ Electrum proxy source code is available here https://github.com/pbca26/electrum-
 ### How to use whitelabel version
 Make changes in src/config.js
 
-Update app title in www/index.html
+Update www/index.html and www/index.prod.html
