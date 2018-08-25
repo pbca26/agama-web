@@ -101,6 +101,7 @@ class WalletsData extends React.Component {
       footerClassName: 'colum--direction',
       Cell: row => TxTypeRender.call(this, row.value),
       accessor: (tx) => tx.category || tx.type,
+      maxWidth: '110',
     },
     {
       id: 'confirmations',
@@ -111,6 +112,7 @@ class WalletsData extends React.Component {
       className: 'hidden-xs hidden-sm',
       Cell: row => TxConfsRender.call(this, row.value),
       accessor: (tx) => tx.confirmations,
+      maxWidth: '180',
     },
     {
       id: 'amount',
@@ -150,6 +152,7 @@ class WalletsData extends React.Component {
       Footer: translate('INDEX.DEST_ADDRESS'),
       className: 'selectable',
       accessor: (tx) => AddressRender.call(this, tx),
+      maxWidth: '350',
     };
 
     if (itemsCount <= BOTTOM_BAR_DISPLAY_THRESHOLD) {
@@ -168,6 +171,7 @@ class WalletsData extends React.Component {
       accessor: (tx) => TransactionDetailRender.call(this, tx),
       sortable: false,
       filterable: false,
+      maxWidth: '100',
     };
 
     if (itemsCount <= BOTTOM_BAR_DISPLAY_THRESHOLD) {
