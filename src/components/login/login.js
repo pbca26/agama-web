@@ -267,8 +267,6 @@ class Login extends React.Component {
   }
 
   componentWillMount() {
-    document.body.className = 'page-login layout-full page-dark page-loading';
-
     if (Config.whitelabel) {
       Store.dispatch(addCoin(Config.wlConfig.coin.ticker));
     }
