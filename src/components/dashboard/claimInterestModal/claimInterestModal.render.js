@@ -35,7 +35,7 @@ export const TxAmountRender = function(tx) {
 export const TxIdRender = function(txid) {
   return (
     <button
-      className="btn btn-default btn-xs clipboard-edexaddr copy-string-btn"
+      className="btn btn-default btn-xs copy-string-btn"
       title={ translate('INDEX.COPY_TO_CLIPBOARD') }
       onClick={ () => this.copyTxId(txid) }>
       <i className="icon fa-copy"></i> { translate('INDEX.COPY') + ' TXID' }

@@ -71,6 +71,7 @@ class ClaimInterestModal extends React.Component {
       accessor: (tx) => tx.txid,
       sortable: false,
       filterable: false,
+      maxWidth: '150',
     },{
       id: 'locktime',
       Header: 'Locktime',
@@ -86,6 +87,7 @@ class ClaimInterestModal extends React.Component {
         }
         return 0;
       },
+      maxWidth: '150',
     },
     {
       id: 'amount',
