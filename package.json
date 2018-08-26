@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "webpack-dashboard -t 'AgamaWeb' -- webpack-dev-server --colors --no-info",
-    "build": "rm -rf ./build && mkdir build && mkdir build/assets && cp -R src/assets build/ && NODE_ENV=\"production\" webpack",
+    "build": "rm -rf ./build && mkdir build && mkdir build/assets && cp -R src/assets build/ && NODE_ENV=\"production\" webpack && cp www/index.prod.html build/index.html",
     "build_win": "rmdir /s /q build && mkdir build && mkdir build/assets && xcopy src/assets build/ /s /e && NODE_ENV=\"production\" webpack",
     "build-only": "./node_modules/.bin/webpack --config ./webpack.prod.config.js",
     "lint-break-on-errors": "eslint ./src ./webpack.config.js -f table --ext .js --ext .jsx",
