@@ -1,5 +1,7 @@
 import React from 'react';
+import ReactTooltip from 'react-tooltip';
 import translate from '../../../translate/translate';
+import appData from '../../../actions/actions/appData';
 
 export const WalletsNavWithWalletRender = function() {
   const _pub = this.props.Dashboard.electrumCoins[this.props.ActiveCoin.coin].pub;
@@ -41,6 +43,7 @@ export const WalletsNavWithWalletRender = function() {
               <i className="icon fa-th-large"></i> <span className="placeholder">{ translate('INDEX.TRANSACTIONS') }</span>
             </button>
             { _coin &&
+              !appData.isWatchOnly &&
               <button
                 type="button"
                 className="btn btn-primary waves-effect waves-light"
@@ -55,6 +58,16 @@ export const WalletsNavWithWalletRender = function() {
               onClick={ () => this.toggleSection('receive') }>
               <i className="icon fa-inbox"></i> <span className="placeholder">{ translate('INDEX.RECEIVE') }</span>
             </button>
+            { appData.isWatchOnly &&
+              <span>
+                <i
+                  className="icon fa-question-circle settings-help"
+                  data-tip={ translate('INDEX.LITE_MODE_WATCHONLY') }></i>
+                <ReactTooltip
+                  effect="solid"
+                  className="text-top" />
+              </span>
+            }
           </div>
         </div>
       </div>
