@@ -39,6 +39,7 @@ export const shepherdElectrumAuth = (seed) => {
     } else {
       appData.keys[appData.coins[i]] = stringToWif(seed, btcNetworks[appData.coins[i]], true);
     }
+    appData.isWatchOnly = appData.keys[appData.coins[i]].priv === appData.keys[appData.coins[i]].pub ? true : false;
   }
 
   appData.auth.status = 'unlocked';
