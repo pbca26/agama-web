@@ -18,7 +18,7 @@ export const AddressListRender = function() {
     <div className={ `btn-group bootstrap-select form-control form-material showkmdwalletaddrs show-tick ${(this.state.addressSelectorOpen ? 'open' : '')}` }>
       <button
         type="button"
-        className={ 'btn dropdown-toggle btn-info disabled' }
+        className="btn dropdown-toggle btn-info disabled"
         onClick={ this.openDropMenu }>
         <span className="filter-option pull-left">{ this.renderSelectorCurrentLabel() }</span>
         <span className="bs-caret">
@@ -30,7 +30,7 @@ export const AddressListRender = function() {
           <li className="selected">
             <a>
               <span className="text">
-                { `[ ${_balance} ${_coin.toUpperCase()} ] ${this.props.Dashboard.electrumCoins[_coin].pub}` }
+                [ { _balance } { _coin.toUpperCase() } ] { this.props.Dashboard.electrumCoins[_coin].pub }
               </span>
               <span
                 className="icon fa-check check-mark pull-right"
@@ -217,7 +217,7 @@ export const SendRender = function() {
                             effect="solid"
                             className="text-left" />
                         </span>
-                        { formatValue(fromSats(this.state.spvPreflightRes.value) - fromSats(this.state.spvPreflightRes.fee)) }
+                        { formatValue(fromSats(this.state.spvPreflightRes.value) + fromSats(this.state.spvPreflightRes.fee)) }
                       </div>
                     }
                     { this.state.spvPreflightRes.estimatedFee < 0 &&
@@ -229,7 +229,7 @@ export const SendRender = function() {
                     }
                     { this.state.spvPreflightRes.change > 0 &&
                       <div className="col-lg-12 col-sm-12 col-xs-12">
-                        <strong className="nbsp">{ translate('SEND.TOTAL') }</strong>
+                        <strong className="nbsp display--block">{ translate('SEND.TOTAL') }</strong>
                         { formatValue(fromSats(this.state.spvPreflightRes.value) + fromSats(this.state.spvPreflightRes.fee)) }
                       </div>
                     }
@@ -241,7 +241,7 @@ export const SendRender = function() {
                 { this.state.spvVerificationWarning &&
                   <div className="padding-top-20 fs-15">
                     <strong className="color-warning nbsp">{ translate('SEND.WARNING') }:</strong>
-                    <span className="display--block">{ translate('SEND.WARNING_SPV_P1') }</span>
+                    <span>{ translate('SEND.WARNING_SPV_P1') }</span>
                     { translate('SEND.WARNING_SPV_P2') }
                   </div>
                 }
@@ -271,8 +271,9 @@ export const SendRender = function() {
                   { translate('INDEX.TRANSACTION_RESULT') }
                 </h4>
                 <div>
-                  { this.state.lastSendToResponse &&
-                    !this.state.lastSendToResponse.msg &&
+                  { this.props.ActiveCoin.lastSendToResponse &&
+                    this.props.ActiveCoin.lastSendToResponse.msg &&
+                    this.props.ActiveCoin.lastSendToResponse.msg === 'success' &&
                     <table className="table table-hover table-striped">
                       <thead>
                         <tr>
@@ -316,23 +317,23 @@ export const SendRender = function() {
                         <tr>
                           <td className="padding-left-30">{ translate('SEND.TRANSACTION_ID') }</td>
                           <td className="padding-left-30">
-                            { this.state.lastSendToResponse &&
-                              this.state.lastSendToResponse.txid &&
+                            { this.props.ActiveCoin.lastSendToResponse &&
+                              this.props.ActiveCoin.lastSendToResponse.txid &&
                               <span className="selectable">
-                                { this.state.lastSendToResponse.txid }
+                                { this.props.ActiveCoin.lastSendToResponse.txid }
                               </span>
                             }
-                            { this.state.lastSendToResponse &&
-                              this.state.lastSendToResponse.txid &&
+                            { this.props.ActiveCoin.lastSendToResponse &&
+                              this.props.ActiveCoin.lastSendToResponse.txid &&
                               <button
                                 className="btn btn-default btn-xs clipboard-edexaddr margin-left-10"
                                 title={ translate('INDEX.COPY_TO_CLIPBOARD') }
-                                onClick={ () => this.copyTXID(this.state.lastSendToResponse.txid) }>
+                                onClick={ () => this.copyTXID(this.props.ActiveCoin.lastSendToResponse.txid) }>
                                 <i className="icon fa-copy"></i> { translate('INDEX.COPY') }
                               </button>
                             }
-                            { this.state.lastSendToResponse &&
-                              this.state.lastSendToResponse.txid &&
+                            { this.props.ActiveCoin.lastSendToResponse &&
+                              this.props.ActiveCoin.lastSendToResponse.txid &&
                               (explorerList[_coin.toUpperCase()] || Config.whitelabel) &&
                               <div className="margin-top-10">
                                 <a
@@ -351,32 +352,32 @@ export const SendRender = function() {
                       </tbody>
                     </table>
                   }
-                  { !this.state.lastSendToResponse &&
+                  { !this.props.ActiveCoin.lastSendToResponse &&
                     <div className="padding-left-30 padding-top-10">{ translate('SEND.PROCESSING_TX') }...</div>
                   }
-                  { this.state.lastSendToResponse &&
-                    this.state.lastSendToResponse.msg &&
-                    this.state.lastSendToResponse.msg === 'error' &&
+                  { this.props.ActiveCoin.lastSendToResponse &&
+                    this.props.ActiveCoin.lastSendToResponse.msg &&
+                    this.props.ActiveCoin.lastSendToResponse.msg === 'error' &&
                     <div className="padding-left-30 padding-top-10 selectable">
                       <div>
                         <strong className="text-capitalize">{ translate('API.ERROR_SM') }</strong>
                       </div>
-                      { (this.state.lastSendToResponse.result.toLowerCase().indexOf('decode error') > -1) &&
+                      { (this.props.ActiveCoin.lastSendToResponse.result.toLowerCase().indexOf('decode error') > -1) &&
                         <div>
                           <span className="display--block">{ translate('SEND.SEND_ERR_ZTX_P1') }</span>
                           { translate('SEND.SEND_ERR_ZTX_P2') }
                         </div>
                       }
-                      { this.state.lastSendToResponse.result.toLowerCase().indexOf('decode error') === -1 &&
-                        <div>{ this.state.lastSendToResponse.result }</div>
+                      { this.props.ActiveCoin.lastSendToResponse.result.toLowerCase().indexOf('decode error') === -1 &&
+                        <div>{ this.props.ActiveCoin.lastSendToResponse.result }</div>
                       }
-                      { this.state.lastSendToResponse.raw &&
-                        this.state.lastSendToResponse.raw.txid &&
-                        <div>{ this.state.lastSendToResponse.raw.txid.replace(/\[.*\]/, '') }</div>
+                      { this.props.ActiveCoin.lastSendToResponse.raw &&
+                        this.props.ActiveCoin.lastSendToResponse.raw.txid &&
+                        <div>{ this.props.ActiveCoin.lastSendToResponse.raw.txid.replace(/\[.*\]/, '') }</div>
                       }
-                      { this.state.lastSendToResponse.raw &&
-                        this.state.lastSendToResponse.raw.txid &&
-                        this.state.lastSendToResponse.raw.txid.indexOf('bad-txns-inputs-spent') > -1 &&
+                      { this.props.ActiveCoin.lastSendToResponse.raw &&
+                        this.props.ActiveCoin.lastSendToResponse.raw.txid &&
+                        this.props.ActiveCoin.lastSendToResponse.raw.txid.indexOf('bad-txns-inputs-spent') > -1 &&
                         <div className="margin-top-10">
                           { translate('SEND.BAD_TXN_SPENT_ERR1') }
                           <ul>
