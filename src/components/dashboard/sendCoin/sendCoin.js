@@ -103,7 +103,7 @@ class SendCoin extends React.Component {
 
   openExplorerWindow() {
     const _coin = this.props.ActiveCoin.coin;
-    const txid = this.state.lastSendToResponse.txid;
+    const txid = this.props.ActiveCoin.lastSendToResponse.txid;
     let url = explorerList[_coin.toUpperCase()].split('/').length - 1 > 2 ? `${explorerList[_coin.toUpperCase()]}${txid}` : `${explorerList[_coin.toUpperCase()]}/tx/${txid}`;
 
     if (Config.whitelabel) {

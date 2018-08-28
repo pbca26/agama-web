@@ -4,11 +4,13 @@ import appData from './appData';
 import Store from '../../store';
 import btcNetworks from 'agama-wallet-lib/src/bitcoinjs-networks';
 import { isKomodoCoin } from 'agama-wallet-lib/src/coin-helpers';
+import transactionBuilder from 'agama-wallet-lib/src/transaction-builder';
 import urlParams from '../../util/url';
 import {
   triggerToaster,
   sendToAddressState,
 } from '../actionCreators';
+import { shepherdElectrumListunspent } from './listunspent';
 
 export const shepherdElectrumSendPromise = (coin, value, sendToAddress, changeAddress, fee, push) => {
   const _serverEndpoint = `${appData.proxy.ssl ? 'https' : 'http'}://${appData.proxy.ip}:${appData.proxy.port}`;

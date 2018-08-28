@@ -19,6 +19,7 @@ let appData = {
   servers: {},
   proxy: {},
   cache: {},
+  isWatchOnly: false,
 };
 
 export default appData;

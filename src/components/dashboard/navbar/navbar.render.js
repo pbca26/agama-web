@@ -3,6 +3,7 @@ import translate from '../../../translate/translate';
 import ReactTooltip from 'react-tooltip';
 import Config from '../../../config';
 import assetsPath from '../../../util/assetsPath';
+import appData from '../../../actions/actions/appData';
 
 const NavbarRender = function() {
   let _imagePath;
@@ -73,6 +74,7 @@ const NavbarRender = function() {
           </ul>
           <ul className="nav navbar-toolbar navbar-right navbar-toolbar-right">
             { (!Config.whitelabel || (Config.whitelabel && Config.wlConfig.enableAllCoins)) &&
+              !appData.isWatchOnly &&
               <li>
                 <a
                   className="pointer padding-bottom-10 padding-top-16"
