@@ -14,7 +14,7 @@ const _shortcutOptions = [
   'mnz',
   'revs',
   'jumblr',
-  'kmd+revs+jumblr' // custom option
+  'kmd+revs+jumblr', // custom option
 ];
 let shortcutOptions = [];
 
@@ -132,6 +132,7 @@ const LoginRender = function() {
                       <label className="switch">
                         <input
                           type="checkbox"
+                          readOnly
                           checked={ this.shouldEncryptSeed() } />
                         <div
                           className="slider"
@@ -316,6 +317,7 @@ const LoginRender = function() {
                         <label className="switch">
                           <input
                             type="checkbox"
+                            readOnly
                             checked={ this.isCustomWalletSeed() } />
                           <div
                             className="slider"
