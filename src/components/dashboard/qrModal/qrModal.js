@@ -16,11 +16,25 @@ class QRModal extends React.Component {
       errorShown: false,
       className: 'hide',
     };
+    this.mounted = false;
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.handleScan = this.handleScan.bind(this);
     this.handleError = this.handleError.bind(this);
     this.saveAsImage = this.saveAsImage.bind(this);
+  }
+
+  componentWillMount() {
+    this.mounted = true;
+  }
+
+  componentWillUnmount() {
+    this.setState(Object.assign({}, this.state, {
+      modalIsOpen: false,
+      className: 'hide',
+    }));
+
+    this.mounted = false;
   }
 
   handleScan(data) {
@@ -68,13 +82,6 @@ class QRModal extends React.Component {
         this.props.cbOnClose();
       }
     }, 300);
-  }
-
-  componentWillUnmount() {
-    this.setState(Object.assign({}, this.state, {
-      modalIsOpen: false,
-      className: 'hide',
-    }));
   }
 
   saveAsImage(e) {
