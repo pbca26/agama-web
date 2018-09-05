@@ -120,7 +120,7 @@ export const TxTypeRender = function(category) {
   } else if (category === 'self') {
     return (
       <span className="label label-info self-send">
-        <span>self</span>
+        <span>{ translate('INDEX.SELF_SM') }</span>
       </span>
     );
   }

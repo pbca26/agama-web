@@ -52,6 +52,7 @@ const LANG_EN = {
     COULDNT_COPY_ADDRESS: 'Couldn\'t copy address to clipboard',
   },
   INDEX: {
+    SELF_SM: 'self',
     LITE_MODE_WATCHONLY: 'You are using watchonly address mode. Send coin functionality is unavailable.',
     TX_DETAILS: 'Transaction details',
     AMOUNT_IN: 'Amount in',
