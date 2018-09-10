@@ -477,6 +477,8 @@ const LANG_EN = {
     ZILLA: 'ChainZilla',
     DSEC: 'DevSec',
     VRSC: 'VerusCoin',
+    CALL: 'Capital',
+    CCL: 'CoinCollect',
   },
   CRYPTO: {
     KMD: 'Komodo',

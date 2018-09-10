@@ -5,7 +5,6 @@ import { sortObject } from '../../util/coinHelper';
 import appData from '../../actions/actions/appData';
 
 const disabledAssets = [
-  'VRSC',
   'DSEC',
   'CEAL',
   'MESH',
