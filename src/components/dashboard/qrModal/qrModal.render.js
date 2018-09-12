@@ -12,7 +12,7 @@ export const QRModalRender = function() {
         onClick={ this.openModal }>
         <i className="icon fa-qrcode margin-right-5"></i> { translate('DASHBOARD.GENERATE_SM') } { translate('INDEX.QR_CODE') }
       </span>
-      <div className={ `modal modal-3d-sign ${this.state.className}` }>
+      <div className={ `modal modal-3d-sign qr-modal ${this.state.className}` }>
         <div className="modal-dialog modal-center modal-sm">
           <div className="modal-content">
             <div className="modal-header bg-orange-a400 wallet-send-header">
@@ -66,7 +66,7 @@ export const QRModalReaderRender = function() {
           <i className="icon fa-qrcode"></i>
           { translate('INDEX.SCAN_QR_CODE') }
         </button>
-        <div className={ `modal modal-3d-sign ${this.state.className}` }>
+        <div className={ `modal modal-3d-sign qr-modal qr-modal-reader ${this.state.className}` }>
           <div
             onClick={ this.closeModal }
             className="modal-close-overlay"></div>
@@ -87,7 +87,8 @@ export const QRModalReaderRender = function() {
                 <div className="modal-body">
                   <div className="vertical-align">
                     <div className="page-content vertical-align-middle">
-                      { !this.state.error &&
+                    { !this.state.error &&
+                      this.state.open &&
                         <QrReader
                         delay={ 50 }
                         className="qr-reader-comp"
