@@ -120,7 +120,7 @@ export const TxTypeRender = function(category) {
   } else if (category === 'self') {
     return (
       <span className="label label-info self-send">
-        <span>self</span>
+        <span>{ translate('INDEX.SELF_SM') }</span>
       </span>
     );
   }
@@ -162,8 +162,8 @@ export const TxAmountRender = function(tx) {
       { tx.interest &&
         <span
           className="tx-interest"
-          data-tip={ `${translate('DASHBOARD.SPV_CLAIMED_INTEREST')} ${Math.abs(tx.interest)}` }>
-          +{ Math.abs(tx.interest) }
+          data-tip={ `${translate('DASHBOARD.SPV_CLAIMED_INTEREST')} ${Math.abs(Number(tx.interest))}` }>
+          +{ Math.abs(Number(tx.interest)) }
         </span>
       }
       { tx.interest &&

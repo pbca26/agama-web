@@ -1,5 +1,10 @@
 body {
   padding-top: 44px;
+  background-color: #fff !important;
+
+  &.page-dark {
+    background-color: rgba(33, 33, 33, 0.85) !important;
+  }
 }
 
 #app {
@@ -50,7 +55,7 @@ body {
 }
 
 .selectable {
-  user-select: all;
+  user-select: text;
 }
 
 .seed-toggle {
@@ -226,4 +231,18 @@ body {
 }
 .nbsp-l {
   margin-left: 3px;
+}
+
+.full-height {
+  background-color: #fff;
+}
+
+.page-dark {
+  .full-height {
+    background-color: transparent;
+  }
+}
+
+.modal-header .close {
+  margin-top: -3px;
 }

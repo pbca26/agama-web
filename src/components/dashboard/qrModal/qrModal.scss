@@ -23,7 +23,7 @@
   overflow: hidden;
 }
 
-#QRModal {
+.qr-modal {
   .modal-body {
     text-align: center;
 
@@ -31,4 +31,8 @@
       text-decoration: none;
     }
   }
+}
+
+.qr-modal-reader {
+  font-size: 16px;
 }
