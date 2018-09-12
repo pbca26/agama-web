@@ -228,6 +228,16 @@ body {
   margin-left: 3px;
 }
 
-.full-height {
+.full-height.unselectable {
   background-color: #fff;
+}
+
+.page-dark {
+  .full-height.unselectable {
+    background-color: transparent;
+  }
+}
+
+.modal-header .close {
+  margin-top: -3px;
 }
