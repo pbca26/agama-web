@@ -6,6 +6,7 @@ let Config = {
   roundValues: false,
   fiatRates: true,
   // single coin option
+  sendCoinAllowFiatEntry: false,
   whitelabel: true,
   wlConfig: {
     enableAllCoins: false,
