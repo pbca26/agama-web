@@ -30,7 +30,7 @@ export const AddressListRender = function() {
           <li className="selected">
             <a>
               <span className="text">
-                [ { _balance } { _coin.toUpperCase() } ] { this.props.Dashboard.electrumCoins[_coin].pub }
+                [ { _balance } { Config.sendCoinAllowFiatEntry && Config.fiatRates && this.state.valuesInFiat && this.props.Dashboard.prices ? 'USD' : _coin.toUpperCase() } ] { this.props.Dashboard.electrumCoins[_coin].pub }
               </span>
               <span
                 className="icon fa-check check-mark pull-right"
@@ -76,7 +76,7 @@ export const _SendFormRender = function() {
             autoComplete="off"
             required />
         </div>
-        <div className="col-lg-12 form-group form-material">
+        <div className="col-xlg-12 form-group form-material">
           <button
             type="button"
             className="btn btn-default btn-send-self"
@@ -99,13 +99,24 @@ export const _SendFormRender = function() {
             autoComplete="off" />
         </div>
         { this.renderBTCFees() }
-        <div className="col-lg-12">
+        <div className="col-xlg-12">
           <button
             type="button"
             className="btn btn-primary waves-effect waves-light pull-right"
             onClick={ this.props.renderFormOnly ? this.handleSubmit : () => this.changeSendCoinStep(1) }
             disabled={ !this.state.sendTo || !this.state.amount }>
-            { translate('INDEX.SEND') } { this.state.amount } { this.props.ActiveCoin.coin.toUpperCase() }
+            { Config.sendCoinAllowFiatEntry &&
+              Config.fiatRates &&
+              this.state.valuesInFiat &&
+              this.props.Dashboard.prices &&
+              <span>{ translate('INDEX.SEND') } { Number(this.state.amount) } USD / { Number((this.state.amount / this.getFiatPrice()).toFixed(8)) } { this.props.ActiveCoin.coin.toUpperCase() }</span>
+            }
+            { (!Config.sendCoinAllowFiatEntry ||
+              !Config.fiatRates ||
+              !this.state.valuesInFiat ||
+              !this.props.Dashboard.prices) &&
+              <span>{ translate('INDEX.SEND') } { Number(this.state.amount) } { this.props.ActiveCoin.coin.toUpperCase() }</span>
+            }
           </button>
         </div>
       </div>
@@ -163,7 +174,38 @@ export const SendRender = function() {
                   setRecieverFromScan={ this.setRecieverFromScan } />
               </div>
               <div className="panel-body container-fluid">
-              { this.SendFormRender() }
+                { Config.sendCoinAllowFiatEntry &&
+                  Config.fiatRates &&
+                  this.props.Dashboard.prices &&
+                  <div className="send-fiat-entry-toggle padding-left-10 margin-bottom-15">
+                    <span className="pointer">
+                      <label className="switch">
+                        <input
+                          type="checkbox"
+                          readOnly
+                          checked={ this.state.valuesInFiat } />
+                        <div
+                          className="slider"
+                          onClick={ this.toggleValuesInFiat }></div>
+                      </label>
+                      <div
+                        className="toggle-label"
+                        onClick={ this.toggleValuesInFiat }>
+                        { translate('SEND.USE_FIAT_VALUES') }
+                      </div>
+                    </span>
+                    <span>
+                      <i
+                        className="icon fa-question-circle settings-help"
+                        data-tip={ translate('SEND.FIAT_VALUES_ENTRY_WARNING', this.props.ActiveCoin.coin.toUpperCase()) }
+                        data-html={ true }></i>
+                      <ReactTooltip
+                        effect="solid"
+                        className="text-top" />
+                    </span>
+                  </div>
+                }
+                { this.SendFormRender() }
               </div>
             </div>
           </div>
@@ -177,12 +219,24 @@ export const SendRender = function() {
                   <div className="col-xs-12">
                     <strong>{ translate('INDEX.TO') }</strong>
                   </div>
-                  <div className="col-lg-6 col-sm-6 col-xs-12 overflow-hidden selectable">{ this.state.sendTo }</div>
+                  <div className="col-lg-6 col-sm-6 col-xs-12 overflow-hidden selectable">
+                  { this.state.sendTo }
+                  </div>
                   <div className="col-lg-6 col-sm-6 col-xs-6">
-                    { this.state.amount } { _coin.toUpperCase() }
+                    { Config.sendCoinAllowFiatEntry &&
+                        Config.fiatRates &&
+                        this.state.valuesInFiat &&
+                        this.props.Dashboard.prices &&
+                        <span>{ Number(this.state.amount) } USD / { Number((this.state.amount / this.getFiatPrice()).toFixed(8)) } { _coin.toUpperCase() }</span>
+                      }
+                      { (!Config.sendCoinAllowFiatEntry ||
+                        !Config.fiatRates ||
+                        !this.state.valuesInFiat ||
+                        !this.props.Dashboard.prices) &&
+                        <span>{ Number(this.state.amount) } { _coin.toUpperCase() }</span>
+                      }
                   </div>
                 </div>
-
                 { this.state.sendFrom &&
                   <div className="row padding-top-20">
                     <div className="col-xs-12">
@@ -190,7 +244,18 @@ export const SendRender = function() {
                     </div>
                     <div className="col-lg-6 col-sm-6 col-xs-12 overflow-hidden">{ this.state.sendFrom }</div>
                     <div className="col-lg-6 col-sm-6 col-xs-6 confirm-currency-send-container">
-                      { Number(this.state.amount) } { _coin.toUpperCase() }
+                      { Config.sendCoinAllowFiatEntry &&
+                        Config.fiatRates &&
+                        this.state.valuesInFiat &&
+                        this.props.Dashboard.prices &&
+                        <span>{ Number(this.state.amount) } USD / { Number((this.state.amount / this.getFiatPrice()).toFixed(8)) } { _coin.toUpperCase() }</span>
+                      }
+                      { (!Config.sendCoinAllowFiatEntry ||
+                        !Config.fiatRates ||
+                        !this.state.valuesInFiat ||
+                        !this.props.Dashboard.prices) &&
+                        <span>{ Number(this.state.amount) } { _coin.toUpperCase() }</span>
+                      }
                     </div>
                   </div>
                 }
@@ -200,7 +265,18 @@ export const SendRender = function() {
                       <strong>{ translate('SEND.FEE') }</strong>
                     </div>
                     <div className="col-lg-12 col-sm-12 col-xs-12">
-                      { formatValue(fromSats(this.state.spvPreflightRes.fee)) } ({ this.state.spvPreflightRes.fee } { translate('SEND.SATS_SM') })
+                      { Config.sendCoinAllowFiatEntry &&
+                        Config.fiatRates &&
+                        this.state.valuesInFiat &&
+                        this.props.Dashboard.prices &&
+                        <span>{ Number((fromSats(this.state.spvPreflightRes.fee) * this.getFiatPrice()).toFixed(8)) } USD / { formatValue(fromSats(this.state.spvPreflightRes.fee)) } { _coin.toUpperCase() } ({ this.state.spvPreflightRes.fee } { translate('SEND.SATS_SM') })</span>
+                      }
+                      { (!Config.sendCoinAllowFiatEntry ||
+                        !Config.fiatRates ||
+                        !this.state.valuesInFiat ||
+                        !this.props.Dashboard.prices) &&
+                        <span>{ formatValue(fromSats(this.state.spvPreflightRes.fee)) } ({ this.state.spvPreflightRes.fee } { translate('SEND.SATS_SM') })</span>
+                      }
                     </div>
                   </div>
                 }
@@ -217,29 +293,62 @@ export const SendRender = function() {
                             effect="solid"
                             className="text-left" />
                         </span>
-                        { formatValue(fromSats(this.state.spvPreflightRes.value) + fromSats(this.state.spvPreflightRes.fee)) }
+                        { Config.sendCoinAllowFiatEntry &&
+                          Config.fiatRates &&
+                          this.state.valuesInFiat &&
+                          this.props.Dashboard.prices &&
+                          <span>{ Number((formatValue(fromSats(this.state.spvPreflightRes.value) + fromSats(this.state.spvPreflightRes.fee)) * this.getFiatPrice()).toFixed(8)) } USD / { formatValue(fromSats(this.state.spvPreflightRes.value) + fromSats(this.state.spvPreflightRes.fee)) } { _coin.toUpperCase() }</span>
+                        }
+                        { (!Config.sendCoinAllowFiatEntry ||
+                          !Config.fiatRates ||
+                          !this.state.valuesInFiat ||
+                          !this.props.Dashboard.prices) &&
+                          <span>{ formatValue(fromSats(this.state.spvPreflightRes.value) + fromSats(this.state.spvPreflightRes.fee)) }</span>
+                        }
                       </div>
                     }
                     { this.state.spvPreflightRes.estimatedFee < 0 &&
                       <div className="col-lg-12 col-sm-12 col-xs-12 padding-bottom-20">
-                        <strong className="nbsp">KMD { translate('SEND.REWARDS_SM') }</strong>&nbsp;
-                        <span className="nbsp">{ Math.abs(formatValue(fromSats(this.state.spvPreflightRes.estimatedFee))) }</span>
+                        <strong className="nbsp">KMD { translate('SEND.REWARDS_SM') }</strong>
+                        { Config.sendCoinAllowFiatEntry &&
+                          Config.fiatRates &&
+                          this.state.valuesInFiat &&
+                          this.props.Dashboard.prices &&
+                          <span>{ Number((Math.abs(formatValue(fromSats(this.state.spvPreflightRes.estimatedFee))) * this.getFiatPrice()).toFixed(8)) } USD / { Math.abs(formatValue(fromSats(this.state.spvPreflightRes.estimatedFee))) } { _coin.toUpperCase() }</span>
+                        }
+                        { (!Config.sendCoinAllowFiatEntry ||
+                          !Config.fiatRates ||
+                          !this.state.valuesInFiat ||
+                          !this.props.Dashboard.prices) &&
+                          <span className="nbsp">{ Math.abs(formatValue(fromSats(this.state.spvPreflightRes.estimatedFee))) }</span>
+                        }
                         { translate('SEND.TO_S,') } { this.props.Dashboard.electrumCoins[_coin].pub }
                       </div>
                     }
                     { this.state.spvPreflightRes.change > 0 &&
                       <div className="col-lg-12 col-sm-12 col-xs-12">
                         <strong className="nbsp display--block">{ translate('SEND.TOTAL') }</strong>
-                        { formatValue(fromSats(this.state.spvPreflightRes.value) + fromSats(this.state.spvPreflightRes.fee)) }
+                        { Config.sendCoinAllowFiatEntry &&
+                          Config.fiatRates &&
+                          this.state.valuesInFiat &&
+                          this.props.Dashboard.prices &&
+                          <span>{ Number((formatValue(fromSats(this.state.spvPreflightRes.value) + fromSats(this.state.spvPreflightRes.fee)) * this.getFiatPrice()).toFixed(8)) } USD / { formatValue(fromSats(this.state.spvPreflightRes.value) + fromSats(this.state.spvPreflightRes.fee)) } { _coin.toUpperCase() }</span>
+                        }
+                        { (!Config.sendCoinAllowFiatEntry ||
+                          !Config.fiatRates ||
+                          !this.state.valuesInFiat ||
+                          !this.props.Dashboard.prices) &&
+                          <span>{ formatValue(fromSats(this.state.spvPreflightRes.value) + fromSats(this.state.spvPreflightRes.fee)) }</span>
+                        }
                       </div>
                     }
                   </div>
                 }
                 { this.state.spvPreflightSendInProgress &&
-                  <div className="padding-top-20">{ translate('SEND.SPV_VERIFYING') }...</div>
+                  <div className="padding-top-20 fs-15 col-lg-12 col-sm-12 col-xs-12 padding-bottom-40">{ translate('SEND.SPV_VERIFYING') }...</div>
                 }
                 { this.state.spvVerificationWarning &&
-                  <div className="padding-top-20 fs-15">
+                  <div className="padding-top-20 fs-15 col-lg-12 col-sm-12 col-xs-12 padding-bottom-40">
                     <strong className="color-warning nbsp">{ translate('SEND.WARNING') }:</strong>
                     <span>{ translate('SEND.WARNING_SPV_P1') }</span>
                     { translate('SEND.WARNING_SPV_P2') }
@@ -311,7 +420,18 @@ export const SendRender = function() {
                           { translate('INDEX.AMOUNT') }
                           </td>
                           <td className="padding-left-30">
-                            { this.state.amount }
+                          { Config.sendCoinAllowFiatEntry &&
+                            Config.fiatRates &&
+                            this.state.valuesInFiat &&
+                            this.props.Dashboard.prices &&
+                            <span>{ Number(this.state.amount) } USD / { Number((this.state.amount / this.getFiatPrice()).toFixed(8)) } { _coin.toUpperCase() }</span>
+                          }
+                          { (!Config.sendCoinAllowFiatEntry ||
+                            !Config.fiatRates ||
+                            !this.state.valuesInFiat ||
+                            !this.props.Dashboard.prices) &&
+                            <span>{ Number(this.state.amount) } { _coin.toUpperCase() }</span>
+                          }
                           </td>
                         </tr>
                         <tr>

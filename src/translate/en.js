@@ -388,6 +388,9 @@ const LANG_EN = {
     RAW_INFO: 'Raw info',
   },
   SEND: {
+    IN_SM: 'in',
+    FIAT_VALUES_ENTRY_WARNING: 'Notice: current prices you see may fluctuate across different services.<br>Consider this feature as highly experimental.<br>It\'s safer to enter values in @template@ instead of relying on fiat prices.',
+    USE_FIAT_VALUES: 'Use fiat values',
     CONF_TIME_WITHIN_60_MIN: 'within 60 min',
     CONF_TIME_WITHIN_3O_MIN: 'within 30 min',
     CONF_TIME_LESS_THAN_30_MIN: 'within less than 30 min',

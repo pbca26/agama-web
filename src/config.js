@@ -7,6 +7,7 @@ let Config = {
   fiatRates: true,
   // single coin option
   whitelabel: false,
+  sendCoinAllowFiatEntry: false,
   /*preload: {
     seed: '',
     coins: ['kmd', 'chips'],
