@@ -88,19 +88,21 @@ class WalletsBalance extends React.Component {
       let _fiatPriceTotal = 0;
       let _fiatPricePerCoin = 0;
 
-      if (_coin === 'KMD') {
-        if (_prices.fiat &&
-            _prices.fiat.USD) {
-          _fiatPriceTotal = formatValue(_balance * _prices.fiat.USD);
-          _fiatPricePerCoin = _prices.fiat.USD;
-        }
-      } else {
-        if (_prices.fiat &&
-            _prices.fiat.USD &&
-            _prices[`${_coin}/KMD`] &&
-            _prices[`${_coin}/KMD`].low) {
-          _fiatPriceTotal = _balance * _prices.fiat.USD * _prices[`${_coin}/KMD`].low;
-          _fiatPricePerCoin = _prices.fiat.USD * _prices[`${_coin}/KMD`].low;
+      if (_prices) {
+        if (_coin === 'KMD') {
+          if (_prices.fiat &&
+              _prices.fiat.USD) {
+            _fiatPriceTotal = formatValue(_balance * _prices.fiat.USD);
+            _fiatPricePerCoin = _prices.fiat.USD;
+          }
+        } else {
+          if (_prices.fiat &&
+              _prices.fiat.USD &&
+              _prices[`${_coin}/KMD`] &&
+              _prices[`${_coin}/KMD`].low) {
+            _fiatPriceTotal = _balance * _prices.fiat.USD * _prices[`${_coin}/KMD`].low;
+            _fiatPricePerCoin = _prices.fiat.USD * _prices[`${_coin}/KMD`].low;
+          }
         }
       }
 
