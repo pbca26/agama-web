@@ -118,8 +118,10 @@ const LoginRender = function() {
                 <span>
                   <i className="icon fa-warning seed-extra-spaces-warning"
                     data-tip={ translate('LOGIN.SEED_TRAILING_CHARS') }
-                    data-html={ true }></i>
+                    data-html={ true }
+                    data-for="login1"></i>
                   <ReactTooltip
+                    id="login1"
                     effect="solid"
                     className="text-left" />
                 </span>
@@ -286,8 +288,10 @@ const LoginRender = function() {
                           ${ translate('LOGIN.SPV_MODE_DESC_P3') }
                           <div className="padding-top-10">${ translate('LOGIN.SPV_MODE_DESC_P4') }</div>`
                         }
-                        data-html={ true }></i>
+                        data-html={ true }
+                        data-for="login2"></i>
                       <ReactTooltip
+                        id="login2"
                         effect="solid"
                         className="text-left" />
                     </div>

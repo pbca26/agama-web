@@ -64,9 +64,11 @@ const NavbarRender = function() {
             { !navigator.onLine &&
               <li
                 className="nav-top-menu offline"
-                data-tip={ translate('INDEX.WALLET_OFFLINE') }>
+                data-tip={ translate('INDEX.WALLET_OFFLINE') }
+                data-for="navbar">
                 <span className="offline-icon"></span> { translate('INDEX.OFFLINE') }
                 <ReactTooltip
+                  id="navbar"
                   effect="solid"
                   className="text-left" />
               </li>

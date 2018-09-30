@@ -113,8 +113,13 @@ class WalletsBalance extends React.Component {
             _fiatPricePerCoin > 0 &&
             <div
               data-tip={ `${translate('INDEX.PRICE_PER')} ${_coin} ~ $${formatValue(_fiatPricePerCoin)}` }
+              data-for="balance1"
               className="text-right">${ formatValue(_fiatPriceTotal) }</div>
           }
+          <ReactTooltip
+            id="balance1"
+            effect="solid"
+            className="text-left" />
         </div>
       );
     } else {

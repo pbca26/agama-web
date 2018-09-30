@@ -198,8 +198,10 @@ export const SendRender = function() {
                       <i
                         className="icon fa-question-circle settings-help"
                         data-tip={ translate('SEND.FIAT_VALUES_ENTRY_WARNING', this.props.ActiveCoin.coin.toUpperCase()) }
-                        data-html={ true }></i>
+                        data-html={ true }
+                        data-for="sendCoin2"></i>
                       <ReactTooltip
+                        id="sendCoin2"
                         effect="solid"
                         className="text-top" />
                     </span>
@@ -288,8 +290,10 @@ export const SendRender = function() {
                         <span className="nbsp">
                           <i
                             className="icon fa-question-circle settings-help send-btc"
-                            data-tip={ translate('SEND.TOTAL_DESC') }></i>
+                            data-tip={ translate('SEND.TOTAL_DESC') }
+                            data-for="sendCoin3"></i>
                           <ReactTooltip
+                            data-for="sendCoin3"
                             effect="solid"
                             className="text-left" />
                         </span>
