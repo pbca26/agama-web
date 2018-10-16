@@ -210,8 +210,10 @@ class ExportKeysPanel extends React.Component {
                   <span>
                     <i className="icon fa-warning seed-extra-spaces-warning"
                       data-tip={ translate('LOGIN.SEED_TRAILING_CHARS') }
-                      data-html={ true }></i>
+                      data-html={ true }
+                      data-for="settingsExportKeys"></i>
                     <ReactTooltip
+                      id="settingsExportKeys"
                       effect="solid"
                       className="text-left" />
                   </span>

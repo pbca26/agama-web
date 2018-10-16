@@ -19,8 +19,10 @@ export const TxConfsRender = function(confs) {
       <span>
         <i
           className="icon fa-warning color-warning margin-right-5"
-          data-tip={ translate('DASHBOARD.FAILED_TX_INFO') }></i>
+          data-tip={ translate('DASHBOARD.FAILED_TX_INFO') }
+          data-for="txHistory1"></i>
         <ReactTooltip
+          id="txHistory1"
           effect="solid"
           className="text-left" />
       </span>
@@ -130,24 +132,29 @@ export const TxAmountRender = function(tx) {
   if (Config.roundValues) {
     return (
       <span>
-        <span data-tip={ tx.amount }>
+        <span
+          data-for="txHistory3"
+          data-tip={ tx.amount }>
           { Math.abs(tx.interest) !== Math.abs(tx.amount) &&
             <span>{ formatValue(tx.amount) || translate('DASHBOARD.UNKNOWN') }</span>
           }
           { tx.interest &&
             <span
               className="tx-interest"
-              data-tip={ `${translate('DASHBOARD.SPV_CLAIMED_INTEREST')} ${formatValue(Math.abs(tx.interest))}` }>
+              data-tip={ `${translate('DASHBOARD.SPV_CLAIMED_INTEREST')} ${formatValue(Math.abs(tx.interest))}` }
+              data-for="txHistory2">
               +{ formatValue(Math.abs(tx.interest)) }
             </span>
           }
           { tx.interest &&
             <ReactTooltip
+              id="txHistory2"
               effect="solid"
               className="text-left" />
           }
         </span>
         <ReactTooltip
+          id="txHistory3"
           effect="solid"
           className="text-left" />
       </span>
@@ -162,12 +169,14 @@ export const TxAmountRender = function(tx) {
       { tx.interest &&
         <span
           className="tx-interest"
-          data-tip={ `${translate('DASHBOARD.SPV_CLAIMED_INTEREST')} ${Math.abs(Number(tx.interest))}` }>
+          data-tip={ `${translate('DASHBOARD.SPV_CLAIMED_INTEREST')} ${Math.abs(Number(tx.interest))}` }
+          data-for="txHistory4">
           +{ Math.abs(Number(tx.interest)) }
         </span>
       }
       { tx.interest &&
         <ReactTooltip
+          id="txHistory4"
           effect="solid"
           className="text-left" />
       }

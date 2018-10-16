@@ -39,8 +39,10 @@ const WalletsBalanceRender = function() {
                         <span>
                           <i
                             className="icon fa-info-circle margin-left-5 icon-unconf-balance"
+                            data-for="balance2"
                             data-tip={ `${translate('INDEX.UNCONFIRMED_BALANCE')} ${Math.abs(this.props.ActiveCoin.balance.unconfirmed)}` }></i>
                           <ReactTooltip
+                            id="balance2"
                             effect="solid"
                             className="text-left" />
                         </span>
@@ -69,10 +71,12 @@ const WalletsBalanceRender = function() {
                       </div>
                       <span
                         className="pull-right padding-top-10 font-size-22"
-                        data-tip={ Config.roundValues ? this.renderBalance('interest') : '' }>
+                        data-tip={ Config.roundValues ? this.renderBalance('interest') : '' }
+                        data-for="balance3">
                         { this.renderBalance('interest', true) }
                       </span>
                       <ReactTooltip
+                        id="balance3"
                         effect="solid"
                         className="text-left" />
                     </div>
@@ -96,10 +100,12 @@ const WalletsBalanceRender = function() {
                       </div>
                       <span
                         className="pull-right padding-top-10 font-size-22"
-                        data-tip={ Config.roundValues ? this.renderBalance('total') : '' }>
+                        data-tip={ Config.roundValues ? this.renderBalance('total') : '' }
+                        data-for="balance4">
                         { this.renderBalance('total', true) }
                       </span>
                       <ReactTooltip
+                        id="balance4"
                         effect="solid"
                         className="text-left" />
                     </div>

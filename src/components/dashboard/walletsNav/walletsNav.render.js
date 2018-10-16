@@ -62,8 +62,10 @@ export const WalletsNavWithWalletRender = function() {
               <span>
                 <i
                   className="icon fa-question-circle settings-help"
-                  data-tip={ translate('INDEX.LITE_MODE_WATCHONLY') }></i>
+                  data-tip={ translate('INDEX.LITE_MODE_WATCHONLY') }
+                  data-for="walletsNav"></i>
                 <ReactTooltip
+                  id="walletsNav"
                   effect="solid"
                   className="text-top" />
               </span>

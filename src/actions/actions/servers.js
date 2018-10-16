@@ -19,11 +19,13 @@ export const shepherdSelectProxy = () => {
 
 export const shepherdSelectRandomCoinServer = (coin) => {
   // pick a random proxy server
-  let _randomServer = electrumServers[coin].serverList[getRandomIntInclusive(0, electrumServers[coin].serverList.length - 1)].split(':');
+  let _randomServer;
 
   if (Config.whitelabel &&
       Config.wlConfig.coin.ticker.toLowerCase() === coin) {
     _randomServer = Config.wlConfig.serverList[getRandomIntInclusive(0, Config.wlConfig.serverList.length - 1)].split(':');
+  } else {
+    _randomServer = electrumServers[coin].serverList[getRandomIntInclusive(0, electrumServers[coin].serverList.length - 1)].split(':');    
   }
 
   appData.servers[coin] = {

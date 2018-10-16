@@ -17,9 +17,11 @@ export const TxLocktimeRender = function(locktime) {
       { !locktime &&
         <i
           data-tip={ translate('CLAIM_INTEREST.LOCKTIME_IS_UNSET') }
+          data-for="interestModal"
           className="fa-exclamation-circle red"></i>
       }
       <ReactTooltip
+        id="interestModal"
         effect="solid"
         className="text-left" />
     </span>

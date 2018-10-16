@@ -539,8 +539,10 @@ class SendCoin extends React.Component {
                 <i
                   className="icon fa-question-circle settings-help"
                   data-html={ true }
-                  data-tip={ _toolTipContent }></i>
+                  data-tip={ _toolTipContent }
+                  data-for="sendCoin1"></i>
                 <ReactTooltip
+                  id="sendCoin1"
                   effect="solid"
                   className="text-left" />
               </span>

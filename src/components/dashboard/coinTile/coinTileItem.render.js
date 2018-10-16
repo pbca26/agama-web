@@ -33,8 +33,10 @@ const CoinTileItemRender = function() {
         className="btn btn-default btn-xs clipboard-edexaddr coin-tile-context-menu-trigger coind-actions-menu">
         <i
           data-tip={ translate('INDEX.TOGGLE_COIN_CONTEXT_MENU') }
+          data-for="coinTile1"
           className="fa fa-ellipsis-v coin-tile-context-menu-trigger"></i>
         <ReactTooltip
+          id="coinTile1"
           effect="solid"
           className="text-left" />
       </button>
@@ -55,9 +57,11 @@ const CoinTileItemRender = function() {
         this.props.Dashboard.electrumCoins[item.coin].serverList === 'none' &&
         <i
           data-tip={ translate('SETTINGS.SPV_SINGLE_SERVER_NOTICE') }
+          data-for="coinTile2"
           className="icon fa-info-circle icon-spv-connection-warning"></i>
       }
       <ReactTooltip
+        id="coinTile2"
         effect="solid"
         className="text-left" />
     </div>
