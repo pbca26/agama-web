@@ -14,8 +14,8 @@
 }
 
 .qr-reader-comp {
-  height: 281;
-  width: 500;
+  width: calc(100vw - 50px);
+  max-width: 500px;
   transform: scaleX(-1);
 }
 
