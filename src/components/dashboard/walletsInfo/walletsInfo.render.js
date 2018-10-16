@@ -44,7 +44,7 @@ const WalletsInfoRender = function() {
                 <tr>
                   <td>{ translate('INDEX.PAY_TX_FEE') }</td>
                   <td className="selectable">
-                    { fromSats(electrumServers[_coin].txfee) } ({ electrumServers[_coin].txfee } sats)
+                    { fromSats(electrumServers[_coin].txfee || 10000) } ({ electrumServers[_coin].txfee || 10000 } sats)
                   </td>
                 </tr>
                 <tr>
