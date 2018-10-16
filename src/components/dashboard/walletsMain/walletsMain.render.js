@@ -34,7 +34,7 @@ const WalletsMainRender = function() {
                   src={ `${assetsPath.coinLogo}/kmd.png` } />
               }
               <span className={ `margin-left-20 easydex-section-image ${(isNativeLogoWide ? 'hide' : '')}` }>
-                { translate((isKomodoCoin(_coin) && _coin !== 'kmd' && _coin !== 'chips' ? 'ASSETCHAINS.' : 'CRYPTO.') + _coin.toUpperCase()) }
+                { Config.whitelabel && Config.wlConfig.coin.name ? Config.wlConfig.coin.name : (translate((isKomodoCoin(_coin) && _coin !== 'kmd' && _coin !== 'chips' ? 'ASSETCHAINS.' : 'CRYPTO.') + _coin.toUpperCase())) }
               </span>
             </li>
           </ol>
