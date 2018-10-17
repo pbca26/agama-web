@@ -11,7 +11,7 @@ import {
 } from 'agama-wallet-lib/src/utils';
 
 export const AddressListRender = function() {
-  const _balance = this.props.ActiveCoin.balance.balance - Math.abs(this.props.ActiveCoin.balance.unconfirmed);
+  const _balance = this.props.ActiveCoin.balance.balance + this.props.ActiveCoin.balance.unconfirmed;
   const _coin = this.props.ActiveCoin.coin;
 
   return (
