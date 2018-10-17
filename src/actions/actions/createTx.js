@@ -28,7 +28,7 @@ export const shepherdElectrumSendPromise = (coin, value, sendToAddress, changeAd
         _network = btcNetworks[coin];
       }
 
-      const _data = transactionBuilder.data(
+      let _data = transactionBuilder.data(
         _network,
         value,
         fee,
@@ -39,7 +39,7 @@ export const shepherdElectrumSendPromise = (coin, value, sendToAddress, changeAd
 
       Config.log('send data', _data);
 
-      const _tx = transactionBuilder.transaction(
+      let _tx = transactionBuilder.transaction(
         sendToAddress,
         changeAddress,
         appData.keys[coin].priv,
@@ -58,7 +58,7 @@ export const shepherdElectrumSendPromise = (coin, value, sendToAddress, changeAd
         value = value - 10000;
         Config.log('double kmd interest fee');
 
-        const _data = transactionBuilder.data(
+        _data = transactionBuilder.data(
           _network,
           value,
           fee,
@@ -69,7 +69,7 @@ export const shepherdElectrumSendPromise = (coin, value, sendToAddress, changeAd
   
         Config.log('send data', _data);
   
-        const _tx = transactionBuilder.transaction(
+        _tx = transactionBuilder.transaction(
           sendToAddress,
           changeAddress,
           appData.keys[coin].priv,
