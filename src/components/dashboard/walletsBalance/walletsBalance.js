@@ -72,14 +72,16 @@ class WalletsBalance extends React.Component {
         if (type === 'transparent' &&
             _balanceProps &&
             _balanceProps.balance) {
-          _balance = Number(_balanceProps.total) + Number(_balanceProps.unconfirmed);
+          _balance = Number(_balanceProps.balance) + Number(_balanceProps.unconfirmed);
         }
       } else {
-        _balance = Number(_balanceProps.total) + Number(_balanceProps.unconfirmed);
+        _balance = Number(_balanceProps.balance) + Number(_balanceProps.unconfirmed);
       }
     }
 
     _balance = Number(_balance.toFixed(8));
+
+    console.warn(_balance);
 
     if (Config.fiatRates &&
         this.props.Dashboard.prices &&

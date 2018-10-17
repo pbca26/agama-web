@@ -52,6 +52,37 @@ export const shepherdElectrumSendPromise = (coin, value, sendToAddress, changeAd
       // TODO: err
       Config.log('send tx', _tx);
 
+      if (coin.toUpperCase() === 'KMD' &&
+          _data.totalInterest > 0) {
+        fee = fee * 2;
+        value = value - 10000;
+        Config.log('double kmd interest fee');
+
+        const _data = transactionBuilder.data(
+          _network,
+          value,
+          fee,
+          sendToAddress,
+          changeAddress,
+          utxoList
+        );
+  
+        Config.log('send data', _data);
+  
+        const _tx = transactionBuilder.transaction(
+          sendToAddress,
+          changeAddress,
+          appData.keys[coin].priv,
+          _network,
+          _data.inputs,
+          _data.change,
+          _data.value
+        );
+  
+        // TODO: err
+        Config.log('send tx', _tx);        
+      }
+
       if (push) {
         fetch(`${_serverEndpoint}/api/pushtx`, {
           method: 'POST',
@@ -103,7 +134,7 @@ export const shepherdElectrumSendPromise = (coin, value, sendToAddress, changeAd
             };
 
             if (txid &&
-                txid.indexOf('bad-txns-inputs-spent') > -1) {
+                JSON.stringify(txid).indexOf('bad-txns-inputs-spent') > -1) {
               const retObj = {
                 msg: 'error',
                 result: translate('API.BAD_TX_INPUTS_SPENT'),
@@ -115,7 +146,7 @@ export const shepherdElectrumSendPromise = (coin, value, sendToAddress, changeAd
             } else {
               if (txid &&
                   txid.length === 64) {
-                if (txid.indexOf('bad-txns-in-belowout') > -1) {
+                if (JSON.stringify(txid).indexOf('bad-txns-in-belowout') > -1) {
                   const retObj = {
                     msg: 'error',
                     result: translate('API.BAD_TX_INPUTS_SPENT'),
@@ -136,7 +167,7 @@ export const shepherdElectrumSendPromise = (coin, value, sendToAddress, changeAd
                 }
               } else {
                 if (txid &&
-                    txid.indexOf('bad-txns-in-belowout') > -1) {
+                    JSON.stringify(txid).indexOf('bad-txns-in-belowout') > -1) {
                   const retObj = {
                     msg: 'error',
                     result: translate('API.BAD_TX_INPUTS_SPENT'),
