@@ -81,8 +81,6 @@ class WalletsBalance extends React.Component {
 
     _balance = Number(_balance.toFixed(8));
 
-    console.warn(_balance);
-
     if (Config.fiatRates &&
         this.props.Dashboard.prices &&
         returnFiatPrice) {
@@ -148,6 +146,13 @@ class WalletsBalance extends React.Component {
         <br />
       </span>
     );
+  }
+
+  renderUnconfBalanceIcon() {
+    if (this.props.ActiveCoin.balance.unconfirmed &&
+        Number(this.props.ActiveCoin.balance.unconfirmed) !== 0) {
+      return true;
+    }
   }
 
   render() {
