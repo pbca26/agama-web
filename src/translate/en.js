@@ -1,5 +1,6 @@
 const LANG_EN = {
   CLAIM_INTEREST: {
+    CLAIM_INTEREST_FEE: 'Claim rewards fee',    
     LOCKTIME_IS_UNSET: 'Locktime is unset! Your UTXO is not accruing interest.',
     LOCKTIME_IS_SET_TO: 'Locktime is set to',
     SHOW_ZERO_INTEREST: 'Show zero rewards',

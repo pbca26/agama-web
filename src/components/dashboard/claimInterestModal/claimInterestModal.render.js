@@ -55,6 +55,9 @@ export const _ClaimInterestTableRender = function() {
         <p>
           <strong>{ translate('CLAIM_INTEREST.TIP') }:</strong> { translate('CLAIM_INTEREST.TIP_DESC') }
         </p>
+        <p>
+          <strong>{ translate('CLAIM_INTEREST.CLAIM_INTEREST_FEE') }:</strong> 0.0002 KMD (20000 sats).
+        </p>
       </div>
       { this.state.totalInterest > 0 &&
         <div className={ 'text-left padding-bottom-20' + (this.state.displayShowZeroInterestToggle ? ' padding-top-40' : '') }>
