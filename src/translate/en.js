@@ -483,6 +483,7 @@ const LANG_EN = {
     VRSC: 'VerusCoin',
     CALL: 'Capital',
     CCL: 'CoinCollect',
+    DION: 'DionPay',
   },
   CRYPTO: {
     KMD: 'Komodo',
