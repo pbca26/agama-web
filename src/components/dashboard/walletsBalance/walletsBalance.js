@@ -60,7 +60,7 @@ class WalletsBalance extends React.Component {
         if (type === 'total' &&
             _balanceProps &&
             _balanceProps.total) {
-          _balance = Number(_balanceProps.total) - Number(Math.abs(_balanceProps.unconfirmed));
+          _balance = Number(_balanceProps.total) - ((_balanceProps.unconfirmed < 0 ? -1 : 1) * Number(Math.abs(_balanceProps.unconfirmed)));
         }
 
         if (type === 'interest' &&
@@ -72,10 +72,10 @@ class WalletsBalance extends React.Component {
         if (type === 'transparent' &&
             _balanceProps &&
             _balanceProps.balance) {
-          _balance = Number(_balanceProps.balance) - Number(Math.abs(_balanceProps.unconfirmed));
+          _balance = Number(_balanceProps.total) - ((_balanceProps.unconfirmed > 0 ? -1 : 1) * Number(Math.abs(_balanceProps.unconfirmed)));
         }
       } else {
-        _balance = Number(_balanceProps.balance) - Number(Math.abs(_balanceProps.unconfirmed));
+        _balance = Number(_balanceProps.total) - ((_balanceProps.unconfirmed > 0 ? -1 : 1) * Number(Math.abs(_balanceProps.unconfirmed)));
       }
     }
 
