@@ -37,7 +37,7 @@ import electrumServers from 'agama-wallet-lib/src/electrum-servers';
 import btcNetworks from 'agama-wallet-lib/src/bitcoinjs-networks';
 import { addressVersionCheck } from 'agama-wallet-lib/src/keys';
 
-const SPV_MAX_LOCAL_TIMESTAMP_DEVIATION = 60; // seconds
+const SPV_MAX_LOCAL_TIMESTAMP_DEVIATION = 900; // seconds
 
 const _feeLookup = [
   'fastestFee',
