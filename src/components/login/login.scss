@@ -274,3 +274,11 @@ option.login-option {
   font-size: 20px;
   color: rgb(255, 75, 0);
 }
+
+.qr-modal-login-block {
+  .modal-content {
+    .page-content {
+      width: inherit;
+    }
+  }
+}

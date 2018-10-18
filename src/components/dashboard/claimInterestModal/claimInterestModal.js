@@ -28,7 +28,7 @@ import {
   checkTimestamp,
 } from 'agama-wallet-lib/src/time';
 
-const SPV_MAX_LOCAL_TIMESTAMP_DEVIATION = 60; // seconds
+const SPV_MAX_LOCAL_TIMESTAMP_DEVIATION = 900; // seconds
 const BOTTOM_BAR_DISPLAY_THRESHOLD = 15;
 
 class ClaimInterestModal extends React.Component {

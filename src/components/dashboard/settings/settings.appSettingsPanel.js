@@ -151,8 +151,10 @@ class AppSettingsPanel extends React.Component {
                   <span>
                     <i
                       className="icon fa-question-circle settings-help"
-                      data-tip={ this.state.appConfigSchema[key].info }></i>
+                      data-tip={ this.state.appConfigSchema[key].info }
+                      data-for="appSettings1"></i>
                     <ReactTooltip
+                      id="appSettings1"
                       effect="solid"
                       className="text-left" />
                   </span>
@@ -171,8 +173,10 @@ class AppSettingsPanel extends React.Component {
                     <span>
                       <i
                         className="icon fa-question-circle settings-help"
-                        data-tip={ this.state.appConfigSchema[key][_key].info }></i>
+                        data-tip={ this.state.appConfigSchema[key][_key].info }
+                        data-for="appSettings2"></i>
                       <ReactTooltip
+                        id="appSettings2"
                         effect="solid"
                         className="text-left" />
                     </span>
@@ -225,8 +229,10 @@ class AppSettingsPanel extends React.Component {
                   <span>
                     <i
                       className="icon fa-question-circle settings-help"
-                      data-tip={ this.state.appConfigSchema[key].info }></i>
+                      data-tip={ this.state.appConfigSchema[key].info }
+                      data-for="appSettings3"></i>
                     <ReactTooltip
+                      id="appSettings3"
                       effect="solid"
                       className="text-left" />
                   </span>

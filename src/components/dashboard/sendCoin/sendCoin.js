@@ -37,7 +37,7 @@ import electrumServers from 'agama-wallet-lib/src/electrum-servers';
 import btcNetworks from 'agama-wallet-lib/src/bitcoinjs-networks';
 import { addressVersionCheck } from 'agama-wallet-lib/src/keys';
 
-const SPV_MAX_LOCAL_TIMESTAMP_DEVIATION = 60; // seconds
+const SPV_MAX_LOCAL_TIMESTAMP_DEVIATION = 900; // seconds
 
 const _feeLookup = [
   'fastestFee',
@@ -67,6 +67,7 @@ class SendCoin extends React.Component {
       btcFeesSize: 0,
       btcFeesTimeBasedStep: 1,
       spvPreflightRes: null,
+      valuesInFiat: false,
     };
     this.defaultState = JSON.parse(JSON.stringify(this.state));
     this.updateInput = this.updateInput.bind(this);
@@ -78,16 +79,53 @@ class SendCoin extends React.Component {
     this.fetchBTCFees = this.fetchBTCFees.bind(this);
     this.onSliderChange = this.onSliderChange.bind(this);
     this.onSliderChangeTime = this.onSliderChangeTime.bind(this);
+    this.toggleValuesInFiat = this.toggleValuesInFiat.bind(this);
+  }
+
+  getFiatPrice() {
+    const _coin = this.props.ActiveCoin.coin.toUpperCase();
+    const _prices = this.props.Dashboard.prices;
+    let _fiatPricePerCoin = 1;
+
+    if (_prices) {
+      if (_coin === 'KMD') {
+        if (_prices.fiat &&
+            _prices.fiat.USD) {
+          _fiatPricePerCoin = _prices.fiat.USD;
+        }
+      } else {
+        if (_prices.fiat &&
+            _prices.fiat.USD &&
+            _prices[`${_coin}/KMD`] &&
+            _prices[`${_coin}/KMD`].low) {
+          _fiatPricePerCoin = _prices.fiat.USD * _prices[`${_coin}/KMD`].low;
+        }
+      }
+    }
+
+    if (!Config.sendCoinAllowFiatEntry ||
+        !Config.fiatRates ||
+        !this.state.valuesInFiat) {
+      _fiatPricePerCoin = 1;
+    }
+
+    return _fiatPricePerCoin;
+  }
+
+  toggleValuesInFiat() {
+    this.setState({
+      valuesInFiat: !this.state.valuesInFiat,
+    });
   }
 
   setSendAmountAll() {
     const _amount = this.state.amount;
     const _amountSats = toSats(this.state.amount);
-    const _balanceSats = this.props.ActiveCoin.balance.balanceSats - Math.abs(this.props.ActiveCoin.balance.unconfirmedSats);
+    const _balanceSats = this.props.ActiveCoin.balance.balanceSats + this.props.ActiveCoin.balance.unconfirmedSats;
     const fee = this.props.ActiveCoin.coin !== 'btc' ? electrumServers[this.props.ActiveCoin.coin].txfee : 0;
 
     this.setState({
-      amount: Number((fromSats(_balanceSats - fee)).toFixed(8)),
+      amount: Number((fromSats(_balanceSats - fee) * this.getFiatPrice()).toFixed(8)),
     });
   }
 
@@ -188,14 +226,14 @@ class SendCoin extends React.Component {
   }
 
   renderSelectorCurrentLabel() {
-    const _balance = this.props.ActiveCoin.balance.balance - Math.abs(this.props.ActiveCoin.balance.unconfirmed);
+    const _balance = this.props.ActiveCoin.balance.balance + this.props.ActiveCoin.balance.unconfirmed;
     const _coin = this.props.ActiveCoin.coin;
 
     if (this.state.sendFrom) {
       return (
         <span>
           <span className="text">
-            [ { this.state.sendFromAmount } { _coin.toUpperCase() } ]  
+            [ { (this.state.sendFromAmount * this.getFiatPrice()).toFixed(8) } { _coin.toUpperCase() } ]  
             { this.state.sendFrom }
           </span>
         </span>
@@ -203,7 +241,7 @@ class SendCoin extends React.Component {
     } else {
       return (
         <span>
-          { `[ ${_balance} ${_coin.toUpperCase()} ] ${this.props.Dashboard.electrumCoins[_coin].pub}` }
+          { `[ ${(_balance * this.getFiatPrice()).toFixed(8)} ${Config.sendCoinAllowFiatEntry && Config.fiatRates && this.state.valuesInFiat ? 'USD' : _coin.toUpperCase()} ] ${this.props.Dashboard.electrumCoins[_coin].pub}` }
         </span>
       );
     }
@@ -292,7 +330,7 @@ class SendCoin extends React.Component {
 
         shepherdElectrumSendPromise(
           _coin,
-          toSats(this.state.amount),
+          toSats(Config.sendCoinAllowFiatEntry && Config.fiatRates && this.state.valuesInFiat && this.props.Dashboard.prices ? Number((this.state.amount / this.getFiatPrice()).toFixed(8)) : this.state.amount),
           this.state.sendTo,
           this.props.Dashboard.electrumCoins[_coin].pub,
           _coin === 'btc' ? { perbyte: true, value: this.state.btcFeesSize } : fee
@@ -340,7 +378,7 @@ class SendCoin extends React.Component {
 
       shepherdElectrumSendPromise(
         _coin,
-        toSats(this.state.amount),
+        toSats(Config.sendCoinAllowFiatEntry && Config.fiatRates && this.state.valuesInFiat && this.props.Dashboard.prices ? Number((this.state.amount / this.getFiatPrice()).toFixed(8)) : this.state.amount),
         this.state.sendTo,
         _pub,
         _coin === 'btc' ? { perbyte: true, value: this.state.btcFeesSize } : fee,
@@ -353,25 +391,47 @@ class SendCoin extends React.Component {
   validateSendFormData() {
     let valid = true;
     const _coin = this.props.ActiveCoin.coin;
-    const _amount = this.state.amount;
-    const _amountSats = Math.floor(toSats(this.state.amount));
-    const _balanceSats = this.props.ActiveCoin.balance.balanceSats - Math.abs(this.props.ActiveCoin.balance.unconfirmedSats);
+    const _amount = Config.sendCoinAllowFiatEntry && Config.fiatRates && this.state.valuesInFiat && this.props.Dashboard.prices ? Number((this.state.amount / this.getFiatPrice()).toFixed(8)) : this.state.amount;
+    const _amountSats = Math.floor(toSats(_amount));
+    const _balanceSats = this.props.ActiveCoin.balance.balanceSats + this.props.ActiveCoin.balance.unconfirmedSats;
     const fee = _coin !== 'btc' ? electrumServers[_coin].txfee : 0;
 
     if ((Number(_amountSats) + fee) > _balanceSats) {
+      let _err;
+
+      if (Config.sendCoinAllowFiatEntry &&
+          Config.fiatRates &&
+          this.state.valuesInFiat &&
+          this.props.Dashboard.prices) {
+        _err = `${Number(fromSats((_balanceSats - fee) / this.getFiatPrice()).toFixed(8))} USD / ${Number(fromSats((_balanceSats - fee)).toFixed(8))} ${_coin.toUpperCase()}`;
+      } else {
+        _err = `${Number(fromSats((_balanceSats - fee)).toFixed(8))} ${_coin.toUpperCase()}`;
+      }
+
       Store.dispatch(
         triggerToaster(
-          `${translate('SEND.INSUFFICIENT_FUNDS')} ${translate('SEND.MAX_AVAIL_BALANCE')}` +
-          `${Number(fromSats((_balanceSats - fee)).toFixed(8))} ${_coin.toUpperCase()}`,
+          `${translate('SEND.INSUFFICIENT_FUNDS')} ${translate('SEND.MAX_AVAIL_BALANCE')} ` +
+          _err,
           translate('TOASTR.WALLET_NOTIFICATION'),
           'error'
         )
       );
       valid = false;
     } else if (Number(_amountSats) < fee) {
+      let _err;
+      
+      if (Config.sendCoinAllowFiatEntry &&
+          Config.fiatRates &&
+          this.state.valuesInFiat &&
+          this.props.Dashboard.prices) {
+        _err = `${translate('SEND.AMOUNT_IS_TOO_SMALL', this.state.amount)}, ${translate('SEND.MIN_AMOUNT_IS', 'USD')} ${Number(fromSats(fee / this.getFiatPrice()).toFixed(8))}`;
+      } else {
+        _err = `${translate('SEND.AMOUNT_IS_TOO_SMALL', _amount)}, ${translate('SEND.MIN_AMOUNT_IS', _coin.toUpperCase())} ${Number(fromSats(fee))}`;
+      }
+
       Store.dispatch(
         triggerToaster(
-          `${translate('SEND.AMOUNT_IS_TOO_SMALL', this.state.amount)}, ${translate('SEND.MIN_AMOUNT_IS', _coin.toUpperCase())} ${Number(fromSats(fee))}`,
+          _err,
           translate('TOASTR.WALLET_NOTIFICATION'),
           'error'
         )
@@ -383,7 +443,8 @@ class SendCoin extends React.Component {
       let _validateAddress;
       let _msg;
 
-      if (isKomodoCoin(_coin) || Config.whitelabel) {
+      if (isKomodoCoin(_coin) ||
+          Config.whitelabel) {
         _validateAddress = addressVersionCheck(btcNetworks.kmd, this.state.sendTo);
       } else {
         _validateAddress = addressVersionCheck(btcNetworks[_coin], this.state.sendTo);
@@ -407,7 +468,7 @@ class SendCoin extends React.Component {
       }
     }
 
-    if (!isPositiveNumber(this.state.amount)) {
+    if (!isPositiveNumber(_amount)) {
       Store.dispatch(
         triggerToaster(
           translate('SEND.AMOUNT_POSITIVE_NUMBER'),
@@ -473,13 +534,15 @@ class SendCoin extends React.Component {
         <div className="col-lg-12 form-group form-material">
           <div>
             <div>
-              Fee
+              { translate('SEND.FEE') }
               <span>
                 <i
                   className="icon fa-question-circle settings-help"
                   data-html={ true }
-                  data-tip={ _toolTipContent }></i>
+                  data-tip={ _toolTipContent }
+                  data-for="sendCoin1"></i>
                 <ReactTooltip
+                  id="sendCoin1"
                   effect="solid"
                   className="text-left" />
               </span>

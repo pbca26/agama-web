@@ -10,10 +10,12 @@ export const AddressActionsRender = function(address) {
       <button
         onClick={ () => this.toggleAddressMenu(address) }
         data-tip={ translate('DASHBOARD.TOGGLE_ADD_MENU') }
+        data-for="receiveCoin"
         className="btn btn-default btn-xs clipboard-edexaddr margin-left-10 receive-address-context-menu-trigger">
         <i className="fa fa-ellipsis-v receive-address-context-menu-trigger"></i>
       </button>
       <ReactTooltip
+        id="receiveCoin"
         effect="solid"
         className="text-left" />
         <div className={ this.state.toggledAddressMenu && this.state.toggledAddressMenu === address ? 'receive-address-context-menu' : 'hide' }>

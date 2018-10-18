@@ -17,9 +17,11 @@ export const TxLocktimeRender = function(locktime) {
       { !locktime &&
         <i
           data-tip={ translate('CLAIM_INTEREST.LOCKTIME_IS_UNSET') }
+          data-for="interestModal"
           className="fa-exclamation-circle red"></i>
       }
       <ReactTooltip
+        id="interestModal"
         effect="solid"
         className="text-left" />
     </span>
@@ -52,6 +54,9 @@ export const _ClaimInterestTableRender = function() {
         </p>
         <p>
           <strong>{ translate('CLAIM_INTEREST.TIP') }:</strong> { translate('CLAIM_INTEREST.TIP_DESC') }
+        </p>
+        <p>
+          <strong>{ translate('CLAIM_INTEREST.CLAIM_INTEREST_FEE') }:</strong> 0.0002 KMD (20000 sats).
         </p>
       </div>
       { this.state.totalInterest > 0 &&
