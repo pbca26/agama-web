@@ -234,6 +234,11 @@ export const WalletsDataRender = function() {
                         <button
                           type="button"
                           className="btn btn-success waves-effect waves-light dashboard-claim-interest-btn"
+                          disabled={
+                            this.props.ActiveCoin.balance.interest &&
+                            this.props.ActiveCoin.balance.interest > 0 &&
+                            this.props.ActiveCoin.balance.interest < 0.0002
+                          }
                           onClick={ this.openClaimInterestModal }>
                           <i className="icon fa-dollar"></i> { translate('DASHBOARD.CLAIM_INTEREST_HELPER_BAR_P3') }
                         </button>
