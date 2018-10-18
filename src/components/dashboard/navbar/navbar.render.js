@@ -102,7 +102,9 @@ const NavbarRender = function() {
               <ul className="dropdown-menu">
                 <li>
                   <a
-                    href={ Config.whitelabel ? Config.wlConfig.support.standaloneLink : 'https://www.atomicexplorer.com/wallet.zip' }
+                    href={
+                      Config.whitelabel ? Config.wlConfig.support.standaloneLink : 'https://www.atomicexplorer.com/wallet.zip'
+                    }
                     target="_blank">
                     <i className="icon fa-download"></i> { translate('INDEX.STANDALONE') }
                   </a>

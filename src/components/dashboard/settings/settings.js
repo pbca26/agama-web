@@ -18,11 +18,13 @@ class Settings extends React.Component {
   }
 
   displaySPVServerListTab() {
-    if (this.props.Main &&
-        this.props.Main.coins &&
-        this.props.Main.coins.spv) {
-      for (let i = 0; i < this.props.Main.coins.spv.length; i++) {
-        if (appData.servers[this.props.Main.coins.spv[i]].serverList) {
+    const _main = this.props.Main;
+
+    if (_main &&
+        _main.coins &&
+        _main.coins.spv) {
+      for (let i = 0; i < _main.coins.spv.length; i++) {
+        if (appData.servers[_main.coins.spv[i]].serverList) {
           return true;
         }
       }
@@ -32,7 +34,8 @@ class Settings extends React.Component {
   componentDidMount(props) {
     document.getElementById('section-iguana-wallet-settings').setAttribute('style',
       'height: auto;' +
-      'min-height: 100%');
+      'min-height: 100%'
+    );
   }
 
   render() {

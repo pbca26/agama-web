@@ -264,7 +264,7 @@ class WalletsData extends React.Component {
     const _server = [
       _coinServers.ip,
       _coinServers.port,
-      _coinServers.proto
+      _coinServers.proto,
     ];
     const _randomServer = getRandomElectrumServer(_spvServers, _server.join(':'));
 
@@ -361,10 +361,10 @@ class WalletsData extends React.Component {
     }
 
     return this.contains(tx.address, term) ||
-            this.contains(tx.confirmations, term) ||
-            this.contains(tx.amount, term) ||
-            this.contains(tx.type, term) ||
-            this.contains(secondsToString(tx.blocktime || tx.timestamp || tx.time), term);
+      this.contains(tx.confirmations, term) ||
+      this.contains(tx.amount, term) ||
+      this.contains(tx.type, term) ||
+      this.contains(secondsToString(tx.blocktime || tx.timestamp || tx.time), term);
   }
 
   contains(value, property) {

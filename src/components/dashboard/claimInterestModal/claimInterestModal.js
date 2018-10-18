@@ -72,7 +72,8 @@ class ClaimInterestModal extends React.Component {
       sortable: false,
       filterable: false,
       maxWidth: '150',
-    },{
+    },
+    {
       id: 'locktime',
       Header: 'Locktime',
       Footer: 'Locktime',
@@ -104,7 +105,8 @@ class ClaimInterestModal extends React.Component {
         }
         return 0;
       },
-    },{
+    },
+    {
       id: 'interest',
       Header: translate('INDEX.INTEREST'),
       Footer: translate('INDEX.INTEREST'),
@@ -226,7 +228,7 @@ class ClaimInterestModal extends React.Component {
     const _coin = this.props.ActiveCoin.coin;
     const _pub = this.props.Dashboard.electrumCoins[_coin].pub;
 
-    if (this.props.ActiveCoin.coin === 'kmd') {
+    if (_coin === 'kmd') {
       this.setState(Object.assign({}, this.state, {
         spvVerificationWarning: false,
         spvPreflightSendInProgress: true,
@@ -293,17 +295,19 @@ class ClaimInterestModal extends React.Component {
   }
 
   componentWillReceiveProps(props) {
-    if (props.Dashboard.displayClaimInterestModal !== this.state.open) {
+    const _display = props.Dashboard.displayClaimInterestModal;
+
+    if (_display !== this.state.open) {
       this.setState({
-        className: props.Dashboard.displayClaimInterestModal ? 'show fade' : 'show out',
+        className: _display ? 'show fade' : 'show out',
       });
 
       setTimeout(() => {
         this.setState(Object.assign({}, this.state, {
-          open: props.Dashboard.displayClaimInterestModal,
-          className: props.Dashboard.displayClaimInterestModal ? 'show in' : 'hide',
+          open: _display,
+          className: _display ? 'show in' : 'hide',
         }));
-      }, props.Dashboard.displayClaimInterestModal ? 50 : 300);
+      }, _display ? 50 : 300);
     }
 
     if (!this.state.open &&

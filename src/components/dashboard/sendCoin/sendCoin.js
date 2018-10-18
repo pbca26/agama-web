@@ -43,7 +43,7 @@ const _feeLookup = [
   'fastestFee',
   'halfHourFee',
   'hourFee',
-  'advanced'
+  'advanced',
 ];
 
 class SendCoin extends React.Component {
@@ -389,13 +389,13 @@ class SendCoin extends React.Component {
 
   // TODO: reduce to a single toast
   validateSendFormData() {
-    let valid = true;
     const _coin = this.props.ActiveCoin.coin;
     const _amount = Config.sendCoinAllowFiatEntry && Config.fiatRates && this.state.valuesInFiat && this.props.Dashboard.prices ? Number((this.state.amount / this.getFiatPrice()).toFixed(8)) : this.state.amount;
     const _amountSats = Math.floor(toSats(_amount));
     const _balanceSats = this.props.ActiveCoin.balance.balanceSats + this.props.ActiveCoin.balance.unconfirmedSats;
     const fee = _coin !== 'btc' ? electrumServers[_coin].txfee : 0;
-
+    let valid = true;
+    
     if ((Number(_amountSats) + fee) > _balanceSats) {
       let _err;
 

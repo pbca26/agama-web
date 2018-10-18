@@ -61,7 +61,7 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
           Config.log('currentHeight =>');
           Config.log(currentHeight);
 
-          let _urlParams = {
+          _urlParams = {
             ip: appData.servers[coin].ip,
             port: appData.servers[coin].port,
             proto: appData.servers[coin].proto,

@@ -185,12 +185,13 @@ export const TxAmountRender = function(tx) {
 };
 
 export const TxHistoryListRender = function() {
+  const _coin = this.props.ActiveCoin.coins[appData.activeCoin];
   let _data;
 
-  if (this.props.ActiveCoin.coins[appData.activeCoin] &&
-      this.props.ActiveCoin.coins[appData.activeCoin].txhistory &&
+  if (_coin &&
+      _coin.txhistory &&
       !this.state.searchTerm) {
-    _data = this.props.ActiveCoin.coins[appData.activeCoin].txhistory;
+    _data = _coin.txhistory;
   }
 
   _data = _data || this.state.filteredItemsList;

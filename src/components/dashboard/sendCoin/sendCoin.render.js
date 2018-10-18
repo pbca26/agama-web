@@ -301,13 +301,17 @@ export const SendRender = function() {
                           Config.fiatRates &&
                           this.state.valuesInFiat &&
                           this.props.Dashboard.prices &&
-                          <span>{ Number((formatValue(fromSats(this.state.spvPreflightRes.value) + fromSats(this.state.spvPreflightRes.fee)) * this.getFiatPrice()).toFixed(8)) } USD / { formatValue(fromSats(this.state.spvPreflightRes.value) + fromSats(this.state.spvPreflightRes.fee)) } { _coin.toUpperCase() }</span>
+                          <span>
+                          { Number((formatValue(fromSats(this.state.spvPreflightRes.value) + fromSats(this.state.spvPreflightRes.fee)) * this.getFiatPrice()).toFixed(8)) } USD / { formatValue(fromSats(this.state.spvPreflightRes.value) + fromSats(this.state.spvPreflightRes.fee)) } { _coin.toUpperCase() }
+                          </span>
                         }
                         { (!Config.sendCoinAllowFiatEntry ||
                           !Config.fiatRates ||
                           !this.state.valuesInFiat ||
                           !this.props.Dashboard.prices) &&
-                          <span>{ formatValue(fromSats(this.state.spvPreflightRes.value) + fromSats(this.state.spvPreflightRes.fee)) }</span>
+                          <span>
+                          { formatValue(fromSats(this.state.spvPreflightRes.value) + fromSats(this.state.spvPreflightRes.fee)) }
+                          </span>
                         }
                       </div>
                     }
@@ -318,7 +322,9 @@ export const SendRender = function() {
                           Config.fiatRates &&
                           this.state.valuesInFiat &&
                           this.props.Dashboard.prices &&
-                          <span>{ Number((Math.abs(formatValue(fromSats(this.state.spvPreflightRes.estimatedFee))) * this.getFiatPrice()).toFixed(8)) } USD / { Math.abs(formatValue(fromSats(this.state.spvPreflightRes.estimatedFee))) } { _coin.toUpperCase() }</span>
+                          <span>
+                          { Number((Math.abs(formatValue(fromSats(this.state.spvPreflightRes.estimatedFee))) * this.getFiatPrice()).toFixed(8)) } USD / { Math.abs(formatValue(fromSats(this.state.spvPreflightRes.estimatedFee))) } { _coin.toUpperCase() }
+                          </span>
                         }
                         { (!Config.sendCoinAllowFiatEntry ||
                           !Config.fiatRates ||
@@ -336,20 +342,26 @@ export const SendRender = function() {
                           Config.fiatRates &&
                           this.state.valuesInFiat &&
                           this.props.Dashboard.prices &&
-                          <span>{ Number((formatValue(fromSats(this.state.spvPreflightRes.value) + fromSats(this.state.spvPreflightRes.fee)) * this.getFiatPrice()).toFixed(8)) } USD / { formatValue(fromSats(this.state.spvPreflightRes.value) + fromSats(this.state.spvPreflightRes.fee)) } { _coin.toUpperCase() }</span>
+                          <span>
+                          { Number((formatValue(fromSats(this.state.spvPreflightRes.value) + fromSats(this.state.spvPreflightRes.fee)) * this.getFiatPrice()).toFixed(8)) } USD / { formatValue(fromSats(this.state.spvPreflightRes.value) + fromSats(this.state.spvPreflightRes.fee)) } { _coin.toUpperCase() }
+                          </span>
                         }
                         { (!Config.sendCoinAllowFiatEntry ||
                           !Config.fiatRates ||
                           !this.state.valuesInFiat ||
                           !this.props.Dashboard.prices) &&
-                          <span>{ formatValue(fromSats(this.state.spvPreflightRes.value) + fromSats(this.state.spvPreflightRes.fee)) }</span>
+                          <span>
+                          { formatValue(fromSats(this.state.spvPreflightRes.value) + fromSats(this.state.spvPreflightRes.fee)) }
+                          </span>
                         }
                       </div>
                     }
                   </div>
                 }
                 { this.state.spvPreflightSendInProgress &&
-                  <div className="padding-top-20 fs-15 col-lg-12 col-sm-12 col-xs-12 padding-bottom-40">{ translate('SEND.SPV_VERIFYING') }...</div>
+                  <div className="padding-top-20 fs-15 col-lg-12 col-sm-12 col-xs-12 padding-bottom-40">
+                  { translate('SEND.SPV_VERIFYING') }...
+                  </div>
                 }
                 { this.state.spvVerificationWarning &&
                   <div className="padding-top-20 fs-15 col-lg-12 col-sm-12 col-xs-12 padding-bottom-40">
@@ -428,7 +440,9 @@ export const SendRender = function() {
                             Config.fiatRates &&
                             this.state.valuesInFiat &&
                             this.props.Dashboard.prices &&
-                            <span>{ Number(this.state.amount) } USD / { Number((this.state.amount / this.getFiatPrice()).toFixed(8)) } { _coin.toUpperCase() }</span>
+                            <span>
+                            { Number(this.state.amount) } USD / { Number((this.state.amount / this.getFiatPrice()).toFixed(8)) } { _coin.toUpperCase() }
+                            </span>
                           }
                           { (!Config.sendCoinAllowFiatEntry ||
                             !Config.fiatRates ||

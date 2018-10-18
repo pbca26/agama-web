@@ -80,13 +80,15 @@ class Navbar extends React.Component {
   }
 
   handleClickOutside(e) {
+    const _srcElement = e.srcElement;
+
     if (e &&
-        e.srcElement &&
-        e.srcElement.className !== 'dropdown-menu' &&
-        e.srcElement.className !== 'icon fa-bars' &&
-        e.srcElement.title !== 'top menu' &&
-        (e.srcElement.offsetParent && e.srcElement.offsetParent.className !== 'navbar-avatar-inner') &&
-        e.srcElement.className.indexOf('navbar-avatar') === -1 &&
+        _srcElement &&
+        _srcElement.className !== 'dropdown-menu' &&
+        _srcElement.className !== 'icon fa-bars' &&
+        _srcElement.title !== 'top menu' &&
+        (_srcElement.offsetParent && _srcElement.offsetParent.className !== 'navbar-avatar-inner') &&
+        _srcElement.className.indexOf('navbar-avatar') === -1 &&
         (e.path && e.path[4] && e.path[4].className.indexOf('dropdown-menu') === -1)) {
       this.setState({
         openDropMenu: false,
