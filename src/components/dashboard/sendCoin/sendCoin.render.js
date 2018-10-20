@@ -359,12 +359,12 @@ export const SendRender = function() {
                   </div>
                 }
                 { this.state.spvPreflightSendInProgress &&
-                  <div className="padding-top-20 fs-15 col-lg-12 col-sm-12 col-xs-12 padding-bottom-40">
+                  <div className="padding-top-20 fs-15 col-lg-12 col-sm-12 col-xs-12 padding-bottom-40 padding-left-0">
                   { translate('SEND.SPV_VERIFYING') }...
                   </div>
                 }
                 { this.state.spvVerificationWarning &&
-                  <div className="padding-top-20 fs-15 col-lg-12 col-sm-12 col-xs-12 padding-bottom-40">
+                  <div className="padding-top-20 fs-15 col-lg-12 col-sm-12 col-xs-12 padding-bottom-40 padding-left-0">
                     <strong className="color-warning nbsp">{ translate('SEND.WARNING') }:</strong>
                     <span>{ translate('SEND.WARNING_SPV_P1') }</span>
                     { translate('SEND.WARNING_SPV_P2') }
