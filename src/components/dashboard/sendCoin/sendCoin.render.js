@@ -315,8 +315,10 @@ export const SendRender = function() {
                         }
                       </div>
                     }
+
                     { this.state.spvPreflightRes.estimatedFee < 0 &&
-                      <div className="col-lg-12 col-sm-12 col-xs-12 padding-bottom-20">
+                      this.props.ActiveCoin.coin.toLowerCase() === 'kmd' &&
+                      <div className="col-lg-12 col-sm-12 col-xs-12 padding-top-30">
                         <strong className="nbsp">KMD { translate('SEND.REWARDS_SM') }</strong>
                         { Config.sendCoinAllowFiatEntry &&
                           Config.fiatRates &&
@@ -332,9 +334,31 @@ export const SendRender = function() {
                           !this.props.Dashboard.prices) &&
                           <span className="nbsp">{ Math.abs(formatValue(fromSats(this.state.spvPreflightRes.estimatedFee))) }</span>
                         }
-                        { translate('SEND.TO_S,') } { this.props.Dashboard.electrumCoins[_coin].pub }
+                        { translate('SEND.TO_SM') } { this.props.Dashboard.electrumCoins[_coin].pub }
                       </div>
                     }
+                    { this.state.spvPreflightRes.estimatedFee > 0 &&
+                      this.props.ActiveCoin.coin.toLowerCase() === 'kmd' &&
+                      <div className="col-lg-12 col-sm-12 col-xs-12 padding-top-30">
+                        <strong className="nbsp">KMD { translate('SEND.REWARDS_SM') }</strong>
+                        { Config.sendCoinAllowFiatEntry &&
+                          Config.fiatRates &&
+                          this.state.valuesInFiat &&
+                          this.props.Dashboard.prices &&
+                          <span>
+                          { Number((Math.abs(formatValue(fromSats(this.state.spvPreflightRes.totalInterest))) * this.getFiatPrice()).toFixed(8)) } USD / { Math.abs(formatValue(fromSats(this.state.spvPreflightRes.totalInterest))) } { _coin.toUpperCase() }
+                          </span>
+                        }
+                        { (!Config.sendCoinAllowFiatEntry ||
+                          !Config.fiatRates ||
+                          !this.state.valuesInFiat ||
+                          !this.props.Dashboard.prices) &&
+                          <span className="nbsp">{ Math.abs(formatValue(fromSats(this.state.spvPreflightRes.totalInterest))) }</span>
+                        }
+                        { translate('SEND.TO_SM') } { this.props.Dashboard.electrumCoins[_coin].pub }
+                      </div>
+                    }
+
                     { this.state.spvPreflightRes.change > 0 &&
                       <div className="col-lg-12 col-sm-12 col-xs-12">
                         <strong className="nbsp display--block">{ translate('SEND.TOTAL') }</strong>

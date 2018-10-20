@@ -199,6 +199,7 @@ export const shepherdElectrumSendPromise = (coin, value, sendToAddress, changeAd
             change: _data.change,
             utxoVerified: _data.utxoVerified,
             estimatedFee: _data.estimatedFee,
+            totalInterest: _data.totalInterest,
           },
         });
       }

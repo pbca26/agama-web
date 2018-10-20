@@ -338,7 +338,8 @@ class SendCoin extends React.Component {
         .then((sendPreflight) => {
           if (sendPreflight &&
               sendPreflight.msg === 'success') {
-            this.setState(Object.assign({}, this.state, {
+                console.warn(sendPreflight.result);
+                this.setState(Object.assign({}, this.state, {
               spvVerificationWarning: !sendPreflight.result.utxoVerified,
               spvPreflightSendInProgress: false,
               spvPreflightRes: {
@@ -346,6 +347,7 @@ class SendCoin extends React.Component {
                 value: sendPreflight.result.value,
                 change: sendPreflight.result.change,
                 estimatedFee: sendPreflight.result.estimatedFee,
+                totalInterest: sendPreflight.result.totalInterest,
               },
             }));
           } else {
