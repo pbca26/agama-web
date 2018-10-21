@@ -18,18 +18,21 @@ export const AddressActionsRender = function(address) {
         id="receiveCoin"
         effect="solid"
         className="text-left" />
-        <div className={ this.state.toggledAddressMenu && this.state.toggledAddressMenu === address ? 'receive-address-context-menu' : 'hide' }>
-          <ul>
-            <li onClick={ () => this._copyCoinAddress(address) }>
-              <i className="icon fa-copy margin-right-5"></i> { `${translate('INDEX.COPY')} ${translate('INDEX.PUB_KEY')}` }
-            </li>
-            <li className="receive-address-context-menu-get-qr">
-              <QRModal
-                cbOnClose={ this.toggleAddressMenu }
-                content={ address } />
-            </li>
-          </ul>
-        </div>
+        { this.state.toggledAddressMenu &&
+          this.state.toggledAddressMenu === address &&
+          <div className="receive-address-context-menu">
+            <ul>
+              <li onClick={ () => this._copyCoinAddress(address) }>
+                <i className="icon fa-copy margin-right-5"></i> { `${translate('INDEX.COPY')} ${translate('INDEX.PUB_KEY')}` }
+              </li>
+              <li className="receive-address-context-menu-get-qr">
+                <QRModal
+                  cbOnClose={ this.toggleAddressMenu }
+                  content={ address } />
+              </li>
+            </ul>
+          </div>
+        }
     </td>
   );
 };

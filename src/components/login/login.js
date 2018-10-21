@@ -280,8 +280,9 @@ class Login extends React.Component {
     // auto-size textarea
     setTimeout(() => {
       if (this.state.seedInputVisibility) {
-        document.querySelector('#loginPassphrase').style.height = '1px';
-        document.querySelector('#loginPassphrase').style.height = `${(15 + document.querySelector('#loginPassphrase').scrollHeight)}px`;
+        const _login = document.querySelector('#loginPassphrase');
+        _login.style.height = '1px';
+        _login.style.height = `${(15 + _login.scrollHeight)}px`;
       }
     }, 100);
   }
@@ -521,13 +522,15 @@ class Login extends React.Component {
   }
 
   renderResetSPVCoinsOption() {
-    if (this.props.Main &&
-        this.props.Main.coins &&
-        this.props.Main.coins.spv &&
-        this.props.Main.coins.spv.length) {
+    const _main = this.props.Main;
+
+    if (_main &&
+        _main.coins &&
+        _main.coins.spv &&
+        _main.coins.spv.length) {
       if (!Config.whitelabel ||
-          (Config.whitelabel && this.props.Main.coins.spv.length === 1 && this.props.Main.coins.spv[0] !== Config.wlConfig.coin.ticker.toLowerCase()) ||
-          (Config.whitelabel && this.props.Main.coins.spv.length > 1)) {
+          (Config.whitelabel && _main.coins.spv.length === 1 && _main.coins.spv[0] !== Config.wlConfig.coin.ticker.toLowerCase()) ||
+          (Config.whitelabel && _main.coins.spv.length > 1)) {
         return true;
       }
     }

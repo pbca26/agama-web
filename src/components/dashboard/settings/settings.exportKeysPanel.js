@@ -145,8 +145,9 @@ class ExportKeysPanel extends React.Component {
     // auto-size textarea
     setTimeout(() => {
       if (this.state.seedInputVisibility) {
-        document.querySelector('#wifkeysPassphraseTextarea').style.height = '1px';
-        document.querySelector('#wifkeysPassphraseTextarea').style.height = `${(15 + document.querySelector('#wifkeysPassphraseTextarea').scrollHeight)}px`;
+        const _ta = document.querySelector('#wifkeysPassphraseTextarea');
+        _ta.style.height = '1px';
+        _ta.style.height = `${(15 + _ta.scrollHeight)}px`;
       }
     }, 100);
   }
@@ -205,10 +206,13 @@ class ExportKeysPanel extends React.Component {
                   onClick={ this.toggleSeedInputVisibility }></i>
                 <label
                   className="floating-label"
-                  htmlFor="wifkeysPassphrase">{ translate('INDEX.PASSPHRASE') } / WIF</label>
+                  htmlFor="wifkeysPassphrase">
+                  { translate('INDEX.PASSPHRASE') } / WIF
+                </label>
                 { this.state.seedExtraSpaces &&
                   <span>
-                    <i className="icon fa-warning seed-extra-spaces-warning"
+                    <i
+                      className="icon fa-warning seed-extra-spaces-warning"
                       data-tip={ translate('LOGIN.SEED_TRAILING_CHARS') }
                       data-html={ true }
                       data-for="settingsExportKeys"></i>

@@ -35,12 +35,12 @@ const WalletsBalanceRender = function() {
                         <span className="padding-right-30 nbsp">&nbsp;</span>
                       }
                       <span className="font-size-18">{ translate('INDEX.BALANCE') }</span>
-                      { Number(this.props.ActiveCoin.balance.unconfirmed) < 0 &&
+                      { this.renderUnconfBalanceIcon() &&
                         <span>
                           <i
                             className="icon fa-info-circle margin-left-5 icon-unconf-balance"
                             data-for="balance2"
-                            data-tip={ `${translate('INDEX.UNCONFIRMED_BALANCE')} ${Math.abs(this.props.ActiveCoin.balance.unconfirmed)}` }></i>
+                            data-tip={ `${translate('INDEX.UNCONFIRMED_BALANCE')} ${this.props.ActiveCoin.balance.unconfirmed} ${this.props.ActiveCoin.coin.toUpperCase()}` }></i>
                           <ReactTooltip
                             id="balance2"
                             effect="solid"
