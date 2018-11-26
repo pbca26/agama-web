@@ -242,7 +242,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                               Config.log(_rawtxJSON);
 
                               // decode tx
-                              const _network = isKomodoCoin(coin) || (Config.whitelabel && Config.wlConfig.coin.ticker.toLowerCase() === coin) ? btcNetworks.kmd : btcNetworks[coin];
+                              const _network = isKomodoCoin(coin) || (Config.whitelabel && Config.wlConfig.coin.ticker.toLowerCase() === coin && !Config.wlConfig.coin.type) ? btcNetworks.kmd : btcNetworks[coin];
                               const decodedTx = transactionDecoder(_rawtxJSON, _network);
                               getCache(coin, 'txs', _utxoItem.tx_hash, _rawtxJSON);
                               getCache(coin, 'decodedTxs', _utxoItem.tx_hash, decodedTx);

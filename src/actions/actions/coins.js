@@ -72,7 +72,7 @@ export const addCoinResult = (coin, mode) => {
 
     if (Object.keys(appData.keys).length) {
       if (isKomodoCoin(coin) ||
-          (Config.whitelabel && Config.wlConfig.coin.ticker.toLowerCase() === coin)) {
+          (Config.whitelabel && Config.wlConfig.coin.ticker.toLowerCase() === coin && !Config.wlConfig.coin.type)) {
         appData.keys[coin] = stringToWif(appData.keys[Object.keys(appData.keys)[0]].priv, btcNetworks.kmd, true);
       } else {
         appData.keys[coin] = stringToWif(appData.keys[Object.keys(appData.keys)[0]].priv, btcNetworks[coin], true);
@@ -120,7 +120,7 @@ export const shepherdRemoveCoin = (coin, mode) => {
 
 export const shepherdElectrumKeys = (seed) => {
   return new Promise((resolve, reject) => {
-    const keys = stringToWif(seed, (Config.whitelabel && Config.wlConfig.coin.ticker.toLowerCase() === Object.keys(appData.keys)[0]) ? btcNetworks.kmd : btcNetworks[Object.keys(appData.keys)[0]], true);
+    const keys = stringToWif(seed, (Config.whitelabel && Config.wlConfig.coin.ticker.toLowerCase() === Object.keys(appData.keys)[0] && !Config.wlConfig.coin.type) ? btcNetworks.kmd : btcNetworks[Object.keys(appData.keys)[0]], true);
 
     if (keys.priv === appData.keys[Object.keys(appData.keys)[0]].priv) {
       resolve({ result: appData.keys });
