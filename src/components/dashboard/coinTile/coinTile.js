@@ -4,6 +4,7 @@ import { getCoinTitle } from '../../../util/coinHelper';
 import translate from '../../../translate/translate';
 import CoinTileItem from './coinTileItem';
 import { isKomodoCoin } from 'agama-wallet-lib/src/coin-helpers';
+import Config from '../../../config';
 
 import CoinTileRender from './coinTile.render';
 
@@ -40,10 +41,9 @@ class CoinTile extends React.Component {
 
     if (allCoins) {
       allCoins.spv.map((coin) => {
-        const _coinuc = coin.toUpperCase();
-        const _coinTitle = getCoinTitle(_coinuc);
-        const coinlogo = _coinuc;
-        const coinname = translate((isKomodoCoin(coin) && coin !== 'kmd' && coin !== 'chips' ? 'ASSETCHAINS.' : 'CRYPTO.') + _coinuc);
+        const _coinTitle = getCoinTitle(coin.toUpperCase());
+        const coinlogo = coin.toUpperCase();
+        const coinname = Config.whitelabel && Config.wlConfig.coin.ticker === coinlogo ? Config.wlConfig.coin.name : translate((isKomodoCoin(coin) && coin !== 'kmd' && coin !== 'chips' ? 'ASSETCHAINS.' : 'CRYPTO.') + coin.toUpperCase());
 
         items.push({
           coinlogo,
