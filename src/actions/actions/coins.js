@@ -34,7 +34,7 @@ export const activeHandle = () => {
 export const shepherdElectrumAuth = (seed) => {
   for (let i = 0; i < appData.coins.length; i++) {
     if (isKomodoCoin(appData.coins[i]) ||
-        (Config.whitelabel && Config.wlConfig.coin.ticker.toLowerCase() === appData.coins[i])) {
+        (Config.whitelabel && Config.wlConfig.coin.ticker.toLowerCase() === appData.coins[i] && !Config.wlConfig.coin.type)) {
       appData.keys[appData.coins[i]] = stringToWif(seed, btcNetworks.kmd, true);
     } else {
       appData.keys[appData.coins[i]] = stringToWif(seed, btcNetworks[appData.coins[i]], true);
