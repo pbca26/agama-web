@@ -23,7 +23,7 @@ export const shepherdElectrumSendPromise = (coin, value, sendToAddress, changeAd
 
       if (isKomodoCoin(coin) ||
           (Config.whitelabel && Config.wlConfig.coin.ticker.toLowerCase() === coin && !Config.wlConfig.coin.type)) {
-        _network = btcNetworks.kmd;
+        _network = btcNetworks[coin] || btcNetworks.kmd;
       } else {
         _network = btcNetworks[coin];
       }

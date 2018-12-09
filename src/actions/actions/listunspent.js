@@ -113,7 +113,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
 
                         if (_cachedTx) {
                           // decode tx
-                          const _network = isKomodoCoin(coin) ? btcNetworks.kmd : btcNetworks[coin];
+                          const _network = btcNetworks[coin] || (isKomodoCoin(coin) ? btcNetworks.kmd : btcNetworks[coin]);
                           const decodedTx = getCache(coin, 'decodedTxs', _utxoItem.tx_hash) ? getCache(coin, 'decodedTxs', _utxoItem.tx_hash) : transactionDecoder(_cachedTx, _network);
 
                           Config.log('decoded tx =>');
@@ -144,6 +144,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                                 spendable: true,
                                 verified: false,
                                 locktime: decodedTx.format.locktime,
+                                currentHeight,
                               };
 
                               // merkle root verification agains another electrum server
@@ -176,6 +177,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                                 confirmations: Number(_utxoItem.height) === 0 ? 0 : currentHeight - _utxoItem.height,
                                 spendable: true,
                                 verified: false,
+                                currentHeight,
                               };
 
                               // merkle root verification agains another electrum server
@@ -242,7 +244,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                               Config.log(_rawtxJSON);
 
                               // decode tx
-                              const _network = isKomodoCoin(coin) || (Config.whitelabel && Config.wlConfig.coin.ticker.toLowerCase() === coin && !Config.wlConfig.coin.type) ? btcNetworks.kmd : btcNetworks[coin];
+                              const _network = btcNetworks[coin] || (isKomodoCoin(coin) || (Config.whitelabel && Config.wlConfig.coin.ticker.toLowerCase() === coin && !Config.wlConfig.coin.type) ? btcNetworks.kmd : btcNetworks[coin]);
                               const decodedTx = transactionDecoder(_rawtxJSON, _network);
                               getCache(coin, 'txs', _utxoItem.tx_hash, _rawtxJSON);
                               getCache(coin, 'decodedTxs', _utxoItem.tx_hash, decodedTx);
@@ -275,6 +277,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                                     spendable: true,
                                     verified: false,
                                     locktime: decodedTx.format.locktime,
+                                    currentHeight,
                                   };
 
                                   // merkle root verification agains another electrum server
@@ -307,6 +310,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                                     confirmations: Number(_utxoItem.height) === 0 ? 0 : currentHeight - _utxoItem.height,
                                     spendable: true,
                                     verified: false,
+                                    currentHeight,
                                   };
 
                                   // merkle root verification agains another electrum server
