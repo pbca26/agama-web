@@ -23,6 +23,7 @@ let Config = {
       'electrum1.cipig.net:10001:tcp',
       'electrum2.cipig.net:10001:tcp',
     ],
+    fee: 10000,
     support: {
       onlineLink: {
         url: 'https://www.atomicexplorer.com/wallet',
