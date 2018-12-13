@@ -31,12 +31,16 @@ const translate = (langID, interpolateStr) => {
         }
       }
     } else {
-      console.warn(`Missing translation ${langID} in js/${defaultLang.toLowerCase()}.js`);
+      if (!Config.whitelabel) {
+        console.warn(`Missing translation ${langID} in js/${defaultLang.toLowerCase()}.js`);
+      }
       return `--> ${langID} <--`;
     }
   } else {
     if (langID.length) {
-      console.warn(`Missing translation ${langID} in js/${defaultLang.toLowerCase()}.js`);
+      if (!Config.whitelabel) {
+        console.warn(`Missing translation ${langID} in js/${defaultLang.toLowerCase()}.js`);
+      }
       return `--> ${langID} <--`;
     }
   }
