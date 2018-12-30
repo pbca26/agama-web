@@ -16,6 +16,7 @@ let Config = {
       ticker: 'KMD',
       name: 'Komodo',
       logo: 'cryptologo/kmd.png', // dashboard coin logo
+      // network: {}, // custom network params
       // type: true // uncomment this line if your coin is a btc fork (non kmd asset)
     },
     explorer: 'https://kmdexplorer.ru', // insight or iquidus
