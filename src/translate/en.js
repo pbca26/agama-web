@@ -1,6 +1,6 @@
 const LANG_EN = {
   CLAIM_INTEREST: {
-    CLAIM_INTEREST_FEE: 'Claim rewards fee',    
+    CLAIM_INTEREST_FEE: 'Claim rewards fee',
     LOCKTIME_IS_UNSET: 'Locktime is unset! Your UTXO is not accruing interest.',
     LOCKTIME_IS_SET_TO: 'Locktime is set to',
     SHOW_ZERO_INTEREST: 'Show zero rewards',
@@ -484,6 +484,11 @@ const LANG_EN = {
     CALL: 'Capital',
     CCL: 'CoinCollect',
     DION: 'DionPay',
+    MGNX: 'MagnaX',
+    KMDICE: 'KMDICE',
+    PTX: 'PatentTX',
+    PGT: 'Pungo',
+    SPLTEST: 'Sapling Test Chain',
   },
   CRYPTO: {
     KMD: 'Komodo',
