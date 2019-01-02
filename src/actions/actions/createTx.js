@@ -28,6 +28,12 @@ export const shepherdElectrumSendPromise = (coin, value, sendToAddress, changeAd
         _network = btcNetworks[coin];
       }
 
+      if (Config.whitelabel &&
+          Config.wlConfig.coin.ticker.toLowerCase() === coin &&
+          Config.wlConfig.coin.network) {
+        _network = Config.wlConfig.coin.network;
+      }
+
       let _data = transactionBuilder.data(
         _network,
         value,
@@ -66,9 +72,9 @@ export const shepherdElectrumSendPromise = (coin, value, sendToAddress, changeAd
           changeAddress,
           utxoList
         );
-  
+
         Config.log('send data', _data);
-  
+
         _tx = transactionBuilder.transaction(
           sendToAddress,
           changeAddress,
@@ -78,9 +84,9 @@ export const shepherdElectrumSendPromise = (coin, value, sendToAddress, changeAd
           _data.change,
           _data.value
         );
-  
+
         // TODO: err
-        Config.log('send tx', _tx);        
+        Config.log('send tx', _tx);
       }
 
       if (push) {

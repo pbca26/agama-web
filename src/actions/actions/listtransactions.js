@@ -115,7 +115,14 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
                         Config.log(transaction.raw);
 
                         // decode tx
-                        const _network = btcNetworks[coin] || (isKomodoCoin(coin) || (Config.whitelabel && Config.wlConfig.coin.ticker.toLowerCase() === coin) ? btcNetworks.kmd : btcNetworks[coin]);
+                        let _network = btcNetworks[coin] || (isKomodoCoin(coin) || (Config.whitelabel && Config.wlConfig.coin.ticker.toLowerCase() === coin) ? btcNetworks.kmd : btcNetworks[coin]);
+
+                        if (Config.whitelabel &&
+                            Config.wlConfig.coin.ticker.toLowerCase() === coin &&
+                            Config.wlConfig.coin.network) {
+                          _network = Config.wlConfig.coin.network;
+                        }
+
                         const decodedTx = transactionDecoder(transaction.raw, _network);
 
                         let txInputs = [];
