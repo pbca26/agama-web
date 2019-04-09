@@ -45,6 +45,17 @@ export const shepherdElectrumSendPromise = (coin, value, sendToAddress, changeAd
 
       Config.log('send data', _data);
 
+      if (typeof _data === 'string') {
+        Store.dispatch(
+          triggerToaster(
+            _data,
+            translate('API.PUSH_ERR'),
+            'error',
+            false
+          )
+        );
+      }
+      
       let _tx = transactionBuilder.transaction(
         sendToAddress,
         changeAddress,
@@ -74,6 +85,17 @@ export const shepherdElectrumSendPromise = (coin, value, sendToAddress, changeAd
         );
 
         Config.log('send data', _data);
+      
+        if (typeof _data === 'string') {
+          Store.dispatch(
+            triggerToaster(
+              _data,
+              translate('API.PUSH_ERR'),
+              'error',
+              false
+            )
+          );
+        }
 
         _tx = transactionBuilder.transaction(
           sendToAddress,
