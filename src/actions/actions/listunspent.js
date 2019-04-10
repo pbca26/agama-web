@@ -99,8 +99,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                     Number(currentHeight) > 0) {
                   // filter out unconfirmed utxos
                   for (let i = 0; i < _utxoJSON.length; i++) {
-                    if ((Number(currentHeight) - Number(_utxoJSON[i].height) < Number(currentHeight)) &&
-                        (Number(currentHeight) - Number(_utxoJSON[i].height) >= 0)) {
+                    if ((Number(currentHeight) - Number(_utxoJSON[i].height) + 1) >=0) {
                       _utxo.push(_utxoJSON[i]);
                     }
                   }
@@ -148,7 +147,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                                 amountSats: _utxoItem.value,
                                 interest: interest,
                                 interestSats: Math.floor(toSats(interest)),
-                                confirmations: Number(_utxoItem.height) === 0 ? 0 : currentHeight - _utxoItem.height,
+                                confirmations: Number(_utxoItem.height) === 0 ? 0 : currentHeight - _utxoItem.height + 1,
                                 spendable: true,
                                 verified: false,
                                 locktime: decodedTx.format.locktime,
@@ -182,7 +181,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                                 address,
                                 amount: Number(fromSats(_utxoItem.value)),
                                 amountSats: _utxoItem.value,
-                                confirmations: Number(_utxoItem.height) === 0 ? 0 : currentHeight - _utxoItem.height,
+                                confirmations: Number(_utxoItem.height) === 0 ? 0 : currentHeight - _utxoItem.height + 1,
                                 spendable: true,
                                 verified: false,
                                 currentHeight,
@@ -288,7 +287,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                                     amountSats: _utxoItem.value,
                                     interest: interest,
                                     interestSats: Math.floor(toSats(interest)),
-                                    confirmations: Number(_utxoItem.height) === 0 ? 0 : currentHeight - _utxoItem.height,
+                                    confirmations: Number(_utxoItem.height) === 0 ? 0 : currentHeight - _utxoItem.height + 1,
                                     spendable: true,
                                     verified: false,
                                     locktime: decodedTx.format.locktime,
@@ -322,7 +321,7 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                                     address,
                                     amount: Number(fromSats(_utxoItem.value)),
                                     amountSats: _utxoItem.value,
-                                    confirmations: Number(_utxoItem.height) === 0 ? 0 : currentHeight - _utxoItem.height,
+                                    confirmations: Number(_utxoItem.height) === 0 ? 0 : currentHeight - _utxoItem.height + 1,
                                     spendable: true,
                                     verified: false,
                                     currentHeight,

@@ -212,7 +212,7 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
                               outputs: decodedTx.outputs,
                               height: transaction.height,
                               timestamp: Number(transaction.height) === 0 ? Math.floor(Date.now() / 1000) : blockInfo.timestamp,
-                              confirmations: Number(transaction.height) === 0 ? 0 : currentHeight - transaction.height,
+                              confirmations: Number(transaction.height) === 0 ? 0 : currentHeight - transaction.height + 1,
                             };
 
                             const formattedTx = transactionType(_parsedTx, address, coin === 'kmd' ? true : false);
@@ -254,7 +254,7 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
                             outputs: 'cant parse',
                             height: transaction.height,
                             timestamp: Number(transaction.height) === 0 ? Math.floor(Date.now() / 1000) : blockInfo.timestamp,
-                            confirmations: Number(transaction.height) === 0 ? 0 : currentHeight - transaction.height,
+                            confirmations: Number(transaction.height) === 0 ? 0 : currentHeight - transaction.height + 1,
                           };
 
                           const formattedTx = transactionType(_parsedTx, address, coin === 'kmd' ? true : false);
@@ -269,7 +269,7 @@ export const shepherdElectrumTransactions = (coin, address, full = true, verify 
                           outputs: 'cant parse',
                           height: transaction.height,
                           timestamp: 'cant get block info',
-                          confirmations: Number(transaction.height) === 0 ? 0 : currentHeight - transaction.height,
+                          confirmations: Number(transaction.height) === 0 ? 0 : currentHeight - transaction.height + 1,
                         };
                         const formattedTx = transactionType(_parsedTx, address, coin === 'kmd' ? true : false);
                         _rawtx.push(formattedTx);
