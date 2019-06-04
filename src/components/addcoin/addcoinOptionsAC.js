@@ -32,7 +32,9 @@ const addCoinOptionsAC = () => {
   let _coins = {};
 
   for (let i = 0; i < _assetChains.length; i++) {
-    _coins[translate('ASSETCHAINS.' + _assetChains[i].toUpperCase())] = _assetChains[i];
+    if (translate('ASSETCHAINS.' + _assetChains[i].toUpperCase()).indexOf('-->') === -1) {
+      _coins[translate('ASSETCHAINS.' + _assetChains[i].toUpperCase())] = _assetChains[i];
+    }
   }
 
   _coins = sortObject(_coins);

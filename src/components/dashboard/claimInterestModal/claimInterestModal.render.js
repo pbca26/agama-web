@@ -9,12 +9,12 @@ import tableSorting from '../../../util/tableSorting'
 export const TxLocktimeRender = function(locktime) {
   return (
     <span className="locktime">
-      { locktime &&
+      { locktime > 0 &&
         <i
           data-tip={ `${translate('CLAIM_INTEREST.LOCKTIME_IS_SET_TO')} ${locktime}` }
           className="fa-check-circle green"></i>
       }
-      { !locktime &&
+      { locktime === 0 &&
         <i
           data-tip={ translate('CLAIM_INTEREST.LOCKTIME_IS_UNSET') }
           data-for="interestModal"

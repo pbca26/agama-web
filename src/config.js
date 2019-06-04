@@ -1,6 +1,6 @@
 // web app config
 let Config = {
-  version: '0.2.5-beta',
+  version: '0.2.7-beta',
   debug: false,
   defaultLang: 'EN',
   roundValues: false,
@@ -10,7 +10,7 @@ let Config = {
   whitelabel: false,
   /*preload: {
     seed: '',
-    coins: ['kmd', 'chips'],
+    coins: [''],
   },*/
 };
 
