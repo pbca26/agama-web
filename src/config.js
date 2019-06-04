@@ -1,10 +1,11 @@
 // web app config
 let Config = {
-  version: '0.2.5-beta',
+  version: '0.2.7-beta',
   debug: false,
   defaultLang: 'EN',
   roundValues: false,
   fiatRates: true,
+  defaultFiatCurrency: 'USD',
   // single coin option
   sendCoinAllowFiatEntry: false,
   whitelabel: true,
@@ -50,7 +51,7 @@ let Config = {
   },
   /*preload: {
     seed: '',
-    coins: ['kmd', 'chips'],
+    coins: [''],
   },*/
 };
 

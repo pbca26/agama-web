@@ -17,6 +17,7 @@ let appData = {
   },
   keys: {},
   servers: {},
+  serverProtocol: {},
   proxy: {},
   cache: {},
   isWatchOnly: false,

@@ -11,7 +11,7 @@ const _shortcutOptions = [
   'kmd',
   'chips',
   'btch',
-  'mnz',
+  'vrsc',
   'revs',
   'jumblr',
   'kmd+revs+jumblr', // custom option

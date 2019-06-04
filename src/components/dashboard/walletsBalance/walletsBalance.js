@@ -6,6 +6,7 @@ import Config from '../../../config';
 import { formatValue } from 'agama-wallet-lib/src/utils';
 import ReactTooltip from 'react-tooltip';
 import Store from '../../../store';
+import { isKomodoCoin } from 'agama-wallet-lib/src/coin-helpers';
 
 import WalletsBalanceRender from './walletsBalance.render';
 
@@ -83,27 +84,32 @@ class WalletsBalance extends React.Component {
 
     if (Config.fiatRates &&
         this.props.Dashboard.prices &&
+        this.props.Dashboard.prices[_coin] &&
         returnFiatPrice) {
       const _prices = this.props.Dashboard.prices;
-      let _fiatPriceTotal = 0;
-      let _fiatPricePerCoin = 0;
+      const _defaultFiat = Config.defaultFiatCurrency.toUpperCase();
+      let _fiatPriceTotal = _balance * _prices[_coin][_defaultFiat];
+      let _fiatPricePerCoin = _prices[_coin][_defaultFiat];
+      let _priceChangeColor = 'green';
 
-      if (_prices) {
-        if (_coin === 'KMD') {
-          if (_prices.fiat &&
-              _prices.fiat.USD) {
-            _fiatPriceTotal = formatValue(_balance * _prices.fiat.USD);
-            _fiatPricePerCoin = _prices.fiat.USD;
-          }
-        } else {
-          if (_prices.fiat &&
-              _prices.fiat.USD &&
-              _prices[`${_coin}/KMD`] &&
-              _prices[`${_coin}/KMD`].low) {
-            _fiatPriceTotal = _balance * _prices.fiat.USD * _prices[`${_coin}/KMD`].low;
-            _fiatPricePerCoin = _prices.fiat.USD * _prices[`${_coin}/KMD`].low;
-          }
-        }
+      if (isKomodoCoin(_coin.toUpperCase()) &&
+          _prices[_coin.toUpperCase()].hasOwnProperty('KIC')) {
+        _fiatPricePerCoin = 0;
+        _fiatPricePerCoin = 0;
+      }
+
+      if (_prices[_coin].priceChange &&
+          _prices[_coin].priceChange.data &&
+          _prices[_coin].priceChange.data.hasOwnProperty('percent_change_1h') &&
+          _prices[_coin].priceChange.data.percent_change_1h < 0) {
+        _priceChangeColor = 'red';
+      }
+
+      if (_prices[_coin].priceChange &&
+          _prices[_coin].priceChange.data &&
+          _prices[_coin].priceChange.data.hasOwnProperty('percent_change_24h') &&
+          _prices[_coin].priceChange.data.percent_change_24h < 0) {
+        _priceChangeColor = 'red';
       }
 
       return (
