@@ -2,35 +2,21 @@ import { PRICES } from '../storeType';
 import { triggerToaster } from '../actionCreators';
 import Config from '../../config';
 
-const fiatRates = (pricesJson) => {
+export const prices = (coins, currency) => {
   return dispatch => {
-    return fetch('https://www.atomicexplorer.com/api/rates/kmd', {
+    return fetch(
+      `https://www.atomicexplorer.com/api/mm/prices/v2?currency=${currency}&coins=${typeof coins === 'object' ? coins.join(',') : coins}&pricechange=true`, {
       method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     })
     .catch((error) => {
       console.log(error);
     })
     .then(response => response.json())
     .then(json => {
-      let _coins = pricesJson.result;
-      _coins.fiat = json.result;
-
-      dispatch(pricesState(_coins));
-    });
-  }
-}
-
-export const prices = () => {
-  return dispatch => {
-    return fetch('https://www.atomicexplorer.com/api/mm/prices', {
-      method: 'GET',
-    })
-    .catch((error) => {
-      console.log(error);
-    })
-    .then(response => response.json())
-    .then(json => {
-      dispatch(fiatRates(json));
+      dispatch(json && json.msg === 'success' ? pricesState(json.result) : pricesState('error'));
     });
   }
 }
