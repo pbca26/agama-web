@@ -5,6 +5,7 @@ let Config = {
   defaultLang: 'EN',
   roundValues: false,
   fiatRates: true,
+  defaultFiatCurrency: 'USD',
   // single coin option
   sendCoinAllowFiatEntry: false,
   whitelabel: false,

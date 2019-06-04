@@ -18,6 +18,7 @@ import {
   triggerToaster,
   shepherdRemoveCoin,
   dashboardRemoveCoin,
+  prices,
 } from '../../../actions/actionCreators';
 import Store from '../../../store';
 import Config from '../../../config';
@@ -26,6 +27,7 @@ import translate from '../../../translate/translate';
 import CoinTileItemRender from './coinTileItem.render';
 
 const SPV_DASHBOARD_UPDATE_TIMEOUT = 60000;
+const PRICES_UPDATE_INTERVAL = 120000; // every 2m
 
 class CoinTileItem extends React.Component {
   constructor() {
@@ -35,6 +37,7 @@ class CoinTileItem extends React.Component {
       activeCoinMode: null,
       toggledCoinMenu: null,
     };
+    this.pricesInterval = null;
     this.autoSetActiveCoin = this.autoSetActiveCoin.bind(this);
     this.toggleCoinMenu = this.toggleCoinMenu.bind(this);
     this.handleClickOutside = this.handleClickOutside.bind(this);
@@ -137,6 +140,7 @@ class CoinTileItem extends React.Component {
 
       Store.dispatch(dashboardRemoveCoin(coin));
       this.autoSetActiveCoin(coin);
+      
       setTimeout(() => {
         Store.dispatch(getDexCoins());
         Store.dispatch(activeHandle());
@@ -182,11 +186,30 @@ class CoinTileItem extends React.Component {
         );
       }
 
+      if (this.props.Interval.interval.prices) {
+        Store.dispatch(
+          stopInterval(
+            'prices',
+            this.props.Interval.interval
+          )
+        );
+      }
+
       const _iguanaActiveHandle = setInterval(() => {
         this.dispatchCoinActions(coin, mode);
       }, SPV_DASHBOARD_UPDATE_TIMEOUT);
 
       Store.dispatch(startInterval('sync', _iguanaActiveHandle));
+
+      if (Config.fiatRates) {  
+        Store.dispatch(prices(coin, Config.defaultFiatCurrency));
+
+        const _pricesInterval = this.pricesInterval = setInterval(() => {
+          Store.dispatch(prices(coin, Config.defaultFiatCurrency));
+        }, PRICES_UPDATE_INTERVAL);
+
+        Store.dispatch(startInterval('prices', _pricesInterval));
+      }
     }
   }
 

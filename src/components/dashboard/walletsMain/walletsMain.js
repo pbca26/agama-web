@@ -4,7 +4,6 @@ import WalletsMainRender from './walletsMain.render';
 import translate from '../../../translate/translate';
 import {
   triggerToaster,
-  prices,
 } from '../../../actions/actionCreators';
 import { getCoinTitle } from '../../../util/coinHelper';
 import Config from '../../../config';
@@ -12,29 +11,14 @@ import Store from '../../../store';
 import assetsPath from '../../../util/assetsPath';
 import appData from '../../../actions/actions/appData';
 
-const PRICES_UPDATE_INTERVAL = 120000; // every 2m
 
 class WalletsMain extends React.Component {
   constructor() {
     super();
     this.getCoinStyle = this.getCoinStyle.bind(this);
-    this.pricesInterval = null;
-  }
-
-  componentWillUnmount() {
-    if (this.pricesInterval) {
-      clearInterval(this.pricesInterval);
-    }
   }
 
   componentWillMount() {
-    if (Config.fiatRates) {
-      Store.dispatch(prices());
-      this.pricesInterval = setInterval(() => {
-        Store.dispatch(prices());
-      }, PRICES_UPDATE_INTERVAL);
-    }
-
     if (appData.createSeed.triggered &&
         !appData.createSeed.secondaryLoginPH) {
       Store.dispatch(
