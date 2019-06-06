@@ -5,6 +5,8 @@ const DashboardPlugin = require('webpack-dashboard/plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const autoprefixer = require('autoprefixer');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const nodeEnv = process.env.NODE_ENV || 'development';
 const isProduction = nodeEnv === 'production';
@@ -26,11 +28,6 @@ const wwwPath = path.join(__dirname, './www');
 * rather than being forced to load a larger bundle whenever a new page is visited.
 */
 const plugins = [
-  new webpack.optimize.CommonsChunkPlugin({
-    name: 'vendor',
-    minChunks: Infinity,
-    filename: 'vendor.js',
-  }),
   /*
   * The DefinePlugin allows you to create global constants which can be configured at compile time.
   * This can be useful for allowing different behaviour between development builds and release builds.
@@ -49,19 +46,9 @@ const plugins = [
     path: buildPath,
     filename: 'index.html',
   }),
-  new webpack.LoaderOptionsPlugin({
-    options: {
-      postcss: [
-        autoprefixer({
-          browsers: [
-            'last 3 version',
-            'ie >= 10',
-          ],
-        }),
-      ],
-      context: __dirname,
-    },
-  })
+  new MiniCssExtractPlugin({
+    filename: 'style.css',
+  }),
 ];
 
 // Common rules
@@ -95,41 +82,17 @@ if (isProduction) {
       minimize: true,
       debug: false,
     }),
-    new webpack.optimize.UglifyJsPlugin({
-      sourceMap: false,
-      compress: {
-        warnings: false,
-        screw_ie8: true,
-        conditionals: true,
-        unused: true,
-        comparisons: true,
-        sequences: true,
-        dead_code: true,
-        evaluate: true,
-        if_return: true,
-        join_vars: true,
-      },
-      output: {
-        comments: false,
-      },
-    }),
-    new ExtractTextPlugin('style.css')
   );
 
   // Production rules
   rules.push(
     {
-      test: /\.scss$/,
-      loader: ExtractTextPlugin.extract({
-        fallback: 'style-loader',
-        use: [
-          'css-loader',
-          'postcss-loader',
-          'sass-loader'
-          //'file-loader',
-          //'url-loader'
-        ]
-      }),
+      test: /\.(sa|sc|c)ss$/,
+      use: [
+        MiniCssExtractPlugin.loader,
+        'css-loader',
+        'sass-loader',
+      ],
     }
   );
 } else {
@@ -144,15 +107,10 @@ if (isProduction) {
     {
       test: /\.scss$/,
       exclude: /node_modules/,
+      test: /\.(sa|sc|c)ss$/,
       use: [
         'style-loader',
-        // Using source maps breaks urls in the CSS loader
-        // https://github.com/webpack/css-loader/issues/232
-        // This comment solves it, but breaks testing from a local network
-        // https://github.com/webpack/css-loader/issues/232#issuecomment-240449998
-        // 'css-loader?sourceMap',
         'css-loader',
-        'postcss-loader',
         'sass-loader?sourceMap',
       ],
     }
@@ -203,5 +161,29 @@ module.exports = {
       },
     },
   },
+  optimization: {
+    minimizer: [
+      new UglifyJSPlugin({
+        sourceMap: true,
+        uglifyOptions: {
+          warnings: false,
+          compress: {
+            ie8: false,
+            conditionals: true,
+            unused: true,
+            comparisons: true,
+            sequences: true,
+            dead_code: true,
+            evaluate: true,
+            if_return: true,
+            join_vars: true,
+          },
+          output: {
+            comments: false,
+          },
+        }
+      })
+    ]
+  },
+  stats: { children: false }
 };
-
