@@ -2,6 +2,7 @@ import translate from '../../translate/translate';
 import electrumServers from 'agama-wallet-lib/src/electrum-servers';
 import { kmdAssetChains } from 'agama-wallet-lib/src/coin-helpers';
 import { sortObject } from 'agama-wallet-lib/src/utils';
+import { disabledTrezorAc } from '../../util/coinHelper';
 import appData from '../../actions/actions/appData';
 
 const disabledAssets = [
@@ -47,11 +48,13 @@ const addCoinOptionsAC = () => {
     const _coin = coinsList[i].toUpperCase();
     const _title = translate('ASSETCHAINS.' + _coin);
 
-    _items.push({
-      label: `${_title}${_title.indexOf('(') === -1 && _title !== _coin ? ' (' + _coin + ')' : ''}`,
-      icon: coinsList[i],
-      value: `${_coin}|spv`,
-    });
+    if (!appData.isTrezor || (appData.isTrezor && disabledTrezorAc.indexOf(_coin.toLowerCase()) === -1)) {
+      _items.push({
+        label: `${_title}${_title.indexOf('(') === -1 && _title !== _coin ? ' (' + _coin + ')' : ''}`,
+        icon: coinsList[i],
+        value: `${_coin}|spv`,
+      });
+    }
   }
 
   return _items;

@@ -97,3 +97,8 @@ export const cryptoCoins = [
   //'BZC',
   //'GRS',
 ];
+
+export const disabledTrezorAc = [
+  'zilla',
+  'oot',
+];
