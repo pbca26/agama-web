@@ -2,7 +2,21 @@ import Config from '../../config';
 import appData from './appData';
 
 // TODO: non-overwintered coins support, coin agnostic
-const signTxTrezor = async function (utxoList, txBuilderData) {
+const signTxTrezor = async function (coin, _utxoList, txBuilderData) {
+  let utxoList = [];
+
+  for (let i = 0; i < _utxoList.length; i++) {
+    for (let j = 0; j < txBuilderData.inputs.length; j++) {
+      if (_utxoList[i].txid === txBuilderData.inputs[j].txid &&
+          _utxoList[i].vout === txBuilderData.inputs[j].vout &&
+          _utxoList[i].amountSats === txBuilderData.inputs[j].value) {
+        utxoList.push(_utxoList[i]);
+      }
+    }
+  }
+
+  Config.log('trezor sign filtered utxos', utxoList);
+
   return new Promise((resolve, reject) => {
     let tx = {
       versionGroupId: 2301567109, // zec sapling forks only
@@ -66,13 +80,18 @@ const signTxTrezor = async function (utxoList, txBuilderData) {
       }
     }
 
+    Config.log('trezor tx coin ' + coin);
     Config.log('trezor tx obj', tx);
     
     TrezorConnect.signTransaction(tx)
     .then((res) => {
       Config.log('trezor tx sign response', res);
 
-      resolve(res.payload.serializedTx);
+      if (res.payload.hasOwnProperty('error')) {
+        resolve(res.payload);
+      } else {
+        resolve(res.payload.serializedTx);
+      }
     });
   });
 };
