@@ -81,6 +81,29 @@ class Login extends React.Component {
   // the setInterval handler for 'activeCoins'
   _iguanaActiveCoins = null;
 
+  trezorLogin() {
+    TrezorConnect.getAddress({
+      path: "m/44'/141'/0'/0/0",
+      showOnTrezor: true,
+    })
+    .then((res) => {
+      if (res.payload.hasOwnProperty('address')) {
+        appData.isTrezor = true;
+
+        this.setState({
+          loginPassphrase: res.payload.address,
+        });
+
+        setTimeout(() => {
+          console.warn(this.state);
+          this.loginSeed();
+        }, 50);
+      } else {
+        // error
+      }
+    });
+  }
+
   toggleRisksWarningModal() {
     Store.dispatch(toggleWalletRisksModal(!this.props.Dashboard.displayWalletRisksModal));
   }
@@ -334,16 +357,6 @@ class Login extends React.Component {
   loginSeed() {
     appData.createSeed.secondaryLoginPH = md5(this.state.loginPassphrase);
 
-    // reset the login pass phrase values so that when the user logs out, the values are clear
-    this.setState({
-      loginPassphrase: '',
-      loginPassPhraseSeedType: null,
-    });
-
-    // reset login input vals
-    this.refs.loginPassphrase.value = '';
-    this.refs.loginPassphraseTextarea.value = '';
-
     if (this.state.shouldEncryptSeed) {
       Store.dispatch(encryptPassphrase(
         this.state.loginPassphrase,
@@ -357,6 +370,22 @@ class Login extends React.Component {
     } else {
       Store.dispatch(shepherdElectrumAuth(this.state.loginPassphrase));
       Store.dispatch(shepherdElectrumCoins());
+    }
+
+    // reset the login pass phrase values so that when the user logs out, the values are clear
+    this.setState({
+      loginPassphrase: '',
+      loginPassPhraseSeedType: null,
+    });
+
+    // reset login input vals
+    if (this.refs &&
+        this.refs.loginPassphrase) {
+      this.refs.loginPassphrase.value = '';
+    }
+    if (this.refs &&
+        this.refs.loginPassphraseTextarea) {
+      this.refs.loginPassphraseTextarea.value = '';
     }
 
     this.setState(this.defaultState);
