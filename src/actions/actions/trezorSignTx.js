@@ -31,6 +31,20 @@ const signTxTrezor = async function (coin, _utxoList, txBuilderData) {
       refTxs: [],
     };
 
+    // note: fails to sign tx version 1, throws "Illegal str: Length not a multiple of 2" error
+    // https://github.com/trezor/connect/issues/409
+    if (coin === 'zilla' ||
+        coin === 'oot') {
+      tx = {
+        version: 1,
+        push: false,
+        coin: 'kmd',
+        outputs: [],
+        inputs: [],
+        refTxs: [],
+      };
+    }
+
     for (let i = 0; i < utxoList.length; i++) {
       tx.inputs.push({
         address_n: [(44 | 0x80000000) >>> 0, (141 | 0x80000000) >>> 0, (0 | 0x80000000) >>> 0, 0, 0],
