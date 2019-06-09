@@ -72,113 +72,124 @@ export const shepherdElectrumSendPromise = (coin, value, sendToAddress, changeAd
           }
 
           signTxTrezor(coin, utxoList, _data)
-          .then((rawtx) => {
-            fetch(`${_serverEndpoint}/api/pushtx`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                port: appData.servers[coin].port,
-                ip: appData.servers[coin].ip,
-                proto: appData.servers[coin].proto,
-                rawtx,
-              }),
-            })
-            .catch((error) => {
-              console.log(error);
-              Store.dispatch(
-                triggerToaster(
-                  translate('API.shepherdElectrumSend'),
-                  'Error',
-                  'error'
-                )
-              );
-            })
-            .then(response => response.json())
-            .then(json => {
-              let result = json;
-  
-              if (result.msg === 'error') {
-                const _err = {
-                  msg: 'error',
-                  result: translate('API.PUSH_ERR'),
-                };
-                Store.dispatch(sendToAddressState(_err));
-                resolve(_err);
-              } else {
-                const txid = json.result;
-                const _rawObj = {
-                  utxoSet: _data.inputs,
-                  change: _data.change,
-                  changeAdjusted: _data.change,
-                  totalInterest: _data.totalInterest,
-                  fee: _data.fee,
-                  value: _data.value,
-                  outputAddress: sendToAddress,
-                  changeAddress,
+          .then((res) => {
+            if (res.hasOwnProperty('error')) {
+              const _err = {
+                msg: 'error',
+                result: res.error,
+              };
+              Store.dispatch(sendToAddressState(_err));
+              resolve(_err);
+            } else {
+              let rawtx = res;
+              
+              fetch(`${_serverEndpoint}/api/pushtx`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  port: appData.servers[coin].port,
+                  ip: appData.servers[coin].ip,
+                  proto: appData.servers[coin].proto,
                   rawtx,
-                  txid,
-                  utxoVerified: _data.utxoVerified,
-                };
-  
-                if (txid &&
-                    JSON.stringify(txid).indexOf('bad-txns-inputs-spent') > -1) {
-                  const retObj = {
+                }),
+              })
+              .catch((error) => {
+                console.log(error);
+                Store.dispatch(
+                  triggerToaster(
+                    translate('API.shepherdElectrumSend'),
+                    'Error',
+                    'error'
+                  )
+                );
+              })
+              .then(response => response.json())
+              .then(json => {
+                let result = json;
+    
+                if (result.msg === 'error') {
+                  const _err = {
                     msg: 'error',
-                    result: translate('API.BAD_TX_INPUTS_SPENT'),
-                    raw: _rawObj,
+                    result: translate('API.PUSH_ERR'),
                   };
-  
-                  Store.dispatch(sendToAddressState(retObj));
-                  resolve(retObj);
+                  Store.dispatch(sendToAddressState(_err));
+                  resolve(_err);
                 } else {
+                  const txid = json.result;
+                  const _rawObj = {
+                    utxoSet: _data.inputs,
+                    change: _data.change,
+                    changeAdjusted: _data.change,
+                    totalInterest: _data.totalInterest,
+                    fee: _data.fee,
+                    value: _data.value,
+                    outputAddress: sendToAddress,
+                    changeAddress,
+                    rawtx,
+                    txid,
+                    utxoVerified: _data.utxoVerified,
+                  };
+    
                   if (txid &&
-                      txid.length === 64) {
-                    if (JSON.stringify(txid).indexOf('bad-txns-in-belowout') > -1) {
-                      const retObj = {
-                        msg: 'error',
-                        result: translate('API.BAD_TX_INPUTS_SPENT'),
-                        raw: _rawObj,
-                      };
-  
-                      Store.dispatch(sendToAddressState(retObj));
-                      resolve(retObj);
-                    } else {
-                      const retObj = {
-                        msg: 'success',
-                        result: _rawObj,
-                        txid: _rawObj.txid,
-                      };
-  
-                      Store.dispatch(sendToAddressState(retObj));
-                      resolve(retObj);
-                    }
+                      JSON.stringify(txid).indexOf('bad-txns-inputs-spent') > -1) {
+                    const retObj = {
+                      msg: 'error',
+                      result: translate('API.BAD_TX_INPUTS_SPENT'),
+                      raw: _rawObj,
+                    };
+    
+                    Store.dispatch(sendToAddressState(retObj));
+                    resolve(retObj);
                   } else {
                     if (txid &&
-                        JSON.stringify(txid).indexOf('bad-txns-in-belowout') > -1) {
-                      const retObj = {
-                        msg: 'error',
-                        result: translate('API.BAD_TX_INPUTS_SPENT'),
-                        raw: _rawObj,
-                      };
-  
-                      dispatch(sendToAddressState(retObj));
-                      resolve(retObj);
+                        txid.length === 64) {
+                      if (JSON.stringify(txid).indexOf('bad-txns-in-belowout') > -1) {
+                        const retObj = {
+                          msg: 'error',
+                          result: translate('API.BAD_TX_INPUTS_SPENT'),
+                          raw: _rawObj,
+                        };
+    
+                        Store.dispatch(sendToAddressState(retObj));
+                        resolve(retObj);
+                      } else {
+                        const retObj = {
+                          msg: 'success',
+                          result: _rawObj,
+                          txid: _rawObj.txid,
+                        };
+    
+                        Store.dispatch(sendToAddressState(retObj));
+                        resolve(retObj);
+                      }
                     } else {
-                      const retObj = {
-                        msg: 'error',
-                        result: translate('API.CANT_BROADCAST_TX'),
-                        raw: _rawObj,
-                      };
-  
-                      Store.dispatch(sendToAddressState(retObj));
-                      resolve(retObj);
+                      if (txid &&
+                          JSON.stringify(txid).indexOf('bad-txns-in-belowout') > -1) {
+                        const retObj = {
+                          msg: 'error',
+                          result: translate('API.BAD_TX_INPUTS_SPENT'),
+                          raw: _rawObj,
+                        };
+    
+                        dispatch(sendToAddressState(retObj));
+                        resolve(retObj);
+                      } else {
+                        const retObj = {
+                          msg: 'error',
+                          result: translate('API.CANT_BROADCAST_TX'),
+                          raw: _rawObj,
+                        };
+    
+                        Store.dispatch(sendToAddressState(retObj));
+                        resolve(retObj);
+                      }
                     }
                   }
                 }
-              }
-            });
+              });
+            }
           });
         } else {
           transactionBuilder.transaction(

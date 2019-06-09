@@ -1,7 +1,8 @@
 // web app config
 let Config = {
-  version: '0.2.7-beta',
-  debug: false,
+  version: '0.2.8-beta',
+  debug: true,
+  enableSeedLogin: true,
   defaultLang: 'EN',
   roundValues: false,
   fiatRates: true,
