@@ -8,13 +8,15 @@ import Config from '../../config';
 import assetsPath from '../../util/assetsPath';
 
 const _shortcutOptions = [
-  'kmd',
-  'chips',
+  //'kmd',
+  //'chips',
+  'rick',
+  'morty',
   'btch',
   'vrsc',
   'revs',
   'jumblr',
-  'kmd+revs+jumblr', // custom option
+  //'kmd+revs+jumblr', // custom option
 ];
 let shortcutOptions = [];
 

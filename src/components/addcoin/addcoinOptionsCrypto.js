@@ -22,12 +22,14 @@ const addCoinOptionsCrypto = () => {
 
   _coins = [];
 
-  for (let i = 0; i < coinsList.length; i++) {
-    _coins.push({
-      label: `${translate('CRYPTO.' + coinsList[i])} (${coinsList[i]})`,
-      icon: coinsList[i],
-      value: `${coinsList[i]}|spv`,
-    });
+  if (!appData.isTrezor) {
+    for (let i = 0; i < coinsList.length; i++) {
+      _coins.push({
+        label: `${translate('CRYPTO.' + coinsList[i])} (${coinsList[i]})`,
+        icon: coinsList[i],
+        value: `${coinsList[i]}|spv`,
+      });
+    }
   }
 
   return _coins;
