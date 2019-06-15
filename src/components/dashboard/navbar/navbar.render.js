@@ -76,7 +76,7 @@ const NavbarRender = function() {
           </ul>
           <ul className="nav navbar-toolbar navbar-right navbar-toolbar-right">
             { (!Config.whitelabel || (Config.whitelabel && Config.wlConfig.enableAllCoins)) &&
-              !appData.isWatchOnly &&
+              (!appData.isWatchOnly || (appData.isWatchOnly && appData.isTrezor)) &&
               <li>
                 <a
                   className="pointer padding-bottom-10 padding-top-16"
