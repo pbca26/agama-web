@@ -20,9 +20,6 @@ class Support extends React.Component {
                   target="_blank"
                   className="support-box"
                   href={ Config.whitelabel ? Config.wlConfig.support.ticketsLink.url : 'http://support.komodoplatform.com' }>
-                  <img
-                    src={ `${assetsPath.cryptoLogo}/supernet.png` }
-                    alt={ translate('SETTINGS.SUPPORT_TICKETS') } />
                   <div className="support-box-title">{ translate('SETTINGS.SUPPORT_TICKETS') }</div>
                   <div className="support-box-link selectable">
                   { Config.whitelabel ? Config.wlConfig.support.ticketsLink.title : 'support.komodoplatform.com' }
