@@ -9,6 +9,7 @@ import {
   toSats,
   fromSats,
 } from 'agama-wallet-lib/src/utils';
+import appData from '../../../actions/actions/appData';
 
 export const AddressListRender = function() {
   const _balance = this.props.ActiveCoin.balance.balance + this.props.ActiveCoin.balance.unconfirmed;
@@ -47,6 +48,16 @@ export const _SendFormRender = function() {
   return (
     <div className="extcoin-send-form">
       <div className="row">
+        { appData.isTrezor &&
+          <div className="col-xlg-12 form-group form-material">
+            <label className="control-label padding-bottom-10">
+              Please follow all instructions presented on the Trezor screen. Verify that all amounts are matching.
+            </label>
+            <label className="control-label padding-bottom-10">
+              For Komodo asset chains Trezor screen is going to show KMD as a currency. This is normal and can't be changed at the moment.
+            </label>
+          </div>
+        }
         <div className="col-xlg-12 form-group form-material">
           <label className="control-label padding-bottom-10">
             { translate('INDEX.SEND_FROM') }
@@ -515,16 +526,17 @@ export const SendRender = function() {
                     </table>
                   }
                   { !this.props.ActiveCoin.lastSendToResponse &&
-                    <div className="padding-left-30 padding-top-10">{ translate('SEND.PROCESSING_TX') }...</div>
+                    <div className="padding-left-30 padding-top-10">{ appData.isTrezor ? 'Awaiting user input...' : translate('SEND.PROCESSING_TX') }...</div>
                   }
                   { this.props.ActiveCoin.lastSendToResponse &&
                     this.props.ActiveCoin.lastSendToResponse.msg &&
                     this.props.ActiveCoin.lastSendToResponse.msg === 'error' &&
+                    !appData.isTrezor &&
                     <div className="padding-left-30 padding-top-10 selectable">
                       <div>
                         <strong className="text-capitalize">{ translate('API.ERROR_SM') }</strong>
                       </div>
-                      { (this.props.ActiveCoin.lastSendToResponse.result.toLowerCase().indexOf('decode error') > -1) &&
+                      { this.props.ActiveCoin.lastSendToResponse.result.toLowerCase().indexOf('decode error') > -1 &&
                         <div>
                           <span className="display--block">{ translate('SEND.SEND_ERR_ZTX_P1') }</span>
                           { translate('SEND.SEND_ERR_ZTX_P2') }
@@ -549,6 +561,17 @@ export const SendRender = function() {
                           </ul>
                         </div>
                       }
+                    </div>
+                  }
+                  { this.props.ActiveCoin.lastSendToResponse &&
+                    this.props.ActiveCoin.lastSendToResponse.msg &&
+                    this.props.ActiveCoin.lastSendToResponse.msg === 'error' &&
+                    appData.isTrezor &&
+                    <div className="padding-left-30 padding-top-10 selectable">
+                      <div>
+                        <strong className="text-capitalize">{ translate('API.ERROR_SM') }</strong>
+                      </div>
+                      { this.props.ActiveCoin.lastSendToResponse.result }
                     </div>
                   }
                 </div>

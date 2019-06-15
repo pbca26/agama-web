@@ -36,6 +36,7 @@ import ReactTooltip from 'react-tooltip';
 import electrumServers from 'agama-wallet-lib/src/electrum-servers';
 import btcNetworks from 'agama-wallet-lib/src/bitcoinjs-networks';
 import { addressVersionCheck } from 'agama-wallet-lib/src/keys';
+import appData from '../../../actions/actions/appData';
 
 const SPV_MAX_LOCAL_TIMESTAMP_DEVIATION = 900; // seconds
 
@@ -358,7 +359,7 @@ class SendCoin extends React.Component {
           if (sendPreflight &&
               sendPreflight.msg === 'success') {
                 console.warn(sendPreflight.result);
-                this.setState(Object.assign({}, this.state, {
+            this.setState(Object.assign({}, this.state, {
               spvVerificationWarning: !sendPreflight.result.utxoVerified,
               spvPreflightSendInProgress: false,
               spvPreflightRes: {
@@ -368,6 +369,7 @@ class SendCoin extends React.Component {
                 estimatedFee: sendPreflight.result.estimatedFee,
                 totalInterest: sendPreflight.result.totalInterest,
               },
+              currentStep: appData.isTrezor ? 2 : this.state.currentStep,
             }));
           } else {
             this.setState(Object.assign({}, this.state, {

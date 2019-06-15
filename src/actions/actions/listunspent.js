@@ -166,6 +166,10 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                                   currentHeight,
                                 };
 
+                                if (appData.isTrezor) {
+                                  _resolveObj.decodedTx = decodedTx;
+                                }
+
                                 // merkle root verification agains another electrum server
                                 if (verify) {
                                   verifyMerkleByCoin(
@@ -198,6 +202,10 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                                   verified: false,
                                   currentHeight,
                                 };
+
+                                if (appData.isTrezor) {
+                                  _resolveObj.decodedTx = decodedTx;
+                                }
 
                                 // merkle root verification agains another electrum server
                                 if (verify) {
@@ -306,6 +314,10 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                                       currentHeight,
                                     };
 
+                                    if (appData.isTrezor) {
+                                      _resolveObj.decodedTx = decodedTx;
+                                    }
+
                                     // merkle root verification agains another electrum server
                                     if (verify) {
                                       verifyMerkleByCoin(
@@ -339,6 +351,10 @@ export const shepherdElectrumListunspent = (coin, address, full = true, verify =
                                       currentHeight,
                                     };
 
+                                    if (appData.isTrezor) {
+                                      _resolveObj.decodedTx = decodedTx;
+                                    }
+                                    
                                     // merkle root verification agains another electrum server
                                     if (verify) {
                                       verifyMerkleByCoin(

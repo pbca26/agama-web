@@ -1,5 +1,3 @@
-import Config from '../../config';
-
 let appData = {
   auth: {
     status: 'locked',
@@ -21,6 +19,7 @@ let appData = {
   proxy: {},
   cache: {},
   isWatchOnly: false,
+  isTrezor: false,
 };
 
 export default appData;
