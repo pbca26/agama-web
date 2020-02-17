@@ -27,7 +27,6 @@
 @import '../components/modal.scss';
 @import '../components/rcSlider.scss';
 @import '../components/contextMenu.scss';
-@import '../components/responsive.scss';
 @import '../components/dashboard/walletsInfo/walletsInfo.scss';
 @import '../components/dashboard/sendCoin/sendCoin.scss';
 @import '../components/dashboard/walletsNav/walletsNav.scss';
@@ -45,3 +44,5 @@
 @import '../components/dashboard/receiveCoin/receiveCoin.scss';
 /*@import '../components/dashboard/tools/tools.scss';*/
 @import '../components/toaster/toaster.scss';
+// responsive
+@import '../components/responsive.scss';

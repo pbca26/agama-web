@@ -81,6 +81,29 @@ class Login extends React.Component {
   // the setInterval handler for 'activeCoins'
   _iguanaActiveCoins = null;
 
+  trezorLogin() {
+    TrezorConnect.getAddress({
+      path: "m/44'/141'/0'/0/0",
+      showOnTrezor: true,
+    })
+    .then((res) => {
+      if (res.payload.hasOwnProperty('address')) {
+        appData.isTrezor = true;
+
+        this.setState({
+          loginPassphrase: res.payload.address,
+        });
+
+        setTimeout(() => {
+          console.warn(this.state);
+          this.loginSeed();
+        }, 50);
+      } else {
+        // error
+      }
+    });
+  }
+
   toggleRisksWarningModal() {
     Store.dispatch(toggleWalletRisksModal(!this.props.Dashboard.displayWalletRisksModal));
   }
@@ -280,8 +303,9 @@ class Login extends React.Component {
     // auto-size textarea
     setTimeout(() => {
       if (this.state.seedInputVisibility) {
-        document.querySelector('#loginPassphrase').style.height = '1px';
-        document.querySelector('#loginPassphrase').style.height = `${(15 + document.querySelector('#loginPassphrase').scrollHeight)}px`;
+        const _login = document.querySelector('#loginPassphrase');
+        _login.style.height = '1px';
+        _login.style.height = `${(15 + _login.scrollHeight)}px`;
       }
     }, 100);
   }
@@ -333,16 +357,6 @@ class Login extends React.Component {
   loginSeed() {
     appData.createSeed.secondaryLoginPH = md5(this.state.loginPassphrase);
 
-    // reset the login pass phrase values so that when the user logs out, the values are clear
-    this.setState({
-      loginPassphrase: '',
-      loginPassPhraseSeedType: null,
-    });
-
-    // reset login input vals
-    this.refs.loginPassphrase.value = '';
-    this.refs.loginPassphraseTextarea.value = '';
-
     if (this.state.shouldEncryptSeed) {
       Store.dispatch(encryptPassphrase(
         this.state.loginPassphrase,
@@ -356,6 +370,22 @@ class Login extends React.Component {
     } else {
       Store.dispatch(shepherdElectrumAuth(this.state.loginPassphrase));
       Store.dispatch(shepherdElectrumCoins());
+    }
+
+    // reset the login pass phrase values so that when the user logs out, the values are clear
+    this.setState({
+      loginPassphrase: '',
+      loginPassPhraseSeedType: null,
+    });
+
+    // reset login input vals
+    if (this.refs &&
+        this.refs.loginPassphrase) {
+      this.refs.loginPassphrase.value = '';
+    }
+    if (this.refs &&
+        this.refs.loginPassphraseTextarea) {
+      this.refs.loginPassphraseTextarea.value = '';
     }
 
     this.setState(this.defaultState);
@@ -521,13 +551,15 @@ class Login extends React.Component {
   }
 
   renderResetSPVCoinsOption() {
-    if (this.props.Main &&
-        this.props.Main.coins &&
-        this.props.Main.coins.spv &&
-        this.props.Main.coins.spv.length) {
+    const _main = this.props.Main;
+
+    if (_main &&
+        _main.coins &&
+        _main.coins.spv &&
+        _main.coins.spv.length) {
       if (!Config.whitelabel ||
-          (Config.whitelabel && this.props.Main.coins.spv.length === 1 && this.props.Main.coins.spv[0] !== Config.wlConfig.coin.ticker.toLowerCase()) ||
-          (Config.whitelabel && this.props.Main.coins.spv.length > 1)) {
+          (Config.whitelabel && _main.coins.spv.length === 1 && _main.coins.spv[0] !== Config.wlConfig.coin.ticker.toLowerCase()) ||
+          (Config.whitelabel && _main.coins.spv.length > 1)) {
         return true;
       }
     }

@@ -20,11 +20,10 @@ class Support extends React.Component {
                   target="_blank"
                   className="support-box"
                   href={ Config.whitelabel ? Config.wlConfig.support.ticketsLink.url : 'http://support.komodoplatform.com' }>
-                  <img
-                    src={ `${assetsPath.cryptoLogo}/supernet.png` }
-                    alt={ translate('SETTINGS.SUPPORT_TICKETS') } />
                   <div className="support-box-title">{ translate('SETTINGS.SUPPORT_TICKETS') }</div>
-                  <div className="support-box-link selectable">{ Config.whitelabel ? Config.wlConfig.support.ticketsLink.title : 'support.komodoplatform.com' }</div>
+                  <div className="support-box-link selectable">
+                  { Config.whitelabel ? Config.wlConfig.support.ticketsLink.title : 'support.komodoplatform.com' }
+                  </div>
                 </a>
               </div>
               <div className="support-box-wrapper">
@@ -35,8 +34,12 @@ class Support extends React.Component {
                   <img
                     src={ `${assetsPath.support}/discord-icon.png`.replace('discord', Config.whitelabel ? Config.wlConfig.support.chatApp.name.toLowerCase() : 'discord') }
                     alt={ Config.whitelabel ? Config.wlConfig.support.chatApp.name : 'Discord' } />
-                  <div className="support-box-title">{ Config.whitelabel ? Config.wlConfig.support.chatApp.name : 'Discord' }</div>
-                  <div className="support-box-link">{ Config.whitelabel ? Config.wlConfig.support.chatApp.channel : '#agama-wallet' }</div>
+                  <div className="support-box-title">
+                  { Config.whitelabel ? Config.wlConfig.support.chatApp.name : 'Discord' }
+                  </div>
+                  <div className="support-box-link">
+                  { Config.whitelabel ? Config.wlConfig.support.chatApp.channel : '#agama-wallet' }
+                  </div>
                 </a>
               </div>
               <div className="support-box-wrapper">
@@ -47,8 +50,12 @@ class Support extends React.Component {
                   <img
                     src={ `${assetsPath.support}/discord-invite-icon.png`.replace('discord', Config.whitelabel ? Config.wlConfig.support.chatApp.name.toLowerCase() : 'discord') }
                     alt={ translate('SETTINGS.GET_DISCORD_INVITE').replace('Discord', Config.whitelabel ? Config.wlConfig.support.chatApp.name : 'Discord') } />
-                  <div className="support-box-title">{ translate('SETTINGS.GET_DISCORD_INVITE').replace('Discord', Config.whitelabel ? Config.wlConfig.support.chatApp.name : 'Discord') }</div>
-                  <div className="support-box-link selectable">{ Config.whitelabel ? Config.wlConfig.support.chatApp.inviteUrl : 'https://komodoplatform.com/discord' }</div>
+                  <div className="support-box-title">
+                  { translate('SETTINGS.GET_DISCORD_INVITE').replace('Discord', Config.whitelabel ? Config.wlConfig.support.chatApp.name : 'Discord') }
+                  </div>
+                  <div className="support-box-link selectable">
+                  { Config.whitelabel ? Config.wlConfig.support.chatApp.inviteUrl : 'https://komodoplatform.com/discord' }
+                  </div>
                 </a>
               </div>
               <div className="support-box-wrapper">
@@ -60,7 +67,9 @@ class Support extends React.Component {
                     src={ `${assetsPath.support}/github-icon.png` }
                     alt="Github" />
                   <div className="support-box-title">Github</div>
-                  <div className="support-box-link selectable">{ Config.whitelabel ? Config.wlConfig.support.gitLink.title : 'github.com/pbca26/agama-web' }</div>
+                  <div className="support-box-link selectable">
+                  { Config.whitelabel ? Config.wlConfig.support.gitLink.title : 'github.com/pbca26/agama-web' }
+                  </div>
                 </a>
               </div>
             </div>
@@ -72,14 +81,22 @@ class Support extends React.Component {
                 <a
                   className="selectable"
                   target="_blank"
-                  href={ Config.whitelabel ? Config.wlConfig.support.ticketsLink.url : 'https://support.komodoplatform.com/support/home' }>{ Config.whitelabel ? Config.wlConfig.support.ticketsLink.url : 'https://support.komodoplatform.com/support/home' }</a>
+                  href={
+                    Config.whitelabel ? Config.wlConfig.support.ticketsLink.url : 'https://support.komodoplatform.com/support/home'
+                  }>{
+                    Config.whitelabel ? Config.wlConfig.support.ticketsLink.url : 'https://support.komodoplatform.com/support/home'
+                  }</a>
               </p>
               <p>
                 <span className="nbsp">{ translate('INDEX.TO_SEND_FEEDBACK') }</span>
                 <a
                   className="selectable"
                   target="_blank"
-                  href={ Config.whitelabel ? Config.wlConfig.support.ticketsLink.urlNewTicket : 'https://support.komodoplatform.com/support/tickets/new' }>{ Config.whitelabel ? Config.wlConfig.support.ticketsLink.urlNewTicket : 'https://support.komodoplatform.com/support/tickets/new' }</a>
+                  href={
+                    Config.whitelabel ? Config.wlConfig.support.ticketsLink.urlNewTicket : 'https://support.komodoplatform.com/support/tickets/new'
+                  }>{
+                    Config.whitelabel ? Config.wlConfig.support.ticketsLink.urlNewTicket : 'https://support.komodoplatform.com/support/tickets/new'
+                  }</a>
               </p>
             </div>
           </div>

@@ -32,10 +32,17 @@
         padding-top: 20px;
       }
     </style>
+    <script src="https://connect.trezor.io/7/trezor-connect.js"></script>
   </head>
   <body
     id="body"
     class="page-login layout-full page-dark page-loading">
+    <script>
+      TrezorConnect.manifest({
+        email: 'developer@xyz.com',
+        appUrl: 'http://your.application.com',
+      });
+    </script>
     <div
       id="app"
       class="full-height unselectable">

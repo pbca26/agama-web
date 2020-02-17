@@ -70,16 +70,17 @@ class WalletsTxInfo extends React.Component {
   }
 
   openExplorerWindow(txid) {
+    const _coin = this.props.ActiveCoin.coin.toUpperCase();
     let url;
-
-    if (explorerList[this.props.ActiveCoin.coin.toUpperCase()].split('/').length - 1 > 2) {
-      url = `${explorerList[this.props.ActiveCoin.coin.toUpperCase()]}${this.state.txDetails.txid}`;
-    } else {
-      url = `${explorerList[this.props.ActiveCoin.coin.toUpperCase()]}/tx/${this.state.txDetails.txid}`;
-    }
 
     if (Config.whitelabel) {
       url = `${Config.wlConfig.explorer}/tx/${this.state.txDetails.txid}`;
+    } else {
+      if (explorerList[_coin].split('/').length - 1 > 2) {
+        url = `${explorerList[_coin]}${this.state.txDetails.txid}`;
+      } else {
+        url = `${explorerList[_coin]}/tx/${this.state.txDetails.txid}`;
+      }
     }
 
     return url;

@@ -18,7 +18,10 @@ const CoinSelectorsRender = function(item, coin, i) {
             onChange={ (event) => this.updateSelectedCoin(event, i) }
             optionRenderer={ this.renderCoinOption }
             valueRenderer={ this.renderCoinOption }
-            options={ addCoinOptionsCrypto().concat(addCoinOptionsAC()) } />
+            options={
+              addCoinOptionsCrypto()
+              .concat(addCoinOptionsAC())
+            } />
         </div>
       </div>
       <div className="col-sm-2">

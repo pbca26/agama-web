@@ -43,7 +43,7 @@ export const WalletsNavWithWalletRender = function() {
               <i className="icon fa-th-large"></i> <span className="placeholder">{ translate('INDEX.TRANSACTIONS') }</span>
             </button>
             { _coin &&
-              !appData.isWatchOnly &&
+              (!appData.isWatchOnly || (appData.isWatchOnly && appData.isTrezor)) &&
               <button
                 type="button"
                 className="btn btn-primary waves-effect waves-light"
@@ -59,6 +59,7 @@ export const WalletsNavWithWalletRender = function() {
               <i className="icon fa-inbox"></i> <span className="placeholder">{ translate('INDEX.RECEIVE') }</span>
             </button>
             { appData.isWatchOnly &&
+              !appData.isTrezor &&
               <span>
                 <i
                   className="icon fa-question-circle settings-help"

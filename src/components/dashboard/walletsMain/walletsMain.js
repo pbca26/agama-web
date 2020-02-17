@@ -4,7 +4,6 @@ import WalletsMainRender from './walletsMain.render';
 import translate from '../../../translate/translate';
 import {
   triggerToaster,
-  prices,
 } from '../../../actions/actionCreators';
 import { getCoinTitle } from '../../../util/coinHelper';
 import Config from '../../../config';
@@ -12,29 +11,14 @@ import Store from '../../../store';
 import assetsPath from '../../../util/assetsPath';
 import appData from '../../../actions/actions/appData';
 
-const PRICES_UPDATE_INTERVAL = 120000; // every 2m
 
 class WalletsMain extends React.Component {
   constructor() {
     super();
     this.getCoinStyle = this.getCoinStyle.bind(this);
-    this.pricesInterval = null;
-  }
-
-  componentWillUnmount() {
-    if (this.pricesInterval) {
-      clearInterval(this.pricesInterval);
-    }
   }
 
   componentWillMount() {
-    if (Config.fiatRates) {
-      Store.dispatch(prices());
-      this.pricesInterval = setInterval(() => {
-        Store.dispatch(prices());
-      }, PRICES_UPDATE_INTERVAL);
-    }
-
     if (appData.createSeed.triggered &&
         !appData.createSeed.secondaryLoginPH) {
       Store.dispatch(
@@ -45,7 +29,10 @@ class WalletsMain extends React.Component {
           false
         )
       );
-    } else if (appData.createSeed.triggered && appData.createSeed.secondaryLoginPH) {
+    } else if (
+      appData.createSeed.triggered &&
+      appData.createSeed.secondaryLoginPH
+    ) {
       if (appData.createSeed.secondaryLoginPH === appData.createSeed.firstLoginPH) {
         Store.dispatch(
           triggerToaster(
@@ -86,18 +73,19 @@ class WalletsMain extends React.Component {
 
   getCoinStyle(type) {
     const _coin = this.props.ActiveCoin.coin;
+    const _logoData = getCoinTitle(_coin.toUpperCase());
 
     if (type === 'transparent') {
-      if (getCoinTitle(_coin.toUpperCase()).transparentBG &&
-          getCoinTitle().logo) {
-        return { 'backgroundImage': `url("${assetsPath.bg}/${getCoinTitle().logo.toLowerCase()}_transparent_header_bg.png")` };
+      if (_logoData.transparentBG &&
+          _logoData.logo) {
+        return { 'backgroundImage': `url("${assetsPath.bg}/${_logoData.logo.toLowerCase()}_transparent_header_bg.png")` };
       }
     } else if (type === 'title') {
       let _iconPath;
 
-      if (getCoinTitle(_coin.toUpperCase()).titleBG) {
-        _iconPath = `${assetsPath.native}/${getCoinTitle(_coin.toUpperCase()).logo.toLowerCase()}_header_title_logo.png`;
-      } else if (!getCoinTitle(_coin.toUpperCase()).titleBG) {
+      if (_logoData.titleBG) {
+        _iconPath = `${assetsPath.native}/${_logoData.logo.toLowerCase()}_header_title_logo.png`;
+      } else if (!_logoData.titleBG) {
         _iconPath = `${assetsPath.coinLogo}/${_coin.toLowerCase()}.png`;
       }
 

@@ -1,8 +1,8 @@
 export const copyToClipboard = (value) => {
   let result;
-  let copyTextarea = document.querySelector('#js-copytextarea');
+  const copyTextarea = document.querySelector('#js-copytextarea');
 
-  document.getElementById('js-copytextarea').value = value;
+  copyTextarea.value = value;
   copyTextarea.select();
 
   try {

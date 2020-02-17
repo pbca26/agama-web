@@ -36,6 +36,7 @@ import ReactTooltip from 'react-tooltip';
 import electrumServers from 'agama-wallet-lib/src/electrum-servers';
 import btcNetworks from 'agama-wallet-lib/src/bitcoinjs-networks';
 import { addressVersionCheck } from 'agama-wallet-lib/src/keys';
+import appData from '../../../actions/actions/appData';
 
 const SPV_MAX_LOCAL_TIMESTAMP_DEVIATION = 900; // seconds
 
@@ -43,7 +44,7 @@ const _feeLookup = [
   'fastestFee',
   'halfHourFee',
   'hourFee',
-  'advanced'
+  'advanced',
 ];
 
 class SendCoin extends React.Component {
@@ -119,10 +120,19 @@ class SendCoin extends React.Component {
   }
 
   setSendAmountAll() {
+    const _coin = this.props.ActiveCoin.coin;
     const _amount = this.state.amount;
     const _amountSats = toSats(this.state.amount);
     const _balanceSats = this.props.ActiveCoin.balance.balanceSats + this.props.ActiveCoin.balance.unconfirmedSats;
-    const fee = this.props.ActiveCoin.coin !== 'btc' ? electrumServers[this.props.ActiveCoin.coin].txfee : 0;
+    let fee;
+
+    if (Config.whitelabel &&
+        Config.wlConfig.coin &&
+        Config.wlConfig.coin.ticker.toLowerCase() === _coin) {
+      fee = Config.wlConfig.fee;
+    } else {
+      fee = _coin !== 'btc' ? electrumServers[_coin].txfee : 0;
+    }
 
     this.setState({
       amount: Number((fromSats(_balanceSats - fee) * this.getFiatPrice()).toFixed(8)),
@@ -142,10 +152,12 @@ class SendCoin extends React.Component {
   openExplorerWindow() {
     const _coin = this.props.ActiveCoin.coin;
     const txid = this.props.ActiveCoin.lastSendToResponse.txid;
-    let url = explorerList[_coin.toUpperCase()].split('/').length - 1 > 2 ? `${explorerList[_coin.toUpperCase()]}${txid}` : `${explorerList[_coin.toUpperCase()]}/tx/${txid}`;
+    let url;
 
     if (Config.whitelabel) {
       url = `${Config.wlConfig.explorer}/tx/${txid}`;
+    } else {
+      url = explorerList[_coin.toUpperCase()].split('/').length - 1 > 2 ? `${explorerList[_coin.toUpperCase()]}${txid}` : `${explorerList[_coin.toUpperCase()]}/tx/${txid}`;
     }
 
     return url;
@@ -326,7 +338,15 @@ class SendCoin extends React.Component {
 
         // spv pre tx push request
         const _coin = this.props.ActiveCoin.coin;
-        const fee = _coin !== 'btc' ? electrumServers[_coin].txfee : 0;
+        let fee;
+
+        if (Config.whitelabel &&
+            Config.wlConfig.coin &&
+            Config.wlConfig.coin.ticker.toLowerCase() === _coin) {
+          fee = Config.wlConfig.fee;
+        } else {
+          fee = _coin !== 'btc' ? electrumServers[_coin].txfee : 0;
+        }
 
         shepherdElectrumSendPromise(
           _coin,
@@ -338,6 +358,7 @@ class SendCoin extends React.Component {
         .then((sendPreflight) => {
           if (sendPreflight &&
               sendPreflight.msg === 'success') {
+                console.warn(sendPreflight.result);
             this.setState(Object.assign({}, this.state, {
               spvVerificationWarning: !sendPreflight.result.utxoVerified,
               spvPreflightSendInProgress: false,
@@ -346,7 +367,9 @@ class SendCoin extends React.Component {
                 value: sendPreflight.result.value,
                 change: sendPreflight.result.change,
                 estimatedFee: sendPreflight.result.estimatedFee,
+                totalInterest: sendPreflight.result.totalInterest,
               },
+              currentStep: appData.isTrezor ? 2 : this.state.currentStep,
             }));
           } else {
             this.setState(Object.assign({}, this.state, {
@@ -374,7 +397,15 @@ class SendCoin extends React.Component {
     const _pub = this.props.Dashboard.electrumCoins[_coin].pub;
     // no op
     if (_pub) {
-      const fee = _coin !== 'btc' ? electrumServers[_coin].txfee : 0;
+      let fee;
+
+      if (Config.whitelabel &&
+          Config.wlConfig.coin &&
+          Config.wlConfig.coin.ticker.toLowerCase() === _coin) {
+        fee = Config.wlConfig.fee;
+      } else {
+        fee = _coin !== 'btc' ? electrumServers[_coin].txfee : 0;
+      }
 
       shepherdElectrumSendPromise(
         _coin,
@@ -389,12 +420,20 @@ class SendCoin extends React.Component {
 
   // TODO: reduce to a single toast
   validateSendFormData() {
-    let valid = true;
     const _coin = this.props.ActiveCoin.coin;
     const _amount = Config.sendCoinAllowFiatEntry && Config.fiatRates && this.state.valuesInFiat && this.props.Dashboard.prices ? Number((this.state.amount / this.getFiatPrice()).toFixed(8)) : this.state.amount;
     const _amountSats = Math.floor(toSats(_amount));
     const _balanceSats = this.props.ActiveCoin.balance.balanceSats + this.props.ActiveCoin.balance.unconfirmedSats;
-    const fee = _coin !== 'btc' ? electrumServers[_coin].txfee : 0;
+    let valid = true;
+    let fee;
+
+    if (Config.whitelabel &&
+        Config.wlConfig.coin &&
+        Config.wlConfig.coin.ticker.toLowerCase() === _coin) {
+      fee = Config.wlConfig.fee;
+    } else {
+      fee = _coin !== 'btc' ? electrumServers[_coin].txfee : 0;
+    }
 
     if ((Number(_amountSats) + fee) > _balanceSats) {
       let _err;
@@ -419,7 +458,7 @@ class SendCoin extends React.Component {
       valid = false;
     } else if (Number(_amountSats) < fee) {
       let _err;
-      
+
       if (Config.sendCoinAllowFiatEntry &&
           Config.fiatRates &&
           this.state.valuesInFiat &&

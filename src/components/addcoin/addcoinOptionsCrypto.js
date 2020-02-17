@@ -1,8 +1,6 @@
 import translate from '../../translate/translate';
-import {
-  cryptoCoins,
-  sortObject,
-} from '../../util/coinHelper';
+import { cryptoCoins } from '../../util/coinHelper';
+import { sortObject } from 'agama-wallet-lib/src/utils';
 import appData from '../../actions/actions/appData';
 
 const addCoinOptionsCrypto = () => {
@@ -10,7 +8,7 @@ const addCoinOptionsCrypto = () => {
   let coinsList = [];
   let _coins = {};
 
-  for (let i = 0; i < cryptoCoins.length; i++) {
+  for (let i = 0; i < cryptoCoins.length; i++) {    
     if (appData.coins.indexOf(cryptoCoins[i].toLowerCase()) === -1) { // filter out active coins
       _coins[translate('CRYPTO.' + cryptoCoins[i].toUpperCase())] = cryptoCoins[i];
     }
@@ -24,12 +22,14 @@ const addCoinOptionsCrypto = () => {
 
   _coins = [];
 
-  for (let i = 0; i < coinsList.length; i++) {
-    _coins.push({
-      label: `${translate('CRYPTO.' + coinsList[i])} (${coinsList[i]})`,
-      icon: coinsList[i],
-      value: `${coinsList[i]}|spv`,
-    });
+  if (!appData.isTrezor) {
+    for (let i = 0; i < coinsList.length; i++) {
+      _coins.push({
+        label: `${translate('CRYPTO.' + coinsList[i])} (${coinsList[i]})`,
+        icon: coinsList[i],
+        value: `${coinsList[i]}|spv`,
+      });
+    }
   }
 
   return _coins;

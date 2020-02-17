@@ -8,13 +8,15 @@ import Config from '../../config';
 import assetsPath from '../../util/assetsPath';
 
 const _shortcutOptions = [
-  'kmd',
-  'chips',
+  //'kmd',
+  //'chips',
+  'rick',
+  'morty',
   'btch',
-  'mnz',
+  'vrsc',
   'revs',
   'jumblr',
-  'kmd+revs+jumblr', // custom option
+  //'kmd+revs+jumblr', // custom option
 ];
 let shortcutOptions = [];
 
@@ -74,39 +76,41 @@ const LoginRender = function() {
               { this.props.Login.pinList.length > 0 &&
                <span>{ translate('LOGIN.PIN_LOGIN_INFO') }</span>
               }
-              <div className="form-group form-material floating col-sm-12 horizontal-padding-0">
-                <form autoComplete="off">
-                  <input
-                    type="password"
-                    name="loginPassphrase"
-                    ref="loginPassphrase"
-                    className={ !this.state.seedInputVisibility ? 'form-control' : 'hide' }
-                    onChange={ this.updateLoginPassPhraseInput }
-                    onKeyDown={ (event) => this.handleKeydown(event) }
-                    autoComplete="off"
-                    value={ this.state.loginPassphrase || '' } />
-                  <textarea
-                    className={ this.state.seedInputVisibility ? 'form-control' : 'hide' }
-                    id="loginPassphrase"
-                    ref="loginPassphraseTextarea"
-                    name="loginPassphraseTextarea"
-                    autoComplete="off"
-                    onChange={ this.updateLoginPassPhraseInput }
-                    onKeyDown={ (event) => this.handleKeydown(event) }
-                    value={ this.state.loginPassphrase || '' }></textarea>
-                  <i
-                    className={ 'seed-toggle fa fa-eye' +  (!this.state.seedInputVisibility ? '-slash' : '') }
-                    onClick={ this.toggleSeedInputVisibility }></i>
-                  <label
-                    className="floating-label"
-                    htmlFor="inputPassword">{ translate('INDEX.WALLET_SEED') }</label>
-                  <div className="qr-modal-login-block">
-                    <QRModal
-                      mode="scan"
-                      setRecieverFromScan={ this.setRecieverFromScan } />
-                  </div>
-                </form>
-              </div>
+              { Config.enableSeedLogin &&
+                <div className="form-group form-material floating col-sm-12 horizontal-padding-0">
+                  <form autoComplete="off">
+                    <input
+                      type="password"
+                      name="loginPassphrase"
+                      ref="loginPassphrase"
+                      className={ !this.state.seedInputVisibility ? 'form-control' : 'hide' }
+                      onChange={ this.updateLoginPassPhraseInput }
+                      onKeyDown={ (event) => this.handleKeydown(event) }
+                      autoComplete="off"
+                      value={ this.state.loginPassphrase || '' } />
+                    <textarea
+                      className={ this.state.seedInputVisibility ? 'form-control' : 'hide' }
+                      id="loginPassphrase"
+                      ref="loginPassphraseTextarea"
+                      name="loginPassphraseTextarea"
+                      autoComplete="off"
+                      onChange={ this.updateLoginPassPhraseInput }
+                      onKeyDown={ (event) => this.handleKeydown(event) }
+                      value={ this.state.loginPassphrase || '' }></textarea>
+                    <i
+                      className={ 'seed-toggle fa fa-eye' +  (!this.state.seedInputVisibility ? '-slash' : '') }
+                      onClick={ this.toggleSeedInputVisibility }></i>
+                    <label
+                      className="floating-label"
+                      htmlFor="inputPassword">{ translate('INDEX.WALLET_SEED') }</label>
+                    <div className="qr-modal-login-block">
+                      <QRModal
+                        mode="scan"
+                        setRecieverFromScan={ this.setRecieverFromScan } />
+                    </div>
+                  </form>
+                </div>
+              }
               { this.state.loginPassPhraseSeedType &&
                 <div
                   className="form-group form-material floating horizontal-padding-0 margin-top-20 seed-type-block"
@@ -223,16 +227,35 @@ const LoginRender = function() {
                 </div>
               }
 
+              { Config.enableSeedLogin &&
+                <button
+                  type="button"
+                  disabled={
+                    !this.state.loginPassphrase ||
+                    !this.state.loginPassphrase.length
+                  }
+                  className="btn btn-primary btn-block margin-top-20"
+                  onClick={ this.loginSeed }>
+                  { translate('INDEX.SIGN_IN') }
+                </button>
+              }
               <button
                 type="button"
-                disabled={
-                  !this.state.loginPassphrase ||
-                  !this.state.loginPassphrase.length
-                }
                 className="btn btn-primary btn-block margin-top-20"
-                onClick={ this.loginSeed }>
-                { translate('INDEX.SIGN_IN') }
+                onClick={ () => this.trezorLogin() }>
+                Sign in with Trezor
               </button>
+              <span>
+                <i
+                  className="icon fa-question-circle login-trezor-help"
+                  data-tip="In order for Trezor to work properly you need to allow popup windows.<br/>Please follow all instructions thoroughly."
+                  data-html={ true }
+                  data-for="loginTrezor"></i>
+                <ReactTooltip
+                  id="loginTrezor"
+                  effect="solid"
+                  className="text-top" />
+              </span>
               <div className="form-group form-material floating">
                 <button
                   className="btn btn-lg btn-flat btn-block waves-effect"

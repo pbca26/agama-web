@@ -1,5 +1,6 @@
 import React from 'react';
 import translate from '../../translate/translate';
+import appData from '../../actions/actions/appData';
 
 const AddCoinRender = function() {
   return (
@@ -30,6 +31,11 @@ const AddCoinRender = function() {
                 <p>
                   <strong>{ translate('INDEX.SPV_MODE') }:</strong> { translate('ADD_COIN.LITE_MODE_DESC') }.
                 </p>
+                { appData.isTrezor &&
+                  <p>
+                    <strong>Trezor:</strong> only Komodo asset chains are supported currently.
+                  </p>
+                }
               </div>
             </div>
           </div>

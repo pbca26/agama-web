@@ -9,6 +9,7 @@ import {
   toSats,
   fromSats,
 } from 'agama-wallet-lib/src/utils';
+import appData from '../../../actions/actions/appData';
 
 export const AddressListRender = function() {
   const _balance = this.props.ActiveCoin.balance.balance + this.props.ActiveCoin.balance.unconfirmed;
@@ -47,6 +48,16 @@ export const _SendFormRender = function() {
   return (
     <div className="extcoin-send-form">
       <div className="row">
+        { appData.isTrezor &&
+          <div className="col-xlg-12 form-group form-material">
+            <label className="control-label padding-bottom-10">
+              Please follow all instructions presented on the Trezor screen. Verify that all amounts are matching.
+            </label>
+            <label className="control-label padding-bottom-10">
+              For Komodo asset chains Trezor screen is going to show KMD as a currency. This is normal and can't be changed at the moment.
+            </label>
+          </div>
+        }
         <div className="col-xlg-12 form-group form-material">
           <label className="control-label padding-bottom-10">
             { translate('INDEX.SEND_FROM') }
@@ -301,24 +312,32 @@ export const SendRender = function() {
                           Config.fiatRates &&
                           this.state.valuesInFiat &&
                           this.props.Dashboard.prices &&
-                          <span>{ Number((formatValue(fromSats(this.state.spvPreflightRes.value) + fromSats(this.state.spvPreflightRes.fee)) * this.getFiatPrice()).toFixed(8)) } USD / { formatValue(fromSats(this.state.spvPreflightRes.value) + fromSats(this.state.spvPreflightRes.fee)) } { _coin.toUpperCase() }</span>
+                          <span>
+                          { Number((formatValue(fromSats(this.state.spvPreflightRes.value) + fromSats(this.state.spvPreflightRes.fee)) * this.getFiatPrice()).toFixed(8)) } USD / { formatValue(fromSats(this.state.spvPreflightRes.value) + fromSats(this.state.spvPreflightRes.fee)) } { _coin.toUpperCase() }
+                          </span>
                         }
                         { (!Config.sendCoinAllowFiatEntry ||
                           !Config.fiatRates ||
                           !this.state.valuesInFiat ||
                           !this.props.Dashboard.prices) &&
-                          <span>{ formatValue(fromSats(this.state.spvPreflightRes.value) + fromSats(this.state.spvPreflightRes.fee)) }</span>
+                          <span>
+                          { formatValue(fromSats(this.state.spvPreflightRes.value) + fromSats(this.state.spvPreflightRes.fee)) }
+                          </span>
                         }
                       </div>
                     }
+
                     { this.state.spvPreflightRes.estimatedFee < 0 &&
-                      <div className="col-lg-12 col-sm-12 col-xs-12 padding-bottom-20">
+                      this.props.ActiveCoin.coin.toLowerCase() === 'kmd' &&
+                      <div className="col-lg-12 col-sm-12 col-xs-12 padding-top-30">
                         <strong className="nbsp">KMD { translate('SEND.REWARDS_SM') }</strong>
                         { Config.sendCoinAllowFiatEntry &&
                           Config.fiatRates &&
                           this.state.valuesInFiat &&
                           this.props.Dashboard.prices &&
-                          <span>{ Number((Math.abs(formatValue(fromSats(this.state.spvPreflightRes.estimatedFee))) * this.getFiatPrice()).toFixed(8)) } USD / { Math.abs(formatValue(fromSats(this.state.spvPreflightRes.estimatedFee))) } { _coin.toUpperCase() }</span>
+                          <span>
+                          { Number((Math.abs(formatValue(fromSats(this.state.spvPreflightRes.estimatedFee))) * this.getFiatPrice()).toFixed(8)) } USD / { Math.abs(formatValue(fromSats(this.state.spvPreflightRes.estimatedFee))) } { _coin.toUpperCase() }
+                          </span>
                         }
                         { (!Config.sendCoinAllowFiatEntry ||
                           !Config.fiatRates ||
@@ -326,9 +345,31 @@ export const SendRender = function() {
                           !this.props.Dashboard.prices) &&
                           <span className="nbsp">{ Math.abs(formatValue(fromSats(this.state.spvPreflightRes.estimatedFee))) }</span>
                         }
-                        { translate('SEND.TO_S,') } { this.props.Dashboard.electrumCoins[_coin].pub }
+                        { translate('SEND.TO_SM') } { this.props.Dashboard.electrumCoins[_coin].pub }
                       </div>
                     }
+                    { this.state.spvPreflightRes.estimatedFee > 0 &&
+                      this.props.ActiveCoin.coin.toLowerCase() === 'kmd' &&
+                      <div className="col-lg-12 col-sm-12 col-xs-12 padding-top-30">
+                        <strong className="nbsp">KMD { translate('SEND.REWARDS_SM') }</strong>
+                        { Config.sendCoinAllowFiatEntry &&
+                          Config.fiatRates &&
+                          this.state.valuesInFiat &&
+                          this.props.Dashboard.prices &&
+                          <span>
+                          { Number((Math.abs(formatValue(fromSats(this.state.spvPreflightRes.totalInterest))) * this.getFiatPrice()).toFixed(8)) } USD / { Math.abs(formatValue(fromSats(this.state.spvPreflightRes.totalInterest))) } { _coin.toUpperCase() }
+                          </span>
+                        }
+                        { (!Config.sendCoinAllowFiatEntry ||
+                          !Config.fiatRates ||
+                          !this.state.valuesInFiat ||
+                          !this.props.Dashboard.prices) &&
+                          <span className="nbsp">{ Math.abs(formatValue(fromSats(this.state.spvPreflightRes.totalInterest))) }</span>
+                        }
+                        { translate('SEND.TO_SM') } { this.props.Dashboard.electrumCoins[_coin].pub }
+                      </div>
+                    }
+
                     { this.state.spvPreflightRes.change > 0 &&
                       <div className="col-lg-12 col-sm-12 col-xs-12">
                         <strong className="nbsp display--block">{ translate('SEND.TOTAL') }</strong>
@@ -336,23 +377,29 @@ export const SendRender = function() {
                           Config.fiatRates &&
                           this.state.valuesInFiat &&
                           this.props.Dashboard.prices &&
-                          <span>{ Number((formatValue(fromSats(this.state.spvPreflightRes.value) + fromSats(this.state.spvPreflightRes.fee)) * this.getFiatPrice()).toFixed(8)) } USD / { formatValue(fromSats(this.state.spvPreflightRes.value) + fromSats(this.state.spvPreflightRes.fee)) } { _coin.toUpperCase() }</span>
+                          <span>
+                          { Number((formatValue(fromSats(this.state.spvPreflightRes.value) + fromSats(this.state.spvPreflightRes.fee)) * this.getFiatPrice()).toFixed(8)) } USD / { formatValue(fromSats(this.state.spvPreflightRes.value) + fromSats(this.state.spvPreflightRes.fee)) } { _coin.toUpperCase() }
+                          </span>
                         }
                         { (!Config.sendCoinAllowFiatEntry ||
                           !Config.fiatRates ||
                           !this.state.valuesInFiat ||
                           !this.props.Dashboard.prices) &&
-                          <span>{ formatValue(fromSats(this.state.spvPreflightRes.value) + fromSats(this.state.spvPreflightRes.fee)) }</span>
+                          <span>
+                          { formatValue(fromSats(this.state.spvPreflightRes.value) + fromSats(this.state.spvPreflightRes.fee)) }
+                          </span>
                         }
                       </div>
                     }
                   </div>
                 }
                 { this.state.spvPreflightSendInProgress &&
-                  <div className="padding-top-20 fs-15 col-lg-12 col-sm-12 col-xs-12 padding-bottom-40">{ translate('SEND.SPV_VERIFYING') }...</div>
+                  <div className="padding-top-20 fs-15 col-lg-12 col-sm-12 col-xs-12 padding-bottom-40 padding-left-0">
+                  { translate('SEND.SPV_VERIFYING') }...
+                  </div>
                 }
                 { this.state.spvVerificationWarning &&
-                  <div className="padding-top-20 fs-15 col-lg-12 col-sm-12 col-xs-12 padding-bottom-40">
+                  <div className="padding-top-20 fs-15 col-lg-12 col-sm-12 col-xs-12 padding-bottom-40 padding-left-0">
                     <strong className="color-warning nbsp">{ translate('SEND.WARNING') }:</strong>
                     <span>{ translate('SEND.WARNING_SPV_P1') }</span>
                     { translate('SEND.WARNING_SPV_P2') }
@@ -428,7 +475,9 @@ export const SendRender = function() {
                             Config.fiatRates &&
                             this.state.valuesInFiat &&
                             this.props.Dashboard.prices &&
-                            <span>{ Number(this.state.amount) } USD / { Number((this.state.amount / this.getFiatPrice()).toFixed(8)) } { _coin.toUpperCase() }</span>
+                            <span>
+                            { Number(this.state.amount) } USD / { Number((this.state.amount / this.getFiatPrice()).toFixed(8)) } { _coin.toUpperCase() }
+                            </span>
                           }
                           { (!Config.sendCoinAllowFiatEntry ||
                             !Config.fiatRates ||
@@ -477,16 +526,17 @@ export const SendRender = function() {
                     </table>
                   }
                   { !this.props.ActiveCoin.lastSendToResponse &&
-                    <div className="padding-left-30 padding-top-10">{ translate('SEND.PROCESSING_TX') }...</div>
+                    <div className="padding-left-30 padding-top-10">{ appData.isTrezor ? 'Awaiting user input...' : translate('SEND.PROCESSING_TX') }...</div>
                   }
                   { this.props.ActiveCoin.lastSendToResponse &&
                     this.props.ActiveCoin.lastSendToResponse.msg &&
                     this.props.ActiveCoin.lastSendToResponse.msg === 'error' &&
+                    !appData.isTrezor &&
                     <div className="padding-left-30 padding-top-10 selectable">
                       <div>
                         <strong className="text-capitalize">{ translate('API.ERROR_SM') }</strong>
                       </div>
-                      { (this.props.ActiveCoin.lastSendToResponse.result.toLowerCase().indexOf('decode error') > -1) &&
+                      { this.props.ActiveCoin.lastSendToResponse.result.toLowerCase().indexOf('decode error') > -1 &&
                         <div>
                           <span className="display--block">{ translate('SEND.SEND_ERR_ZTX_P1') }</span>
                           { translate('SEND.SEND_ERR_ZTX_P2') }
@@ -511,6 +561,17 @@ export const SendRender = function() {
                           </ul>
                         </div>
                       }
+                    </div>
+                  }
+                  { this.props.ActiveCoin.lastSendToResponse &&
+                    this.props.ActiveCoin.lastSendToResponse.msg &&
+                    this.props.ActiveCoin.lastSendToResponse.msg === 'error' &&
+                    appData.isTrezor &&
+                    <div className="padding-left-30 padding-top-10 selectable">
+                      <div>
+                        <strong className="text-capitalize">{ translate('API.ERROR_SM') }</strong>
+                      </div>
+                      { this.props.ActiveCoin.lastSendToResponse.result }
                     </div>
                   }
                 </div>

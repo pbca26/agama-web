@@ -19,22 +19,32 @@ class About extends React.Component {
           <a
             className="pointer nbsp nbsp-l"
             target="_blank"
-            href={ Config.whitelabel ? Config.wlConfig.support.onlineLink.url : 'https://www.atomicexplorer.com/wallet' }>{ Config.whitelabel ? Config.wlConfig.support.onlineLink.title : 'https://www.atomicexplorer.com/wallet' }</a>
+            href={
+              Config.whitelabel ? Config.wlConfig.support.onlineLink.url : 'https://www.atomicexplorer.com/wallet'
+            }>{ Config.whitelabel ? Config.wlConfig.support.onlineLink.title : 'https://www.atomicexplorer.com/wallet' }</a>
           <span className="nbsp">{ translate('ABOUT.TESTERS_OR') }</span>
           <a
             className="pointer nbsp"
             target="_blank"
-            href={ Config.whitelabel ? Config.wlConfig.support.standaloneLink : 'https://www.atomicexplorer.com/wallet.zip' }>{ translate('ABOUT.TESTERS_P2') }</a>.
+            href={
+              Config.whitelabel ? Config.wlConfig.support.standaloneLink : 'https://www.atomicexplorer.com/wallet.zip'
+            }>{ translate('ABOUT.TESTERS_P2') }</a>.
           <span className="nbsp-l nbsp">{ translate('ABOUT.TESTERS_P3') }</span>
           <a
             className="pointer nbsp"
             target="_blank"
-            href={ Config.whitelabel ? Config.wlConfig.support.chatApp.url : 'https://discordapp.com/channels/412898016371015680/453204571393622027' }>{ Config.whitelabel ? Config.wlConfig.support.chatApp.channel : '#agama-wallet' }</a>
+            href={
+              Config.whitelabel ? Config.wlConfig.support.chatApp.url : 'https://discordapp.com/channels/412898016371015680/453204571393622027'
+            }>{
+              Config.whitelabel ? Config.wlConfig.support.chatApp.channel : '#agama-wallet'
+            }</a>
           <span className="nbsp">{ Config.whitelabel ? Config.wlConfig.support.chatApp.name : 'Discord' } { translate('ABOUT.CHANNEL') }</span>.
           <a
             className="pointer nbsp nbsp-l"
             target="_blank"
-            href={ Config.whitelabel ? Config.wlConfig.support.chatApp.inviteUrl : 'https://komodoplatform.com/discord' }>{ translate('ABOUT.GET_AN_INVITE') }</a>
+            href={
+              Config.whitelabel ? Config.wlConfig.support.chatApp.inviteUrl : 'https://komodoplatform.com/discord'
+            }>{ translate('ABOUT.GET_AN_INVITE') }</a>
           { translate('ABOUT.GET_AN_INVITE_P2').replace('Discord', Config.whitelabel ? Config.wlConfig.support.chatApp.name : 'Discord') }.
           <span className="nbsp-l">{ translate('ABOUT.TESTERS_P4') }</span>
         </div>
